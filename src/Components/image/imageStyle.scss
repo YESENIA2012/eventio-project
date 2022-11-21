@@ -1,0 +1,46 @@
+$font-color: rgb(150, 157, 166);
+
+img {
+  height: 758px;
+  width: 30%;
+}
+
+.span-1,
+.text-image {
+  position: absolute;
+  color: white;
+}
+
+.span-1 {
+  margin-top: 20px;
+  margin-left: 50px;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.text-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 550px;
+  width: 20%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.p-image {
+  font-size: 28px;
+  text-align: center;
+  margin: 0;
+  font-weight: bolder;
+}
+
+.span-2 {
+  color: rgb(100, 207, 140);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.p-image-2 {
+  color: $font-color;
+}

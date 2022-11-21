@@ -1,0 +1,84 @@
+$font-color: rgb(150, 157, 166);
+.login {
+  display: flex;
+  flex-direction: row;
+}
+
+.sign-in-button {
+  position: absolute;
+  margin-top: -680px;
+  margin-left: 700px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-in-button span {
+  font-size: 14px;
+  color: $font-color;
+}
+
+.button-s {
+  border: none;
+  background-color: white;
+  color: $font-color;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.button-s:hover {
+  cursor: pointer;
+}
+
+.section-login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 70%;
+  align-items: center;
+}
+
+.title-and-message {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+}
+
+h1 {
+  font-weight: 900;
+  font-size: 23px;
+}
+
+.message-login {
+  margin-top: -10px;
+  font-size: 14px;
+  color: $font-color;
+}
+
+.form-login {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  margin-top: 20px;
+}
+
+#textfield {
+  width: 100%;
+}
+
+.textfield-label {
+  font-size: 14px !important;
+  color: $font-color !important;
+}
+
+.button-login {
+  width: 50%;
+  height: 46px;
+}
+
+.form-login .button-login {
+  margin: 40px auto;
+  width: 40%;
+  color: white;
+}
