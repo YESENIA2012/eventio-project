@@ -5,7 +5,6 @@ import "./imageStyle.scss";
 const Image = () => {
   return (
     <Hidden smDown>
-      <span className="span-1">E.</span>
       <img
         src="https://raw.githubusercontent.com/erick2014/events-app/master/src/assets/images/starWars.png"
         alt="star wars stormtroopers"

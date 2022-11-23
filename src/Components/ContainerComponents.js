@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import Login from "./login/login";
+import Login from "./login/Login";
 
 const ContainerComponent = () => {
   return (
