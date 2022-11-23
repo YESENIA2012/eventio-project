@@ -1,8 +1,11 @@
-import { Button, TextField, ThemeProvider, createTheme } from "@mui/material";
 import React, { useState, Fragment } from "react";
-import Image from "../image/ImageContainer";
+
+import { Button, TextField, ThemeProvider, createTheme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
+
+import Image from "../image/ImageContainer";
 import "./styleLogin.scss";
+import { Link } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -38,7 +41,9 @@ const Login = () => {
           <div className="section-login">
             <div className="sign-in-button">
               <span>Don’t have account?</span>
-              <button className="button-s">SIGN UP</button>
+              <Link to="sign-up" className="button-s">
+                SIGN UP
+              </Link>
             </div>
             <div className="title-and-message">
               <h1 className="title-login">Sing in to Eventio.</h1>

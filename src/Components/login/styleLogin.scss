@@ -8,9 +8,9 @@ $font-color: rgb(150, 157, 166);
   position: absolute;
   margin-top: -680px;
   margin-left: 700px;
-  width: 300px;
+  width: 180px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -20,9 +20,9 @@ $font-color: rgb(150, 157, 166);
 }
 
 .button-s {
-  border: none;
+  text-decoration: none;
   background-color: white;
-  color: $font-color;
+  color: rgb(66, 66, 66);
   font-weight: 300;
   font-size: 14px;
 }
