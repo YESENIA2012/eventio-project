@@ -1,0 +1,86 @@
+$font-color: rgb(150, 157, 166);
+
+.sign-up {
+  display: flex;
+  flex-direction: row;
+}
+
+.section-sign-up {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 70%;
+  align-items: center;
+}
+
+.login-link {
+  position: absolute;
+  margin-top: -680px;
+  margin-left: 700px;
+  width: 230px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.login-link span {
+  font-size: 14px;
+  color: $font-color;
+}
+
+.link-l {
+  text-decoration: none;
+  background-color: white;
+  color: rgb(66, 66, 66);
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.link-l:hover {
+  cursor: pointer;
+}
+
+.title-and-message {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+}
+
+.title-sign-up {
+  font-weight: 900;
+  font-size: 23px;
+}
+
+.message-sign-up {
+  margin-top: -10px;
+  font-size: 14px;
+  color: $font-color;
+}
+
+.form-sign-up {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  margin-top: 20px;
+}
+
+.textfield-label {
+  font-size: 14px !important;
+  color: $font-color !important;
+}
+
+.botton-sign-up {
+  width: 50%;
+  height: 46px;
+}
+
+.form-sign-up .botton-sign-up {
+  margin: 40px auto;
+  width: 40%;
+  color: white;
+  background-color: rgb(100, 207, 140);
+}
+
+.form-sign-up .botton-sign-up:hover {
+  background-color: rgb(100, 207, 140);
+}
