@@ -21,6 +21,7 @@ const SignUp = () => {
   //hooks
   const [intoDashboard, setIntoDashboard] = useState(false);
   const [textAvatar, setTextAvatar] = useState("");
+  const [userName, setUserName] = useState("");
   const { classes } = styles();
   //functions
   const signUpFunction = (e) => {
@@ -32,18 +33,20 @@ const SignUp = () => {
     let lastName = document.querySelector("#LastName").value;
     let firsLetterName = name[0];
     let firstLetterLastName = lastName[0];
-    let letterAvatar = firsLetterName + firstLetterLastName;
+    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+    let userName = `${name} ${lastName}`;
 
-    if (password === repeatPassword) {
+    if (password === repeatPassword && password !== "") {
       intoDasboardSet = true;
     }
 
     setIntoDashboard(intoDasboardSet);
     setTextAvatar(letterAvatar);
+    setUserName(userName);
   };
 
   if (intoDashboard) {
-    return <DashboardComponent textAvatar={textAvatar} />;
+    return <DashboardComponent textAvatar={textAvatar} userName={userName} />;
   } else {
     return (
       <Fragment>
