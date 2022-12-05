@@ -1,6 +1,6 @@
 const eventsInformation = [
   {
-    id: 1,
+    id: 0,
     dateAndTime: "April 4, 2017 – 2:17 PM",
     nameEvent: "How to get angry",
     host: "Tom Watts",
@@ -9,7 +9,7 @@ const eventsInformation = [
     buttonEvent: "EDIT",
   },
   {
-    id: 2,
+    id: 1,
     dateAndTime: "April 4, 2017 – 2:17 PM",
     nameEvent: "Mexican party vol.2",
     host: "Matilda Daniels",
@@ -18,7 +18,7 @@ const eventsInformation = [
     buttonEvent: "JOIN",
   },
   {
-    id: 3,
+    id: 2,
     dateAndTime: "April 4, 2017 – 2:17 PM",
     nameEvent: "How to become Dark Soldier",
     host: "Bill Soto",
@@ -28,7 +28,7 @@ const eventsInformation = [
     buttonEvent: "JOIN",
   },
   {
-    id: 4,
+    id: 3,
     dateAndTime: "April 4, 2017 – 2:17 PM",
     nameEvent: "Parkour lesson",
     host: "Johnny Erickson",
@@ -37,7 +37,7 @@ const eventsInformation = [
     buttonEvent: "JOIN",
   },
   {
-    id: 5,
+    id: 4,
     dateAndTime: "April 4, 2017 – 2:17 PM",
     nameEvent: "Party in Asgard",
     host: "Ivan Wong",
@@ -46,7 +46,7 @@ const eventsInformation = [
     buttonEvent: "LEAVE",
   },
   {
-    id: 6,
+    id: 5,
     dateAndTime: "April 4, 2017 – 2:17 PM",
     nameEvent: "Russian lesson",
     host: "Herman Ray",

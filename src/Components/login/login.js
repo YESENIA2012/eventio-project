@@ -23,7 +23,7 @@ const Login = () => {
   // hooks
   const [messageSignIn, setMessageSignIn] = useState({
     text: "Enter your detalls below.",
-    mesaggeColor: { color: "rgb(150, 157, 166)" },
+    messageColor: { color: "rgb(150, 157, 166)" },
     borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -34,7 +34,7 @@ const Login = () => {
   const changeMessage = () => {
     setMessageSignIn({
       text: "Oops! That email and password combination is not valid.",
-      mesaggeColor: { color: "rgb(237, 85, 151)" },
+      messageColor: { color: "rgb(237, 85, 151)" },
       borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
     });
   };
@@ -78,7 +78,7 @@ const Login = () => {
             </nav>
             <div className="title-and-message">
               <h1 className="title-login">Sing in to Eventio.</h1>
-              <p className="message-login" style={messageSignIn.mesaggeColor}>
+              <p className="message-login" style={messageSignIn.messageColor}>
                 {messageSignIn.text}
               </p>
             </div>
