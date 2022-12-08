@@ -1,16 +1,33 @@
 $font-color: rgb(150, 157, 166);
 $event-container-color: rgb(255, 255, 255);
+$justify-content-center: center;
+$justify-content-end: end;
+$justify-content-space-between: space-between;
+$direction-element: column;
+
+@mixin display-type($direction-element) {
+  display: flex;
+  flex-direction: $direction-element;
+}
+
+@mixin align-element-with-flex($justify-content-center) {
+  display: flex;
+  justify-content: $justify-content-center;
+  align-items: center;
+}
+
+@mixin style-font {
+  color: $font-color;
+  font-size: 13px;
+}
 
 .event-container {
-  display: flex;
-  flex-direction: column;
+  @include display-type($direction-element);
   height: auto;
   background-color: rgb(249, 249, 251);
 
   .user-name-container {
-    display: flex;
-    justify-content: end;
-    align-items: center;
+    @include align-element-with-flex($justify-content-end);
     width: 100%;
     height: 80px;
 
@@ -20,9 +37,7 @@ $event-container-color: rgb(255, 255, 255);
     }
 
     .back-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include align-element-with-flex($justify-content-center);
       width: 70%;
 
       span {
@@ -41,55 +56,49 @@ $event-container-color: rgb(255, 255, 255);
 }
 
 .nav-icon-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  @include align-element-with-flex($justify-content-space-between);
   margin: auto;
   width: 81%;
   margin-bottom: 10px;
-}
 
-.nav-container {
-  font-size: 14px;
-  display: flex;
-  width: 300px;
+  .nav-link-container {
+    display: flex;
+    font-size: 14px;
+    width: 300px;
+  }
+
+  .link-1 {
+    width: 70px;
+  }
+
+  .link-2 {
+    width: 95px;
+  }
+
+  .link-3 {
+    width: 70px;
+  }
+
+  .link-1,
+  .link-2,
+  .link-3 {
+    text-decoration: none;
+    color: $font-color;
+  }
 }
 
 .container-dashboard-hidden {
   opacity: 0;
 }
 
-.link-1 {
-  width: 70px;
-}
-
-.link-2 {
-  width: 95px;
-}
-
-.link-3 {
-  width: 70px;
-}
-
-.link-1,
-.link-2,
-.link-3 {
-  text-decoration: none;
-  color: $font-color;
-}
-
 .box-event-view-row {
-  display: flex;
+  @include align-element-with-flex($justify-content-center);
   flex-flow: wrap;
-  justify-content: center;
-  align-items: center;
   width: 95%;
   margin: auto;
 
   .element {
-    display: flex;
-    flex-direction: column;
+    @include display-type($direction-element);
     justify-content: space-evenly;
     margin: 6px;
     width: 25%;
@@ -100,9 +109,7 @@ $event-container-color: rgb(255, 255, 255);
     background-color: $event-container-color;
 
     .date-time {
-      color: rgb(202, 205, 210);
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
@@ -115,31 +122,25 @@ $event-container-color: rgb(255, 255, 255);
     .p-host {
       margin-top: 0;
       font-weight: bolder;
-      color: rgb(95, 100, 110);
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
     .description-event {
       width: 180px;
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
     .attendees {
       display: flex;
       align-items: center;
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
     .button-span-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      @include align-element-with-flex($justify-content-space-between);
     }
 
     .button-event:hover {
@@ -153,17 +154,14 @@ $event-container-color: rgb(255, 255, 255);
 }
 
 .box-event-view-column {
-  display: flex;
-  flex-direction: column;
+  @include display-type($direction-element);
   align-items: center;
   margin: 10px auto 60px auto;
   width: 80%;
 
   .element-column {
-    display: flex;
-    align-items: center;
+    @include align-element-with-flex($justify-content-space-between);
     margin-bottom: 10px;
-    justify-content: space-between;
     padding: 5px 18px 5px 18px;
     height: 50px;
     width: 100%;
@@ -185,22 +183,18 @@ $event-container-color: rgb(255, 255, 255);
 
     .p-host {
       width: 100px;
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
     .description-event {
       width: 250px;
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
     .button-span-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      @include align-element-with-flex($justify-content-space-between);
 
       span {
         height: 40px;
@@ -209,8 +203,7 @@ $event-container-color: rgb(255, 255, 255);
 
     .attendees {
       width: 120px;
-      font-size: 13px;
-      color: $font-color;
+      @include style-font;
       font-weight: 400;
     }
 
@@ -237,9 +230,7 @@ $event-container-color: rgb(255, 255, 255);
 }
 
 .icon-add-container {
-  display: flex;
-  justify-content: end;
-  align-items: center;
+  @include align-element-with-flex($justify-content-end);
   margin: 30px 50px 0 0;
 
   .icon-add {

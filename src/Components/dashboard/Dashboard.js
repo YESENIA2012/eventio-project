@@ -107,7 +107,7 @@ const DashboardComponent = (props) => {
         }
       >
         <div className="nav-icon-container">
-          <nav className="nav-container">
+          <nav className="nav-link-container">
             <Link to="dashboard" className="link-1">
               All events
             </Link>
