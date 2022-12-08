@@ -8,37 +8,16 @@ import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import eventsInformation from "../../utils";
+import { mockedEvents } from "../../utils";
 import EventClickedComponent from "../eventClicked/EventClcked";
 import "./dashboardStyles.scss";
 
 const DashboardComponent = (props) => {
   const { textAvatar, userName } = props;
-  //Hooks
   const [viewEvents, setViewEvents] = useState(true);
   const [eventClicked, setEventClicked] = useState("");
   const [hiddenDashboard, setHiddenDashboard] = useState(false);
-
-  //functions
-  const changeViewEventsToColumn = () => {
-    setViewEvents(false);
-  };
-
-  const changeViewEventsToRow = () => {
-    setViewEvents(true);
-  };
-
-  const handleButtonEvent = (e) => {
-    let textButton = e.target.innerText;
-
-    if (textButton === "EDIT") {
-      console.log("Editar el evento");
-    } else if (textButton === "JOIN") {
-      e.target.innerText = "LEAVE";
-    } else {
-      e.target.innerText = "JOIN";
-    }
-  };
+  const [events, setEvents] = useState([...mockedEvents]);
 
   const handleEventClicked = (e) => {
     let hiddenDashboard = false;
@@ -48,8 +27,9 @@ const DashboardComponent = (props) => {
     let elementClickedId = Number(eventId[1]);
 
     if (
-      elementClassName === undefined ||
-      eventsInformation[elementClickedId] === undefined
+      elementClickedId === undefined ||
+      isNaN(elementClickedId) ||
+      elementClickedId === ""
     ) {
       return;
     } else {
@@ -58,14 +38,25 @@ const DashboardComponent = (props) => {
 
     setHiddenDashboard(hiddenDashboard);
     setEventClicked(elementClickedId);
-    console.log(eventClicked);
   };
 
   const changeToDashboard = () => {
     setHiddenDashboard(false);
   };
 
-  const items = eventsInformation.map((element, index) => {
+  const items = events.map((element, index) => {
+    const handleButtonEvent = (e) => {
+      let textButton = e.target.innerText;
+
+      if (textButton === "EDIT") {
+        console.log("Editar el evento");
+      } else if (textButton === "JOIN") {
+        e.target.innerText = "LEAVE";
+      } else {
+        e.target.innerText = "JOIN";
+      }
+    };
+
     return (
       <div
         key={index}
@@ -74,7 +65,7 @@ const DashboardComponent = (props) => {
             ? `element-${index} element`
             : `element-${index} element-column`
         }
-        onClick={handleEventClicked}
+        onClick={(e) => handleEventClicked(e)}
       >
         <spam className="date-time">{element.dateAndTime}</spam>
         <h4 className="title-event">{element.nameEvent}</h4>
@@ -99,7 +90,7 @@ const DashboardComponent = (props) => {
 
   return (
     <div className="event-container">
-      <section className="user-name">
+      <section className="user-name-container">
         <div
           className={hiddenDashboard ? "back-button" : "back-button-hidden"}
           onClick={changeToDashboard}
@@ -108,7 +99,7 @@ const DashboardComponent = (props) => {
           <span>Back to events</span>
         </div>
         <Avatar>{textAvatar}</Avatar>
-        <span className="username">{userName}</span>
+        <span className="user-name-text">{userName}</span>
       </section>
       <div
         className={
@@ -128,8 +119,16 @@ const DashboardComponent = (props) => {
             </Link>
           </nav>
           <div className="view-icon">
-            <ViewModuleIcon onClick={changeViewEventsToRow} />
-            <ViewStreamIcon onClick={changeViewEventsToColumn} />
+            <ViewModuleIcon
+              onClick={() => {
+                setViewEvents(true);
+              }}
+            />
+            <ViewStreamIcon
+              onClick={() => {
+                setViewEvents(false);
+              }}
+            />
           </div>
         </div>
         <div

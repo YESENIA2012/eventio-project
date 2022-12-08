@@ -1,18 +1,11 @@
 import { Avatar, Button } from "@mui/material";
-import { useState } from "react";
-import eventsInformation from "../../utils";
+import { mockedEvents } from "../../utils";
 import "./dashboardStyles.scss";
 
 const DashboardComponent2 = (props) => {
-  console.log(props.textAvatar);
-
-  const items = eventsInformation.map((element, index) => {
+  const items = mockedEvents.map((element, index) => {
     return (
-      <div
-        key={index}
-        className={`element-${index} element`}
-        /* onClick={this.handleElementsClick}  */ //colocar el onclick en el button
-      >
+      <div key={index} className={`element-${index} element`}>
         <spam className="date-time">{element.dateAndTime}</spam>
         <h4 className="title-event">{element.nameEvent}</h4>
         <p className="p-host">{element.host}</p>

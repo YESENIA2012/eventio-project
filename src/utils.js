@@ -1,4 +1,4 @@
-const eventsInformation = [
+const mockedEvents = [
   {
     id: 0,
     dateAndTime: "April 4, 2017 – 2:17 PM",
@@ -56,4 +56,4 @@ const eventsInformation = [
   },
 ];
 
-export default eventsInformation;
+export { mockedEvents };

@@ -1,33 +1,35 @@
 import PersonIcon from "@mui/icons-material/Person";
 
 import "./eventClickedStyles.scss";
-import eventsInformation from "../../utils";
+import { mockedEvents } from "../../utils";
 
 const EventClickedComponent = (props) => {
   const { eventClicked, hiddenEventsList } = props;
 
   const drawEvent = () => {
-    let eventToDraw = eventClicked;
+    console.log(eventClicked);
 
-    if (eventToDraw === undefined) {
+    if (
+      eventClicked === undefined ||
+      isNaN(eventClicked) ||
+      eventClicked === ""
+    ) {
       return;
     } else {
       return (
         <div className="container">
           <div className="information-event">
             <span className="time">
-              {eventsInformation[eventToDraw].dateAndTime}
+              {mockedEvents[eventClicked].dateAndTime} yesenia
             </span>
-            <h1 className="title">
-              {eventsInformation[eventToDraw].nameEvent}
-            </h1>
-            <p className="host-e">{eventsInformation[eventToDraw].host}</p>
+            <h1 className="title">{mockedEvents[eventClicked].nameEvent}</h1>
+            <p className="host-e">{mockedEvents[eventClicked].host}</p>
             <p className="description-event-e">
-              {eventsInformation[eventToDraw].descriptionEvent}
+              {mockedEvents[eventClicked].descriptionEvent}
             </p>
             <div className="attendees-e">
               <PersonIcon />
-              <span>{eventsInformation[eventToDraw].attendees}</span>
+              <span>{mockedEvents[eventClicked].attendees}</span>
             </div>
           </div>
           <div className="name-attendees">Attendees</div>
