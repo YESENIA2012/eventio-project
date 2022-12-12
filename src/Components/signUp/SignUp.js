@@ -18,29 +18,56 @@ const styles = makeStyles()((theme) => {
 });
 
 const SignUp = () => {
-  //hooks
   const [intoDashboard, setIntoDashboard] = useState(false);
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const { classes } = styles();
-  //functions
-  const signUpFunction = (e) => {
-    let intoDasboardSet = false;
+
+  const enterDashboardFunction = (e) => {
     e.preventDefault();
-    let password = document.querySelector("#Password").value;
-    let repeatPassword = document.querySelector("#repeatPassword").value;
+    let intoDasboardSet = false;
     let name = document.querySelector("#Name").value;
     let lastName = document.querySelector("#LastName").value;
-    let firsLetterName = name[0];
-    let firstLetterLastName = lastName[0];
-    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-    let userName = `${name} ${lastName}`;
+    let password = document.querySelector("#Password").value;
+    let repeatPassword = document.querySelector("#repeatPassword").value;
+    let email = document.querySelector("#email").value;
 
     if (password === repeatPassword && password !== "") {
       intoDasboardSet = true;
     }
 
+    saveInformationUser(name, lastName, email, password);
     setIntoDashboard(intoDasboardSet);
+  };
+
+  const saveInformationUser = (name, lastName, email, password) => {
+    let arrayInformationUser = [];
+
+    let item = {
+      name: name,
+      lastName: lastName,
+      email: email,
+      password: password,
+    };
+
+    arrayInformationUser.unshift(item);
+
+    localStorage.setItem(
+      "userInformation",
+      JSON.stringify(arrayInformationUser)
+    );
+
+    drawTextAvatarAndNameUser();
+  };
+
+  const drawTextAvatarAndNameUser = () => {
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
+    let firsLetterName = informationUser[0].name[0];
+    let firstLetterLastName = informationUser[0].lastName[0];
+    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+    let userName = `${informationUser[0].name} ${informationUser[0].lastName}`;
+
     setTextAvatar(letterAvatar);
     setUserName(userName);
   };
@@ -53,12 +80,15 @@ const SignUp = () => {
         <div className="sign-up">
           <Image />
           <section className="section-sign-up">
-            <nav className="login-link">
-              <span>Already have an account?</span>
-              <Link to="/" className="link-l">
-                SIGN IN
-              </Link>
-            </nav>
+            <div className="login-container-nav">
+              <nav className="login-link">
+                <span>Already have an account?</span>
+                <Link to="/" className="link-l">
+                  SIGN IN
+                </Link>
+              </nav>
+            </div>
+
             <div className="title-and-message">
               <h1 className="title-sign-up">Get started absolutely free.</h1>
               <p className="message-sign-up">Enter your details below.</p>
@@ -132,7 +162,10 @@ const SignUp = () => {
                 }}
                 InputProps={{ disableUnderline: true }}
               ></TextField>
-              <Button className="botton-sign-up" onClick={signUpFunction}>
+              <Button
+                className="botton-sign-up"
+                onClick={enterDashboardFunction}
+              >
                 SIGN UP
               </Button>
             </form>

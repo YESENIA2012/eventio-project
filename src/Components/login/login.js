@@ -19,8 +19,7 @@ const styles = makeStyles()((theme) => {
   };
 });
 
-const Login = () => {
-  // hooks
+const Login = (props) => {
   const [messageSignIn, setMessageSignIn] = useState({
     text: "Enter your detalls below.",
     messageColor: { color: "rgb(150, 157, 166)" },
@@ -28,9 +27,11 @@ const Login = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [intoDashboard, setIntoDashboard] = useState(false);
+  const [textAvatar, setTextAvatar] = useState("");
+  const [userName, setUserName] = useState("");
+
   const { classes } = styles();
 
-  //funtions
   const changeMessage = () => {
     setMessageSignIn({
       text: "Oops! That email and password combination is not valid.",
@@ -49,33 +50,52 @@ const Login = () => {
     let emailInfo = document.querySelector("#Email").value;
     let passwordInfo = document.querySelector("#Password").value;
 
-    if (emailInfo !== "gyesenia173@gmail.com" || passwordInfo !== "dilan") {
-      changeMessage();
-    } else if (
-      emailInfo === "gyesenia173@gmail.com" &&
-      passwordInfo === "dilan"
-    ) {
-      intoDisboardSet = true;
-      console.log("inicio sessión");
-    }
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
+    informationUser.forEach((element) => {
+      if (element.email !== emailInfo || element.password !== passwordInfo) {
+        changeMessage();
+      } else if (
+        emailInfo === element.email &&
+        passwordInfo === element.password
+      ) {
+        intoDisboardSet = true;
+      }
+    });
 
     setIntoDashboard(intoDisboardSet);
+    paintAvatarAndName();
+  };
+
+  const paintAvatarAndName = () => {
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
+    let firsLetterName = informationUser[0].name[0];
+    let firstLetterLastName = informationUser[0].lastName[0];
+    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+    let userName = `${informationUser[0].name} ${informationUser[0].lastName}`;
+
+    setTextAvatar(letterAvatar);
+    setUserName(userName);
   };
 
   if (intoDashboard) {
-    return <DashboardComponent />;
+    return <DashboardComponent textAvatar={textAvatar} userName={userName} />;
   } else {
     return (
       <Fragment>
         <div className="login">
           <Image />
           <section className="section-login">
-            <nav className="sign-in-link">
-              <span>Don’t have account?</span>
-              <Link to="sign-up" className="link-s">
-                SIGN UP
-              </Link>
-            </nav>
+            <div className="nav-container">
+              <nav className="sign-in-link">
+                <span>Don’t have account?</span>
+                <Link to="sign-up" className="link-s">
+                  SIGN UP
+                </Link>
+              </nav>
+            </div>
+
             <div className="title-and-message">
               <h1 className="title-login">Sing in to Eventio.</h1>
               <p className="message-login" style={messageSignIn.messageColor}>

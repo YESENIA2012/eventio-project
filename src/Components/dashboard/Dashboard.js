@@ -9,7 +9,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import { mockedEvents } from "../../utils";
-import EventClickedComponent from "../eventClicked/EventClcked";
+import DetailEvent from "../eventClicked/DetailEvent";
 import "./dashboardStyles.scss";
 
 const DashboardComponent = (props) => {
@@ -38,10 +38,6 @@ const DashboardComponent = (props) => {
 
     setHiddenDashboard(hiddenDashboard);
     setEventClicked(elementClickedId);
-  };
-
-  const changeToDashboard = () => {
-    setHiddenDashboard(false);
   };
 
   const items = events.map((element, index) => {
@@ -93,7 +89,9 @@ const DashboardComponent = (props) => {
       <section className="user-name-container">
         <div
           className={hiddenDashboard ? "back-button" : "back-button-hidden"}
-          onClick={changeToDashboard}
+          onClick={() => {
+            setHiddenDashboard(false);
+          }}
         >
           <ArrowBackIcon />
           <span>Back to events</span>
@@ -144,7 +142,7 @@ const DashboardComponent = (props) => {
         </div>
       </div>
 
-      <EventClickedComponent
+      <DetailEvent
         eventClicked={eventClicked}
         hiddenEventsList={hiddenDashboard}
       />

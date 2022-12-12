@@ -1,93 +1,89 @@
-$font-color: rgb(150, 157, 166);
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
 .login {
-  display: flex;
-  flex-direction: row;
+  @include styleFile.display-type(row);
+
+  .section-login {
+    @include styleFile.align-element-with-flex(center);
+    flex-direction: column;
+    width: 70%;
+  }
 }
 
-.section-login {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 70%;
-  align-items: center;
-}
-
-.sign-in-link {
+.nav-container {
+  @include styleFile.align-element-with-flex(end);
   position: absolute;
   margin-top: -680px;
-  margin-left: 700px;
-  width: 180px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
+  width: 70%;
+  margin-right: 50px;
 
-.sign-in-link span {
-  font-size: 14px;
-  color: $font-color;
-}
+  .sign-in-link {
+    @include styleFile.align-element-with-flex(space-around);
+    width: 180px;
 
-.link-s {
-  text-decoration: none;
-  background-color: white;
-  color: rgb(66, 66, 66);
-  font-weight: 300;
-  font-size: 14px;
-}
+    span {
+      @include styleFile.style-font(14px);
+    }
 
-.link-s:hover {
-  cursor: pointer;
+    .link-s {
+      text-decoration: none;
+      background-color: white;
+      color: rgb(66, 66, 66);
+      font-weight: 300;
+      font-size: 14px;
+    }
+
+    .link-s:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .title-and-message {
-  display: flex;
-  flex-direction: column;
+  @include styleFile.display-type(column);
   width: 45%;
-}
 
-.title-login {
-  font-weight: 900;
-  font-size: 23px;
-}
+  .title-login {
+    font-weight: 900;
+    font-size: 23px;
+  }
 
-.message-login {
-  margin-top: -10px;
-  font-size: 14px;
-  font-weight: bold;
+  .message-login {
+    margin-top: -10px;
+    font-size: 14px;
+    font-weight: bold;
+  }
 }
 
 .form-login {
-  display: flex;
+  @include styleFile.display-type(column);
   flex-direction: column;
   width: 45%;
   margin-top: 20px;
-}
 
-.textfield-label {
-  font-size: 14px !important;
-  color: $font-color !important;
-}
+  .textfield-label {
+    font-size: 14px !important;
+    color: styleFile.$color-gray !important;
+  }
 
-.icon-visibility {
-  color: rgb(224, 227, 230);
-}
+  .icon-visibility {
+    color: rgb(224, 227, 230);
+  }
 
-.icon-visibility:hover {
-  cursor: pointer;
-}
+  .icon-visibility:hover {
+    cursor: pointer;
+  }
 
-.botton-login {
-  width: 50%;
-  height: 46px;
-}
+  .botton-login {
+    width: 50%;
+    height: 46px;
+    margin-top: 40px;
+    width: 40%;
+    color: white;
+    background-color: styleFile.$background-color-button;
+  }
 
-.form-login .botton-login {
-  margin: 40px auto;
-  width: 40%;
-  color: white;
-  background-color: rgb(100, 207, 140);
-}
-
-.form-login .botton-login:hover {
-  background-color: rgb(100, 207, 140);
+  .botton-login:hover {
+    background-color: styleFile.$background-color-button;
+  }
 }

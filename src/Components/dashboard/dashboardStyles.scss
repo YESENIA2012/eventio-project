@@ -1,33 +1,12 @@
-$font-color: rgb(150, 157, 166);
-$event-container-color: rgb(255, 255, 255);
-$justify-content-center: center;
-$justify-content-end: end;
-$justify-content-space-between: space-between;
-$direction-element: column;
-
-@mixin display-type($direction-element) {
-  display: flex;
-  flex-direction: $direction-element;
-}
-
-@mixin align-element-with-flex($justify-content-center) {
-  display: flex;
-  justify-content: $justify-content-center;
-  align-items: center;
-}
-
-@mixin style-font {
-  color: $font-color;
-  font-size: 13px;
-}
+@use "../../styles/mixinAndVariables.scss" as styleFile;
 
 .event-container {
-  @include display-type($direction-element);
+  @include styleFile.display-type(column);
   height: auto;
   background-color: rgb(249, 249, 251);
 
   .user-name-container {
-    @include align-element-with-flex($justify-content-end);
+    @include styleFile.align-element-with-flex(end);
     width: 100%;
     height: 80px;
 
@@ -37,7 +16,7 @@ $direction-element: column;
     }
 
     .back-button {
-      @include align-element-with-flex($justify-content-center);
+      @include styleFile.align-element-with-flex(center);
       width: 70%;
 
       span {
@@ -56,7 +35,7 @@ $direction-element: column;
 }
 
 .nav-icon-container {
-  @include align-element-with-flex($justify-content-space-between);
+  @include styleFile.align-element-with-flex(space-between);
   margin: auto;
   width: 81%;
   margin-bottom: 10px;
@@ -83,7 +62,7 @@ $direction-element: column;
   .link-2,
   .link-3 {
     text-decoration: none;
-    color: $font-color;
+    color: styleFile.$color-gray;
   }
 }
 
@@ -92,59 +71,55 @@ $direction-element: column;
 }
 
 .box-event-view-row {
-  @include align-element-with-flex($justify-content-center);
+  @include styleFile.align-element-with-flex(center);
   flex-flow: wrap;
   width: 95%;
-  margin: auto;
+  margin: auto auto 30px auto;
 
   .element {
-    @include display-type($direction-element);
+    @include styleFile.display-type(column);
     justify-content: space-evenly;
     margin: 6px;
     width: 25%;
     height: 200px;
-    border: 1px solid rgba(218, 222, 227, 0.5);
     padding: 20px;
-    box-shadow: 0 1px 1px rgba(229, 232, 236, 0.5);
-    background-color: $event-container-color;
+    @include styleFile.border-background-events-element;
 
     .date-time {
-      @include style-font;
-      font-weight: 400;
+      @include styleFile.style-font(13px);
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .title-event {
       margin-bottom: 0;
-      font-weight: bolder;
-      color: rgb(0, 2, 5);
+      font-weight: styleFile.$font-weigth-bolder;
     }
 
     .p-host {
       margin-top: 0;
-      font-weight: bolder;
-      @include style-font;
-      font-weight: 400;
+      font-weight: styleFile.$font-weigth-bolder;
+      @include styleFile.style-font(13px);
     }
 
     .description-event {
       width: 180px;
-      @include style-font;
-      font-weight: 400;
+      @include styleFile.style-font(13px);
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .attendees {
       display: flex;
       align-items: center;
-      @include style-font;
-      font-weight: 400;
+      @include styleFile.style-font(13px);
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .button-span-container {
-      @include align-element-with-flex($justify-content-space-between);
+      @include styleFile.align-element-with-flex(space-between);
     }
 
     .button-event:hover {
-      background-color: rgb(100, 207, 140);
+      background-color: styleFile.$background-color-button;
     }
   }
 
@@ -154,47 +129,45 @@ $direction-element: column;
 }
 
 .box-event-view-column {
-  @include display-type($direction-element);
+  @include styleFile.display-type(column);
   align-items: center;
   margin: 10px auto 60px auto;
   width: 80%;
 
   .element-column {
-    @include align-element-with-flex($justify-content-space-between);
+    @include styleFile.align-element-with-flex(space-between);
     margin-bottom: 10px;
     padding: 5px 18px 5px 18px;
     height: 50px;
     width: 100%;
-    border: 1px solid rgba(218, 222, 227, 0.5);
-    box-shadow: 0 1px 1px rgb(229 232 236 / 50%);
-    background-color: $event-container-color;
+    @include styleFile.border-background-events-element;
 
     .date-time {
-      font-size: 10px;
+      @include styleFile.style-font(10px);
       width: 130px;
-      color: $font-color;
-      font-weight: 400;
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .title-event {
+      /* color: rgb(0, 2, 5); */
       font-size: 14px;
       width: 180px;
     }
 
     .p-host {
       width: 100px;
-      @include style-font;
-      font-weight: 400;
+      @include styleFile.style-font(13px);
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .description-event {
       width: 250px;
-      @include style-font;
-      font-weight: 400;
+      @include styleFile.style-font(13px);
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .button-span-container {
-      @include align-element-with-flex($justify-content-space-between);
+      @include styleFile.align-element-with-flex(space-between);
 
       span {
         height: 40px;
@@ -203,12 +176,12 @@ $direction-element: column;
 
     .attendees {
       width: 120px;
-      @include style-font;
-      font-weight: 400;
+      @include styleFile.style-font(13px);
+      font-weight: styleFile.$font-weigth-400;
     }
 
     .button-event:hover {
-      background-color: rgb(100, 207, 140);
+      background-color: styleFile.$background-color-button;
     }
   }
 
@@ -225,12 +198,12 @@ $direction-element: column;
 .element-column .button-event {
   width: 100px;
   height: 30px;
-  background-color: rgb(100, 207, 140);
+  background-color: styleFile.$background-color-button;
   font-weight: bold;
 }
 
 .icon-add-container {
-  @include align-element-with-flex($justify-content-end);
+  @include styleFile.align-element-with-flex(end);
   margin: 30px 50px 0 0;
 
   .icon-add {

@@ -1,86 +1,79 @@
-$font-color: rgb(150, 157, 166);
+@use "../../styles/mixinAndVariables.scss" as styleFile;
 
 .sign-up {
-  display: flex;
-  flex-direction: row;
+  @include styleFile.display-type(row);
 }
 
 .section-sign-up {
-  display: flex;
+  @include styleFile.align-element-with-flex(center);
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 70%;
 }
 
-.login-link {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
+.login-container-nav {
+  @include styleFile.align-element-with-flex(end);
   position: absolute;
   margin-top: -680px;
-  margin-left: 700px;
-  width: 230px;
-}
+  width: 70%;
+  margin-right: 50px;
 
-.login-link span {
-  font-size: 14px;
-  color: $font-color;
-}
+  .login-link {
+    @include styleFile.align-element-with-flex(space-around);
+    width: 230px;
 
-.link-l {
-  text-decoration: none;
-  background-color: white;
-  color: rgb(66, 66, 66);
-  font-weight: 300;
-  font-size: 14px;
-}
+    span {
+      @include styleFile.style-font(14px);
+    }
 
-.link-l:hover {
-  cursor: pointer;
+    .link-l {
+      text-decoration: none;
+      background-color: white;
+      color: rgb(66, 66, 66);
+      font-weight: 300;
+      font-size: 14px;
+    }
+
+    .link-l:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .title-and-message {
-  display: flex;
-  flex-direction: column;
+  @include styleFile.display-type(column);
   width: 45%;
-}
 
-.title-sign-up {
-  font-weight: 900;
-  font-size: 23px;
-}
+  .title-sign-up {
+    font-weight: 900;
+    font-size: 23px;
+  }
 
-.message-sign-up {
-  margin-top: -10px;
-  font-size: 14px;
-  color: $font-color;
+  .message-sign-up {
+    @include styleFile.style-font(14px);
+    margin-top: -10px;
+  }
 }
 
 .form-sign-up {
-  display: flex;
-  flex-direction: column;
+  @include styleFile.display-type(column);
   width: 45%;
   margin-top: 20px;
-}
 
-.textfield-label {
-  font-size: 14px !important;
-  color: $font-color !important;
-}
+  .textfield-label {
+    font-size: 14px !important;
+    color: styleFile.$color-gray !important;
+  }
 
-.botton-sign-up {
-  width: 50%;
-  height: 46px;
-}
+  .botton-sign-up {
+    width: 50%;
+    height: 46px;
+    margin-top: 40px;
+    width: 40%;
+    color: white;
+    background-color: styleFile.$background-color-button;
+  }
 
-.form-sign-up .botton-sign-up {
-  margin: 40px auto;
-  width: 40%;
-  color: white;
-  background-color: rgb(100, 207, 140);
-}
-
-.form-sign-up .botton-sign-up:hover {
-  background-color: rgb(100, 207, 140);
+  .botton-sign-up:hover {
+    background-color: styleFile.$background-color-button;
+  }
 }

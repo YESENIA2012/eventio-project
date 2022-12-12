@@ -1,14 +1,12 @@
 import PersonIcon from "@mui/icons-material/Person";
 
-import "./eventClickedStyles.scss";
+import "./detailEventStyle.scss";
 import { mockedEvents } from "../../utils";
 
-const EventClickedComponent = (props) => {
+const DetailEvent = (props) => {
   const { eventClicked, hiddenEventsList } = props;
 
   const drawEvent = () => {
-    console.log(eventClicked);
-
     if (
       eventClicked === undefined ||
       isNaN(eventClicked) ||
@@ -17,11 +15,11 @@ const EventClickedComponent = (props) => {
       return;
     } else {
       return (
-        <div className="container">
+        <div className="container-event">
           <div className="information-event">
-            <span className="time">
+            <p className="time">
               {mockedEvents[eventClicked].dateAndTime} yesenia
-            </span>
+            </p>
             <h1 className="title">{mockedEvents[eventClicked].nameEvent}</h1>
             <p className="host-e">{mockedEvents[eventClicked].host}</p>
             <p className="description-event-e">
@@ -48,4 +46,4 @@ const EventClickedComponent = (props) => {
   );
 };
 
-export default EventClickedComponent;
+export default DetailEvent;

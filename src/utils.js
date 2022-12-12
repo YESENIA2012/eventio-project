@@ -56,4 +56,6 @@ const mockedEvents = [
   },
 ];
 
+localStorage.setItem("Events", JSON.stringify(mockedEvents));
+
 export { mockedEvents };
