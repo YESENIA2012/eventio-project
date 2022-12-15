@@ -6,32 +6,3 @@ body {
 .App {
   color: black;
 }
-
-$color-gray: rgb(150, 157, 166);
-$event-container-color: rgb(255, 255, 255);
-$direction-element: column;
-$font-weigth-400: 400;
-$font-weigth-bolder: bolder;
-$background-color-button: rgb(100, 207, 140);
-
-@mixin border-background-events-element {
-  border: 1px solid rgba(218, 222, 227, 0.5);
-  box-shadow: 0 1px 1px rgba(229, 232, 236, 0.5);
-  background-color: $event-container-color;
-}
-
-@mixin display-type($direction-element) {
-  display: flex;
-  flex-direction: $direction-element;
-}
-
-@mixin align-element-with-flex($justify) {
-  display: flex;
-  justify-content: $justify;
-  align-items: center;
-}
-
-@mixin style-font($font-size-v) {
-  color: $color-gray;
-  font-size: $font-size-v;
-}
