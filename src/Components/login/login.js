@@ -9,8 +9,6 @@ import { VisibilityOff } from "@mui/icons-material";
 import Image from "../image/ImageContainer";
 import "./styleLogin.scss";
 
-import DashboardComponent from "../dashboard/Dashboard";
-
 const styles = makeStyles()((theme) => {
   return {
     textFieldStyle: {
@@ -47,10 +45,6 @@ const Login = () => {
       messageColor: { color: "rgb(237, 85, 151)" },
       borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
     });
-  };
-
-  const changeShowPassword = () => {
-    setShowPassword(!showPassword);
   };
 
   const logInFunction = (e) => {
@@ -154,12 +148,16 @@ const Login = () => {
                       {showPassword ? (
                         <VisibilityIcon
                           className="icon-visibility"
-                          onClick={changeShowPassword}
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
                         />
                       ) : (
                         <VisibilityOff
                           className="icon-visibility"
-                          onClick={changeShowPassword}
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
                         />
                       )}
                     </InputAdornment>
