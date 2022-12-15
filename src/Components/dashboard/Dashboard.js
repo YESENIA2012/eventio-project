@@ -8,13 +8,11 @@ import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { mockedEventsCopy } from "../../utils";
 import DetailEvent from "../eventClicked/DetailEvent";
 import NewEvent from "../newEvent/NewEvent";
 import "./dashboardStyles.scss";
 
 const DashboardComponent = (props) => {
-  /* const { textAvatar, userName } = props; */
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
@@ -42,7 +40,7 @@ const DashboardComponent = (props) => {
     paintAvatarAndName();
   }, []);
 
-  const handleEventClicked = (e) => {
+  const showDetailEventClicked = (e) => {
     let hiddenDashboard = false;
     let elementClassName = e.target.className;
     let classNamePosition = elementClassName.split(" ");
@@ -84,7 +82,7 @@ const DashboardComponent = (props) => {
             ? `element-${index} element`
             : `element-${index} element-column`
         }
-        onClick={(e) => handleEventClicked(e)}
+        onClick={(e) => showDetailEventClicked(e)}
       >
         <div className="date-time-container">
           <spam className="date">{element.date}</spam>
