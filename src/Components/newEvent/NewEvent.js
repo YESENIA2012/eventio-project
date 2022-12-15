@@ -4,7 +4,6 @@ import { makeStyles } from "tss-react/mui";
 
 import { mockedEventsCopy } from "../../utils";
 import "./newEventStyle.scss";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const styles = makeStyles()((theme) => {
@@ -52,7 +51,6 @@ const NewEvent = () => {
     document.querySelector("#date-event").value = "";
     document.querySelector("#time-event").value = "";
     document.querySelector("#capacity-event").value = "";
-    console.log(mockedEventsCopy);
   };
   return (
     <div className="container-new-event">
