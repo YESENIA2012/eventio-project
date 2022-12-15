@@ -16,7 +16,7 @@ const styles = makeStyles()((theme) => {
     },
   };
 });
-
+//
 const SignUp = () => {
   const [intoDashboard, setIntoDashboard] = useState(false);
   const [textAvatar, setTextAvatar] = useState("");
