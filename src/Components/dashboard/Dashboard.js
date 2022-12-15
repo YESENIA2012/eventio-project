@@ -12,7 +12,7 @@ import DetailEvent from "../eventClicked/DetailEvent";
 import NewEvent from "../newEvent/NewEvent";
 import "./dashboardStyles.scss";
 
-const DashboardComponent = (props) => {
+const DashboardComponent = () => {
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
@@ -21,6 +21,7 @@ const DashboardComponent = (props) => {
   const [eventsList, setEventsList] = useState(
     JSON.parse(localStorage.getItem("Events"))
   );
+
   const [showCreateNewEventCompnent, setShowCreateNewEventCompnent] =
     useState(false);
 
@@ -61,6 +62,9 @@ const DashboardComponent = (props) => {
     setEventClicked(elementClickedId);
   };
 
+  if (eventsList === null) {
+    return;
+  }
   const items = eventsList.map((element, index) => {
     const handleButtonEvent = (e) => {
       let textButton = e.target.innerText;

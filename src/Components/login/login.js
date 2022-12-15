@@ -19,12 +19,13 @@ const styles = makeStyles()((theme) => {
   };
 });
 
-const Login = (props) => {
+const Login = () => {
   const [messageSignIn, setMessageSignIn] = useState({
     text: "Enter your detalls below.",
     messageColor: { color: "rgb(150, 157, 166)" },
     borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [intoDashboard, setIntoDashboard] = useState(false);
   const [textAvatar, setTextAvatar] = useState("");
@@ -32,9 +33,17 @@ const Login = (props) => {
 
   const { classes } = styles();
 
-  const changeMessage = () => {
+  const passwordAndUsernameNotMatchMessage = () => {
     setMessageSignIn({
       text: "Oops! That email and password combination is not valid.",
+      messageColor: { color: "rgb(237, 85, 151)" },
+      borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
+    });
+  };
+
+  const UsernameNotExistMessage = () => {
+    setMessageSignIn({
+      text: "Oops! Username does not exist",
       messageColor: { color: "rgb(237, 85, 151)" },
       borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
     });
@@ -52,16 +61,23 @@ const Login = (props) => {
 
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
 
-    informationUser.forEach((element) => {
-      if (element.email !== emailInfo || element.password !== passwordInfo) {
-        changeMessage();
-      } else if (
-        emailInfo === element.email &&
-        passwordInfo === element.password
-      ) {
-        intoDisboardSet = true;
-      }
-    });
+    if (informationUser === null) {
+      UsernameNotExistMessage();
+      return;
+    } else {
+      informationUser.forEach((element) => {
+        if (element.email !== emailInfo || element.password !== passwordInfo) {
+          passwordAndUsernameNotMatchMessage();
+        } else if (
+          emailInfo === element.email &&
+          passwordInfo === element.password
+        ) {
+          intoDisboardSet = true;
+        } else {
+          UsernameNotExistMessage();
+        }
+      });
+    }
 
     setIntoDashboard(intoDisboardSet);
     paintAvatarAndName();
@@ -151,7 +167,7 @@ const Login = (props) => {
                 }}
               ></TextField>
               <Button
-                className="botton-login"
+                className="button-login"
                 variant="contained"
                 onClick={logInFunction}
               >
