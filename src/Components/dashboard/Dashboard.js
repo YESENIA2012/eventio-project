@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -8,16 +8,39 @@ import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import { mockedEvents } from "../../utils";
+import { mockedEventsCopy } from "../../utils";
 import DetailEvent from "../eventClicked/DetailEvent";
+import NewEvent from "../newEvent/NewEvent";
 import "./dashboardStyles.scss";
 
 const DashboardComponent = (props) => {
-  const { textAvatar, userName } = props;
+  /* const { textAvatar, userName } = props; */
+  const [textAvatar, setTextAvatar] = useState("");
+  const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
   const [eventClicked, setEventClicked] = useState("");
   const [hiddenDashboard, setHiddenDashboard] = useState(false);
-  const [events, setEvents] = useState([...mockedEvents]);
+  const [eventsList, setEventsList] = useState(
+    JSON.parse(localStorage.getItem("Events"))
+  );
+  const [showCreateNewEventCompnent, setShowCreateNewEventCompnent] =
+    useState(false);
+
+  const paintAvatarAndName = () => {
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
+    let firsLetterName = informationUser[0].name[0];
+    let firstLetterLastName = informationUser[0].lastName[0];
+    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+    let userName = `${informationUser[0].name} ${informationUser[0].lastName}`;
+
+    setTextAvatar(letterAvatar);
+    setUserName(userName);
+  };
+
+  useEffect(() => {
+    paintAvatarAndName();
+  }, []);
 
   const handleEventClicked = (e) => {
     let hiddenDashboard = false;
@@ -40,7 +63,7 @@ const DashboardComponent = (props) => {
     setEventClicked(elementClickedId);
   };
 
-  const items = events.map((element, index) => {
+  const items = eventsList.map((element, index) => {
     const handleButtonEvent = (e) => {
       let textButton = e.target.innerText;
 
@@ -63,91 +86,108 @@ const DashboardComponent = (props) => {
         }
         onClick={(e) => handleEventClicked(e)}
       >
-        <spam className="date-time">{element.dateAndTime}</spam>
+        <div className="date-time-container">
+          <spam className="date">{element.date}</spam>
+          <span className="dash">-</span>
+          <spam className="time">{element.time}</spam>
+        </div>
         <h4 className="title-event">{element.nameEvent}</h4>
         <p className="p-host">{element.host}</p>
         <p className="description-event">{element.descriptionEvent}</p>
-        <div className="button-span-container">
+        <div className="button-attendees-capacity-container ">
           <span className="attendees">
-            <PersonIcon className={viewEvents ? "" : "icon-hide"} />
+            <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
             <span>{element.attendees}</span>
+            <span className="of-text">of</span>
+            <span>{element.capacity}</span>
           </span>
           <Button
             variant="contained"
             className="button-event"
             onClick={handleButtonEvent}
           >
-            {element.buttonEvent}
+            {element.stateEvent}
           </Button>
         </div>
       </div>
     );
   });
 
-  return (
-    <div className="event-container">
-      <section className="user-name-container">
+  if (showCreateNewEventCompnent) {
+    return <NewEvent />;
+  } else {
+    return (
+      <div className="event-container">
+        <section className="user-name-container">
+          <div
+            className={hiddenDashboard ? "back-button" : "back-button-hidden"}
+            onClick={() => {
+              setHiddenDashboard(false);
+            }}
+          >
+            <ArrowBackIcon />
+            <span>Back to events</span>
+          </div>
+          <Avatar>{textAvatar}</Avatar>
+          <span className="user-name-text">{userName}</span>
+        </section>
         <div
-          className={hiddenDashboard ? "back-button" : "back-button-hidden"}
-          onClick={() => {
-            setHiddenDashboard(false);
-          }}
+          className={
+            hiddenDashboard
+              ? "container-dashboard-hidden"
+              : "container-dashboard"
+          }
         >
-          <ArrowBackIcon />
-          <span>Back to events</span>
-        </div>
-        <Avatar>{textAvatar}</Avatar>
-        <span className="user-name-text">{userName}</span>
-      </section>
-      <div
-        className={
-          hiddenDashboard ? "container-dashboard-hidden" : "container-dashboard"
-        }
-      >
-        <div className="nav-icon-container">
-          <nav className="nav-link-container">
-            <Link to="dashboard" className="link-1">
-              All events
-            </Link>
-            <Link to="dashboard" className="link-2">
-              Future Events
-            </Link>
-            <Link to="dashboard" className="link-3">
-              Past Events
-            </Link>
-          </nav>
-          <div className="view-icon">
-            <ViewModuleIcon
+          <div className="nav-icon-container">
+            <nav className="nav-link-container">
+              <Link to="dashboard" className="link-1">
+                All events
+              </Link>
+              <Link to="dashboard" className="link-2">
+                Future Events
+              </Link>
+              <Link to="dashboard" className="link-3">
+                Past Events
+              </Link>
+            </nav>
+            <div className="view-icon">
+              <ViewModuleIcon
+                onClick={() => {
+                  setViewEvents(true);
+                }}
+              />
+              <ViewStreamIcon
+                onClick={() => {
+                  setViewEvents(false);
+                }}
+              />
+            </div>
+          </div>
+          <div
+            className={
+              viewEvents ? "box-event-view-row" : "box-event-view-column"
+            }
+          >
+            {items}
+          </div>
+          ;
+          <div className="add-new-event-container">
+            <AddCircleIcon
+              className="add-new-event-button"
               onClick={() => {
-                setViewEvents(true);
-              }}
-            />
-            <ViewStreamIcon
-              onClick={() => {
-                setViewEvents(false);
+                setShowCreateNewEventCompnent(true);
               }}
             />
           </div>
         </div>
-        <div
-          className={
-            viewEvents ? "box-event-view-row" : "box-event-view-column"
-          }
-        >
-          {items}
-        </div>
-        ;
-        <div className="icon-add-container">
-          <AddCircleIcon className="icon-add" />
-        </div>
-      </div>
 
-      <DetailEvent
-        eventClicked={eventClicked}
-        hiddenEventsList={hiddenDashboard}
-      />
-    </div>
-  );
+        <DetailEvent
+          eventClicked={eventClicked}
+          hiddenEventsList={hiddenDashboard}
+        />
+      </div>
+    );
+  }
 };
 
 export default DashboardComponent;
