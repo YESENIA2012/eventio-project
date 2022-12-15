@@ -40,6 +40,14 @@ const Login = (props) => {
     });
   };
 
+  const UsernameNotExistMessage = () => {
+    setMessageSignIn({
+      text: "Oops! Username does not exist",
+      messageColor: { color: "rgb(237, 85, 151)" },
+      borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
+    });
+  };
+
   const changeShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -52,16 +60,21 @@ const Login = (props) => {
 
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
 
-    informationUser.forEach((element) => {
-      if (element.email !== emailInfo || element.password !== passwordInfo) {
-        changeMessage();
-      } else if (
-        emailInfo === element.email &&
-        passwordInfo === element.password
-      ) {
-        intoDisboardSet = true;
-      }
-    });
+    if (informationUser === null) {
+      UsernameNotExistMessage();
+      return;
+    } else {
+      informationUser.forEach((element) => {
+        if (element.email !== emailInfo || element.password !== passwordInfo) {
+          changeMessage();
+        } else if (
+          emailInfo === element.email &&
+          passwordInfo === element.password
+        ) {
+          intoDisboardSet = true;
+        }
+      });
+    }
 
     setIntoDashboard(intoDisboardSet);
     paintAvatarAndName();
@@ -151,7 +164,7 @@ const Login = (props) => {
                 }}
               ></TextField>
               <Button
-                className="botton-login"
+                className="button-login"
                 variant="contained"
                 onClick={logInFunction}
               >
