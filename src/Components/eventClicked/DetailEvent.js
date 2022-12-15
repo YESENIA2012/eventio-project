@@ -1,13 +1,15 @@
 import PersonIcon from "@mui/icons-material/Person";
 
 import "./detailEventStyle.scss";
-import { mockedEventsCopy } from "../../utils";
+
 import { Button } from "@mui/material";
 
 const DetailEvent = (props) => {
   const { eventClicked, hiddenEventsList } = props;
 
   const drawEvent = () => {
+    const events = JSON.parse(localStorage.getItem("Events"));
+
     if (
       eventClicked === undefined ||
       isNaN(eventClicked) ||
@@ -19,32 +21,26 @@ const DetailEvent = (props) => {
         <div className="container-event">
           <div className="information-event">
             <div className="time-date-container">
-              <span className="date-d">
-                {mockedEventsCopy[eventClicked].date}
-              </span>
+              <span className="date-d">{events[eventClicked].date}</span>
               <span className="dash-d">-</span>
-              <span className="time-d">
-                {mockedEventsCopy[eventClicked].time}
-              </span>
+              <span className="time-d">{events[eventClicked].time}</span>
             </div>
-            <h1 className="title">
-              {mockedEventsCopy[eventClicked].nameEvent}
-            </h1>
-            <p className="host-e">{mockedEventsCopy[eventClicked].host}</p>
+            <h1 className="title">{events[eventClicked].nameEvent}</h1>
+            <p className="host-e">{events[eventClicked].host}</p>
             <p className="description-event-e">
-              {mockedEventsCopy[eventClicked].descriptionEvent}
+              {events[eventClicked].descriptionEvent}
             </p>
             <div className="attendees-capacity-button-container">
               <div className="attendees-capacity-container">
                 <PersonIcon className="person-icon" />
                 <span className="attendees">
-                  {mockedEventsCopy[eventClicked].attendees}
+                  {events[eventClicked].attendees}
                 </span>
                 <span className="of-text-d">of</span>
-                <span>{mockedEventsCopy[eventClicked].capacity}</span>
+                <span>{events[eventClicked].capacity}</span>
               </div>
               <Button variant="contained" className="button-event-detail">
-                {mockedEventsCopy[eventClicked].stateEvent}
+                {events[eventClicked].stateEvent}
               </Button>
             </div>
           </div>
