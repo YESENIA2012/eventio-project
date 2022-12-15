@@ -1,7 +1,8 @@
 import PersonIcon from "@mui/icons-material/Person";
 
 import "./detailEventStyle.scss";
-import { mockedEvents } from "../../utils";
+import { mockedEventsCopy } from "../../utils";
+import { Button } from "@mui/material";
 
 const DetailEvent = (props) => {
   const { eventClicked, hiddenEventsList } = props;
@@ -17,17 +18,34 @@ const DetailEvent = (props) => {
       return (
         <div className="container-event">
           <div className="information-event">
-            <p className="time">
-              {mockedEvents[eventClicked].dateAndTime} yesenia
-            </p>
-            <h1 className="title">{mockedEvents[eventClicked].nameEvent}</h1>
-            <p className="host-e">{mockedEvents[eventClicked].host}</p>
+            <div className="time-date-container">
+              <span className="date-d">
+                {mockedEventsCopy[eventClicked].date}
+              </span>
+              <span className="dash-d">-</span>
+              <span className="time-d">
+                {mockedEventsCopy[eventClicked].time}
+              </span>
+            </div>
+            <h1 className="title">
+              {mockedEventsCopy[eventClicked].nameEvent}
+            </h1>
+            <p className="host-e">{mockedEventsCopy[eventClicked].host}</p>
             <p className="description-event-e">
-              {mockedEvents[eventClicked].descriptionEvent}
+              {mockedEventsCopy[eventClicked].descriptionEvent}
             </p>
-            <div className="attendees-e">
-              <PersonIcon />
-              <span>{mockedEvents[eventClicked].attendees}</span>
+            <div className="attendees-capacity-button-container">
+              <div className="attendees-capacity-container">
+                <PersonIcon className="person-icon" />
+                <span className="attendees">
+                  {mockedEventsCopy[eventClicked].attendees}
+                </span>
+                <span className="of-text-d">of</span>
+                <span>{mockedEventsCopy[eventClicked].capacity}</span>
+              </div>
+              <Button variant="contained" className="button-event-detail">
+                {mockedEventsCopy[eventClicked].stateEvent}
+              </Button>
             </div>
           </div>
           <div className="name-attendees">Attendees</div>
@@ -38,7 +56,9 @@ const DetailEvent = (props) => {
 
   return (
     <div
-      className={hiddenEventsList ? "container-event-section" : "event-hidden"}
+      className={
+        hiddenEventsList ? "container-event-section" : "event-detail-hidden"
+      }
     >
       <p className="p-title">DETAIL EVENT</p>
       <section className="section-event-information">{drawEvent()}</section>

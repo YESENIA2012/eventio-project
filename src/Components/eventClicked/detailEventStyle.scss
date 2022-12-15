@@ -28,8 +28,12 @@ $event-container-color: rgb(255, 255, 255);
         width: 60%;
         margin-right: 15px;
 
-        .time {
-          color: styleFile.$color-gray;
+        .time-date-container {
+          @include styleFile.style-font(12px);
+
+          .dash-d {
+            margin: 0 5px 0 5px;
+          }
         }
 
         .title {
@@ -47,9 +51,31 @@ $event-container-color: rgb(255, 255, 255);
           width: auto;
         }
 
-        .attendees-e {
+        .attendees-capacity-button-container {
           @include styleFile.align-element-with-flex(space-between);
-          width: 60px;
+          color: styleFile.$color-gray;
+          width: 100%;
+
+          .attendees-capacity-container {
+            @include styleFile.align-element-with-flex(center);
+
+            .person-icon {
+              margin-right: 5px;
+            }
+            .of-text-d {
+              margin: 0 5px 0 5px;
+            }
+
+            span {
+              @include styleFile.style-font(12px);
+            }
+          }
+
+          .button-event-detail {
+            width: 100px;
+            height: 30px;
+            background-color: styleFile.$background-color-button;
+          }
         }
 
         .time,
@@ -74,6 +100,6 @@ $event-container-color: rgb(255, 255, 255);
   }
 }
 
-.event-hidden {
+.event-detail-hidden {
   opacity: 0;
 }
