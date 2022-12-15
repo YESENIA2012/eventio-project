@@ -80,7 +80,7 @@ const Login = (props) => {
   };
 
   if (intoDashboard) {
-    return <DashboardComponent textAvatar={textAvatar} userName={userName} />;
+    return;
   } else {
     return (
       <Fragment>
