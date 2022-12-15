@@ -1,0 +1,46 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
+.container-new-event {
+  @include styleFile.align-element-with-flex(space-around);
+  flex-direction: column;
+  height: 700px;
+
+  .close-element {
+    @include styleFile.align-element-with-flex(end);
+    width: 100%;
+    margin-right: 80px;
+
+    span {
+      margin-left: 8px;
+    }
+  }
+}
+
+.create-new-event {
+  @include styleFile.align-element-with-flex(center);
+  @include styleFile.border-background-events-element;
+  flex-direction: column;
+  width: 30%;
+  height: 600px;
+
+  h3 {
+    font-size: 25px;
+    width: 30%;
+    text-align: center;
+    font-weight: bolder;
+  }
+
+  .text-label {
+    font-size: 13px !important;
+    color: styleFile.$color-gray !important;
+  }
+
+  .new-event-button {
+    margin-top: 30px;
+    background-color: styleFile.$background-color-button;
+  }
+
+  .new-event-button:hover {
+    background-color: styleFile.$background-color-button;
+  }
+}
