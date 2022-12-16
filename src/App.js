@@ -1,4 +1,4 @@
-import Login from "./components/login/LoginComponent";
+import Login from "./components/login/Login";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles/app.scss";
