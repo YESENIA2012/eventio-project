@@ -8,82 +8,82 @@
     flex-direction: column;
     width: 70%;
   }
-}
 
-.nav-container {
-  @include styleFile.align-element-with-flex(flex-end);
-  position: absolute;
-  margin-top: -680px;
-  width: 70%;
-  margin-right: 50px;
+  .nav-container {
+    @include styleFile.align-element-with-flex(flex-end);
+    position: absolute;
+    margin-top: -680px;
+    width: 70%;
+    margin-right: 50px;
 
-  .sign-in-link {
-    @include styleFile.align-element-with-flex(space-around);
-    width: 180px;
+    .sign-in-link {
+      @include styleFile.align-element-with-flex(space-around);
+      width: 180px;
 
-    span {
-      @include styleFile.style-font(14px);
+      span {
+        @include styleFile.style-font(14px);
+      }
+
+      .link-s {
+        text-decoration: none;
+        background-color: white;
+        color: rgb(66, 66, 66);
+        font-weight: 300;
+        font-size: 14px;
+      }
+
+      .link-s:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .title-and-message {
+    @include styleFile.display-type(column);
+    width: 45%;
+
+    .title-login {
+      font-weight: 900;
+      font-size: 23px;
     }
 
-    .link-s {
-      text-decoration: none;
-      background-color: white;
-      color: rgb(66, 66, 66);
-      font-weight: 300;
+    .message-login {
+      margin-top: -10px;
       font-size: 14px;
+      font-weight: bold;
+    }
+  }
+
+  .form-login {
+    @include styleFile.display-type(column);
+    flex-direction: column;
+    width: 45%;
+    margin-top: 20px;
+
+    .textfield-label {
+      font-size: 14px !important;
+      color: styleFile.$color-gray !important;
     }
 
-    .link-s:hover {
+    .icon-visibility {
+      color: rgb(224, 227, 230);
+    }
+
+    .icon-visibility:hover {
       cursor: pointer;
     }
-  }
-}
 
-.title-and-message {
-  @include styleFile.display-type(column);
-  width: 45%;
+    .button-login {
+      width: 50%;
+      height: 46px;
+      margin-top: 40px;
+      width: 40%;
+      color: white;
+      background-color: styleFile.$background-color-button;
+    }
 
-  .title-login {
-    font-weight: 900;
-    font-size: 23px;
-  }
-
-  .message-login {
-    margin-top: -10px;
-    font-size: 14px;
-    font-weight: bold;
-  }
-}
-
-.form-login {
-  @include styleFile.display-type(column);
-  flex-direction: column;
-  width: 45%;
-  margin-top: 20px;
-
-  .textfield-label {
-    font-size: 14px !important;
-    color: styleFile.$color-gray !important;
-  }
-
-  .icon-visibility {
-    color: rgb(224, 227, 230);
-  }
-
-  .icon-visibility:hover {
-    cursor: pointer;
-  }
-
-  .button-login {
-    width: 50%;
-    height: 46px;
-    margin-top: 40px;
-    width: 40%;
-    color: white;
-    background-color: styleFile.$background-color-button;
-  }
-
-  .button-login:hover {
-    background-color: styleFile.$background-color-button;
+    .button-login:hover {
+      background-color: styleFile.$background-color-button;
+    }
   }
 }

@@ -90,7 +90,6 @@ const Login = () => {
               </Link>
             </nav>
           </div>
-
           <div className="title-and-message">
             <h1 className="title-login">Sing in to Eventio.</h1>
             <p className="message-login" style={messageSignIn.messageColor}>
