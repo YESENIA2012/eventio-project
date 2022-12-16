@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
@@ -24,10 +24,10 @@ const Login = () => {
     borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
   });
 
+  const [emailText, setEmailText] = useState("");
+  const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [intoDashboard, setIntoDashboard] = useState(false);
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const { classes } = styles();
 
@@ -47,11 +47,8 @@ const Login = () => {
     });
   };
 
-  const logInFunction = (e) => {
-    e.preventDefault();
-    let intoDisboardSet = false;
-    let emailInfo = document.querySelector("#Email").value;
-    let passwordInfo = document.querySelector("#Password").value;
+  const processLogin = () => {
+    let isLoggedInVar = false;
 
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
 
@@ -60,123 +57,118 @@ const Login = () => {
       return;
     } else {
       informationUser.forEach((element) => {
-        if (element.email !== emailInfo || element.password !== passwordInfo) {
+        if (element.email !== emailText || element.password !== passwordText) {
           passwordAndUsernameNotMatchMessage();
         } else if (
-          emailInfo === element.email &&
-          passwordInfo === element.password
+          emailText === element.email &&
+          passwordText === element.password
         ) {
-          intoDisboardSet = true;
+          isLoggedInVar = true;
         } else {
           UsernameNotExistMessage();
         }
       });
     }
 
-    setIntoDashboard(intoDisboardSet);
-    paintAvatarAndName();
+    setIsLoggedIn(isLoggedInVar);
   };
 
-  const paintAvatarAndName = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-    let firsLetterName = informationUser[0].name[0];
-    let firstLetterLastName = informationUser[0].lastName[0];
-    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-    let userName = `${informationUser[0].name} ${informationUser[0].lastName}`;
-
-    setTextAvatar(letterAvatar);
-    setUserName(userName);
-  };
-
-  if (intoDashboard) {
-    return;
-  } else {
-    return (
-      <Fragment>
-        <div className="login">
-          <Image />
-          <section className="section-login">
-            <div className="nav-container">
-              <nav className="sign-in-link">
-                <span>Don’t have account?</span>
-                <Link to="sign-up" className="link-s">
-                  SIGN UP
-                </Link>
-              </nav>
-            </div>
-
-            <div className="title-and-message">
-              <h1 className="title-login">Sing in to Eventio.</h1>
-              <p className="message-login" style={messageSignIn.messageColor}>
-                {messageSignIn.text}
-              </p>
-            </div>
-            <form className="form-login">
-              <TextField
-                id="Email"
-                label="Email"
-                variant="standard"
-                type="email"
-                className={classes.textFieldStyle}
-                InputLabelProps={{ className: "textfield-label" }}
-                name="Email"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: messageSignIn.borderBottonStyle,
-                }}
-                InputProps={{ disableUnderline: true }}
-              ></TextField>
-              <TextField
-                id="Password"
-                label="Password"
-                variant="standard"
-                type={showPassword ? "text" : "password"}
-                className={classes.textFieldStyle}
-                InputLabelProps={{
-                  className: "textfield-label",
-                }}
-                name="Password"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: messageSignIn.borderBottonStyle,
-                }}
-                InputProps={{
-                  disableUnderline: true,
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {showPassword ? (
-                        <VisibilityIcon
-                          className="icon-visibility"
-                          onClick={() => {
-                            setShowPassword(!showPassword);
-                          }}
-                        />
-                      ) : (
-                        <VisibilityOff
-                          className="icon-visibility"
-                          onClick={() => {
-                            setShowPassword(!showPassword);
-                          }}
-                        />
-                      )}
-                    </InputAdornment>
-                  ),
-                }}
-              ></TextField>
-              <Button
-                className="button-login"
-                variant="contained"
-                onClick={logInFunction}
-              >
-                SIGN IN
-              </Button>
-            </form>
-          </section>
-        </div>
-      </Fragment>
-    );
+  if (isLoggedIn) {
+    return <Navigate to="dashboard" />;
   }
+
+  return (
+    <Fragment>
+      <div className="login">
+        <Image />
+        <section className="section-login">
+          <div className="nav-container">
+            <nav className="sign-in-link">
+              <span>Don’t have account?</span>
+              <Link to="sign-up" className="link-s">
+                SIGN UP
+              </Link>
+            </nav>
+          </div>
+
+          <div className="title-and-message">
+            <h1 className="title-login">Sing in to Eventio.</h1>
+            <p className="message-login" style={messageSignIn.messageColor}>
+              {messageSignIn.text}
+            </p>
+          </div>
+          <form className="form-login">
+            <TextField
+              id="Email"
+              label="Email"
+              variant="standard"
+              type="email"
+              className={classes.textFieldStyle}
+              InputLabelProps={{ className: "textfield-label" }}
+              name="Email"
+              sx={{
+                "& .MuiInputLabel-root": {},
+                borderBottom: messageSignIn.borderBottonStyle,
+              }}
+              InputProps={{ disableUnderline: true }}
+              onChange={(e) => {
+                setEmailText(e.target.value);
+              }}
+              value={emailText}
+            ></TextField>
+            <TextField
+              id="Password"
+              label="Password"
+              variant="standard"
+              type={showPassword ? "text" : "password"}
+              className={classes.textFieldStyle}
+              InputLabelProps={{
+                className: "textfield-label",
+              }}
+              name="Password"
+              sx={{
+                "& .MuiInputLabel-root": {},
+                borderBottom: messageSignIn.borderBottonStyle,
+              }}
+              onChange={(e) => {
+                setPasswordText(e.target.value);
+              }}
+              value={passwordText}
+              InputProps={{
+                disableUnderline: true,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {showPassword ? (
+                      <VisibilityIcon
+                        className="icon-visibility"
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                      />
+                    ) : (
+                      <VisibilityOff
+                        className="icon-visibility"
+                        onClick={() => {
+                          setShowPassword(!showPassword);
+                        }}
+                      />
+                    )}
+                  </InputAdornment>
+                ),
+              }}
+            ></TextField>
+            <Button
+              className="button-login"
+              variant="contained"
+              onClick={processLogin}
+            >
+              SIGN IN
+            </Button>
+          </form>
+        </section>
+      </div>
+    </Fragment>
+  );
 };
 
 export default Login;

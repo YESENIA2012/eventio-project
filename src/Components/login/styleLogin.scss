@@ -11,7 +11,7 @@
 }
 
 .nav-container {
-  @include styleFile.align-element-with-flex(end);
+  @include styleFile.align-element-with-flex(flex-end);
   position: absolute;
   margin-top: -680px;
   width: 70%;
