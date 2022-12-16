@@ -28,6 +28,7 @@ const Login = () => {
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [goCreateAccount, setGoCreateAccount] = useState(false);
 
   const { classes } = styles();
 
@@ -77,6 +78,10 @@ const Login = () => {
     return <Navigate to="dashboard" />;
   }
 
+  if (goCreateAccount) {
+    return <Navigate to="sign-up" />;
+  }
+
   return (
     <Fragment>
       <div className="login">
@@ -85,9 +90,14 @@ const Login = () => {
           <div className="nav-container">
             <nav className="sign-in-link">
               <span>Don’t have account?</span>
-              <Link to="sign-up" className="link-s">
+              <span
+                onClick={() => {
+                  setGoCreateAccount(true);
+                }}
+                className="link-s"
+              >
                 SIGN UP
-              </Link>
+              </span>
             </nav>
           </div>
           <div className="title-and-message">
