@@ -11,7 +11,7 @@ const Image = () => {
       />
       <div className="text-image">
         <p className="p-image">“Great, kid. Don't get cocky.”</p>
-        <span className="span-2">_</span>
+        <span className="span-1">_</span>
         <p className="p-image-2">Han solo</p>
       </div>
     </Hidden>
