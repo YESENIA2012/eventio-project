@@ -1,39 +1,34 @@
-$font-color: rgb(150, 157, 166);
+@use "../../styles/mixinAndVariables.scss" as styleFile;
 
 img {
   height: 758px;
   width: 30%;
 }
 
-.span-1,
 .text-image {
-  position: absolute;
-  color: white;
-}
-
-.text-image {
-  display: flex;
-  flex-direction: column;
+  @include styleFile.display-type(column);
   align-items: center;
   margin-top: 550px;
   width: 20%;
   margin-left: 5%;
   margin-right: 5%;
-}
+  position: absolute;
+  color: white;
 
-.p-image {
-  font-size: 28px;
-  text-align: center;
-  margin: 0;
-  font-weight: bolder;
-}
+  .p-image {
+    font-size: 28px;
+    text-align: center;
+    margin: 0;
+    font-weight: styleFile.$font-weigth-bolder;
+  }
 
-.span-2 {
-  color: rgb(100, 207, 140);
-  font-size: 30px;
-  font-weight: 900;
-}
+  .span-1 {
+    color: styleFile.$background-color-button;
+    font-size: 30px;
+    font-weight: 900;
+  }
 
-.p-image-2 {
-  color: $font-color;
+  .p-image-2 {
+    color: styleFile.$color-gray;
+  }
 }
