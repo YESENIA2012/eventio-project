@@ -2,78 +2,78 @@
 
 .sign-up {
   @include styleFile.display-type(row);
-}
 
-.section-sign-up {
-  @include styleFile.align-element-with-flex(center);
-  flex-direction: column;
-  width: 70%;
-}
+  .section-sign-up {
+    @include styleFile.align-element-with-flex(center);
+    flex-direction: column;
+    width: 70%;
 
-.login-container-nav {
-  @include styleFile.align-element-with-flex(end);
-  position: absolute;
-  margin-top: -680px;
-  width: 70%;
-  margin-right: 50px;
+    .login-container-nav {
+      @include styleFile.align-element-with-flex(end);
+      position: absolute;
+      margin-top: -680px;
+      width: 70%;
+      margin-right: 50px;
 
-  .login-link {
-    @include styleFile.align-element-with-flex(space-around);
-    width: 230px;
+      .login-link {
+        @include styleFile.align-element-with-flex(space-around);
+        width: 230px;
 
-    span {
-      @include styleFile.style-font(14px);
+        span {
+          @include styleFile.style-font(14px);
+        }
+
+        .link-l {
+          text-decoration: none;
+          background-color: white;
+          color: rgb(66, 66, 66);
+          font-weight: 300;
+          font-size: 14px;
+        }
+
+        .link-l:hover {
+          cursor: pointer;
+        }
+      }
     }
 
-    .link-l {
-      text-decoration: none;
-      background-color: white;
-      color: rgb(66, 66, 66);
-      font-weight: 300;
-      font-size: 14px;
+    .title-and-message {
+      @include styleFile.display-type(column);
+      width: 45%;
+
+      .title-sign-up {
+        font-weight: 900;
+        font-size: 23px;
+      }
+
+      .message-sign-up {
+        @include styleFile.style-font(14px);
+        margin-top: -10px;
+      }
     }
 
-    .link-l:hover {
-      cursor: pointer;
+    .form-sign-up {
+      @include styleFile.display-type(column);
+      width: 45%;
+      margin-top: 20px;
+
+      .textfield-label {
+        font-size: 14px !important;
+        color: styleFile.$color-gray !important;
+      }
+
+      .button-sign-up {
+        width: 50%;
+        height: 46px;
+        margin-top: 40px;
+        width: 40%;
+        color: white;
+        background-color: styleFile.$background-color-button;
+      }
+
+      .button-sign-up:hover {
+        background-color: styleFile.$background-color-button;
+      }
     }
-  }
-}
-
-.title-and-message {
-  @include styleFile.display-type(column);
-  width: 45%;
-
-  .title-sign-up {
-    font-weight: 900;
-    font-size: 23px;
-  }
-
-  .message-sign-up {
-    @include styleFile.style-font(14px);
-    margin-top: -10px;
-  }
-}
-
-.form-sign-up {
-  @include styleFile.display-type(column);
-  width: 45%;
-  margin-top: 20px;
-
-  .textfield-label {
-    font-size: 14px !important;
-    color: styleFile.$color-gray !important;
-  }
-
-  .botton-sign-up {
-    width: 50%;
-    height: 46px;
-    margin-top: 40px;
-    width: 40%;
-    color: white;
-    background-color: styleFile.$background-color-button;
-  }
-
-  .botton-sign-up:hover {
-    background-color: styleFile.$background-color-button;
   }
 }
