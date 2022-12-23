@@ -5,7 +5,7 @@ import "./detailEventStyle.scss";
 import { Button } from "@mui/material";
 
 const DetailEvent = (props) => {
-  const { eventClicked, hiddenEventsList } = props;
+  const { eventClicked, goToDetailEvent } = props;
 
   const drawEvent = () => {
     const events = JSON.parse(localStorage.getItem("Events"));
@@ -53,7 +53,7 @@ const DetailEvent = (props) => {
   return (
     <div
       className={
-        hiddenEventsList ? "container-event-section" : "event-detail-hidden"
+        goToDetailEvent ? "container-event-section" : "event-detail-hidden"
       }
     >
       <p className="p-title">DETAIL EVENT</p>
