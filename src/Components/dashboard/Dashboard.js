@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
