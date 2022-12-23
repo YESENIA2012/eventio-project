@@ -17,7 +17,7 @@ const DashboardComponent = () => {
   const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
   const [eventClicked, setEventClicked] = useState("");
-  const [hiddenDashboard, setHiddenDashboard] = useState(false);
+  const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToFutureEvents, setGoToFutureEvents] = useState(false);
   const [goToPastEvents, setGoToPastEvents] = useState(false);
@@ -48,7 +48,7 @@ const DashboardComponent = () => {
   }, []);
 
   const showDetailEventClicked = (e) => {
-    let hiddenDashboard = false;
+    let goToDetailEvent = false;
     let elementClassName = e.target.className;
     let classNamePosition = elementClassName.split(" ");
     let eventId = classNamePosition[0].split("-");
@@ -61,10 +61,10 @@ const DashboardComponent = () => {
     ) {
       return;
     } else {
-      hiddenDashboard = true;
+      goToDetailEvent = true;
     }
 
-    setHiddenDashboard(hiddenDashboard);
+    setGoToDetailEvent(goToDetailEvent);
     setEventClicked(elementClickedId);
   };
 
@@ -131,9 +131,9 @@ const DashboardComponent = () => {
       <div className="event-container">
         <section className="user-name-container">
           <div
-            className={hiddenDashboard ? "back-button" : "back-button-hidden"}
+            className={goToDetailEvent ? "back-button" : "back-button-hidden"}
             onClick={() => {
-              setHiddenDashboard(false);
+              setGoToDetailEvent(false);
             }}
           >
             <ArrowBackIcon />
@@ -144,7 +144,7 @@ const DashboardComponent = () => {
         </section>
         <div
           className={
-            hiddenDashboard
+            goToDetailEvent
               ? "container-dashboard-hidden"
               : "container-dashboard"
           }
@@ -216,7 +216,7 @@ const DashboardComponent = () => {
         </div>
         <DetailEvent
           eventClicked={eventClicked}
-          hiddenEventsList={hiddenDashboard}
+          goToDetailEvent={goToDetailEvent}
         />
       </div>
     );
