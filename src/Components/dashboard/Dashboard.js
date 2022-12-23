@@ -151,9 +151,9 @@ const DashboardComponent = () => {
         >
           <div className="nav-icon-container">
             <nav className="nav-link-container">
-              <Link to="dashboard" className="link-1">
+              <span to="dashboard" className="link-1">
                 All events
-              </Link>
+              </span>
               <span
                 className="link-2"
                 onClick={() => {
@@ -162,14 +162,14 @@ const DashboardComponent = () => {
               >
                 Future Events
               </span>
-              <Link
+              <span
                 className="link-3"
                 onClick={() => {
                   setGoToPastEvents(true);
                 }}
               >
                 Past Events
-              </Link>
+              </span>
             </nav>
             <div className="view-icon">
               <ViewModuleIcon
