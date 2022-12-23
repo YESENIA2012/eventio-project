@@ -1,10 +1,12 @@
+import { Navigate } from "react-router-dom";
+import { useState } from "react";
+
 import { Button, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { makeStyles } from "tss-react/mui";
 
 import { mockedEventsCopy } from "../../utils";
 import "./newEventStyle.scss";
-import { Link } from "react-router-dom";
 
 const styles = makeStyles()((theme) => {
   return {
@@ -16,6 +18,7 @@ const styles = makeStyles()((theme) => {
 });
 
 const NewEvent = () => {
+  const [goToDashboard, setGoToDashboard] = useState(false);
   const { classes } = styles();
 
   const createNewEventFunction = (e) => {
@@ -30,7 +33,7 @@ const NewEvent = () => {
     let id = mockedEventsCopy.length;
 
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-    let host = `${informationUser[0].name} ${informationUser[0].lastName}`;
+    let host = `${informationUser.name} ${informationUser.lastName}`;
 
     mockedEventsCopy.push({
       id: id,
@@ -52,91 +55,100 @@ const NewEvent = () => {
     document.querySelector("#time-event").value = "";
     document.querySelector("#capacity-event").value = "";
   };
-  return (
-    <div className="container-new-event">
-      <p className="close-element">
-        <Link to="dashboard">
-          <CloseIcon />
-          <span>Close</span>
-        </Link>
-      </p>
-      <div className="create-new-event">
-        <h3>Create new event</h3>
-        <TextField
-          label="Title"
-          type="text"
-          id="title-event"
-          variant="standard"
-          className={classes.textFieldStyle}
-          sx={{
-            "& .MuiInputLabel-root": {},
-            borderBottom: "1px solid rgb(179, 175, 177)",
+
+  if (goToDashboard) {
+    return <Navigate to="/dashboard" />;
+  } else {
+    return (
+      <div className="container-new-event">
+        <div
+          className="dashboard-redirect-container"
+          to="dashboard"
+          onClick={() => {
+            setGoToDashboard(true);
           }}
-          InputProps={{ disableUnderline: true }}
-          InputLabelProps={{ className: "text-label" }}
-        ></TextField>
-        <TextField
-          label="Description"
-          type="text"
-          id="description-event"
-          variant="standard"
-          className={classes.textFieldStyle}
-          sx={{
-            "& .MuiInputLabel-root": {},
-            borderBottom: "1px solid rgb(179, 175, 177)",
-          }}
-          InputProps={{ disableUnderline: true }}
-          InputLabelProps={{ className: "text-label" }}
-        ></TextField>
-        <TextField
-          label="Date"
-          type="text"
-          id="date-event"
-          variant="standard"
-          className={classes.textFieldStyle}
-          sx={{
-            "& .MuiInputLabel-root": {},
-            borderBottom: "1px solid rgb(179, 175, 177)",
-          }}
-          InputProps={{ disableUnderline: true }}
-          InputLabelProps={{ className: "text-label" }}
-        ></TextField>
-        <TextField
-          label="Time"
-          type="text"
-          id="time-event"
-          variant="standard"
-          className={classes.textFieldStyle}
-          sx={{
-            "& .MuiInputLabel-root": {},
-            borderBottom: "1px solid rgb(179, 175, 177)",
-          }}
-          InputProps={{ disableUnderline: true }}
-          InputLabelProps={{ className: "text-label" }}
-        ></TextField>
-        <TextField
-          label="Capacity"
-          type="text"
-          id="capacity-event"
-          variant="standard"
-          className={classes.textFieldStyle}
-          sx={{
-            "& .MuiInputLabel-root": {},
-            borderBottom: "1px solid rgb(179, 175, 177)",
-          }}
-          InputProps={{ disableUnderline: true }}
-          InputLabelProps={{ className: "text-label" }}
-        ></TextField>
-        <Button
-          variant="contained"
-          className="new-event-button"
-          onClick={createNewEventFunction}
         >
-          CREATE NEW EVENT
-        </Button>
+          <CloseIcon className="close-icon" />
+          <span>Close</span>
+        </div>
+        <div className="create-new-event">
+          <h3>Create new event</h3>
+          <TextField
+            label="Title"
+            type="text"
+            id="title-event"
+            variant="standard"
+            className={classes.textFieldStyle}
+            sx={{
+              "& .MuiInputLabel-root": {},
+              borderBottom: "1px solid rgb(179, 175, 177)",
+            }}
+            InputProps={{ disableUnderline: true }}
+            InputLabelProps={{ className: "text-label" }}
+          ></TextField>
+          <TextField
+            label="Description"
+            type="text"
+            id="description-event"
+            variant="standard"
+            className={classes.textFieldStyle}
+            sx={{
+              "& .MuiInputLabel-root": {},
+              borderBottom: "1px solid rgb(179, 175, 177)",
+            }}
+            InputProps={{ disableUnderline: true }}
+            InputLabelProps={{ className: "text-label" }}
+          ></TextField>
+          <TextField
+            label="Date"
+            type="text"
+            id="date-event"
+            variant="standard"
+            className={classes.textFieldStyle}
+            sx={{
+              "& .MuiInputLabel-root": {},
+              borderBottom: "1px solid rgb(179, 175, 177)",
+            }}
+            InputProps={{ disableUnderline: true }}
+            InputLabelProps={{ className: "text-label" }}
+          ></TextField>
+          <TextField
+            label="Time"
+            type="text"
+            id="time-event"
+            variant="standard"
+            className={classes.textFieldStyle}
+            sx={{
+              "& .MuiInputLabel-root": {},
+              borderBottom: "1px solid rgb(179, 175, 177)",
+            }}
+            InputProps={{ disableUnderline: true }}
+            InputLabelProps={{ className: "text-label" }}
+          ></TextField>
+          <TextField
+            label="Capacity"
+            type="text"
+            id="capacity-event"
+            variant="standard"
+            className={classes.textFieldStyle}
+            sx={{
+              "& .MuiInputLabel-root": {},
+              borderBottom: "1px solid rgb(179, 175, 177)",
+            }}
+            InputProps={{ disableUnderline: true }}
+            InputLabelProps={{ className: "text-label" }}
+          ></TextField>
+          <Button
+            variant="contained"
+            className="new-event-button"
+            onClick={createNewEventFunction}
+          >
+            CREATE NEW EVENT
+          </Button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default NewEvent;

@@ -1,13 +1,11 @@
 import { Fragment, useState } from "react";
-import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { Button, TextField } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
 
 import Image from "../image/ImageContainer";
 import "./styleSignUp.scss";
-
-import DashboardComponent from "../dashboard/Dashboard";
 
 const styles = makeStyles()((theme) => {
   return {
@@ -18,62 +16,69 @@ const styles = makeStyles()((theme) => {
 });
 
 const SignUp = () => {
-  const [intoDashboard, setIntoDashboard] = useState(false);
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [logInAccount, setLogInAccount] = useState(false);
+  const [nameUser, setNameUser] = useState("");
+  const [lastNameUser, setLastNameUser] = useState("");
+  const [emailUser, setEmailUser] = useState("");
+  const [passwordUser, setPasswordUser] = useState("");
+  const [repeatPasswordUser, setRepeatPasswordUser] = useState("");
+  const [messageSignUp, setMessageSignUp] = useState({
+    text: "Enter your detalls below.",
+    messageColor: { color: "rgb(150, 157, 166)" },
+  });
+
   const { classes } = styles();
 
   const enterDashboardFunction = (e) => {
-    e.preventDefault();
-    let intoDasboardSet = false;
-    let name = document.querySelector("#Name").value;
-    let lastName = document.querySelector("#LastName").value;
-    let password = document.querySelector("#Password").value;
-    let repeatPassword = document.querySelector("#repeatPassword").value;
-    let email = document.querySelector("#email").value;
+    let isLoggedInVar = false;
+    const userInformation = JSON.parse(localStorage.getItem("userInformation"));
 
-    if (password === repeatPassword && password !== "") {
-      intoDasboardSet = true;
+    if (userInformation !== null && userInformation.email === emailUser) {
+      theUserExistsMessage();
+      isLoggedInVar = false;
+    } else if (passwordUser === repeatPasswordUser && passwordUser !== "") {
+      saveInformationUser();
+      isLoggedInVar = true;
+    } else {
+      passWordNotMatchMessage();
+      isLoggedInVar = false;
     }
 
-    saveInformationUser(name, lastName, email, password);
-    setIntoDashboard(intoDasboardSet);
+    setIsLoggedIn(isLoggedInVar);
+  };
+
+  const theUserExistsMessage = () => {
+    setMessageSignUp({
+      text: "The user already exists. Log In.",
+      messageColor: { color: "rgb(237, 85, 151)" },
+    });
+  };
+
+  const passWordNotMatchMessage = () => {
+    setMessageSignUp({
+      text: "Passwords do not match.",
+      messageColor: { color: "rgb(237, 85, 151)" },
+    });
   };
 
   const saveInformationUser = (name, lastName, email, password) => {
-    let arrayInformationUser = [];
+    let informationUser = null;
 
-    let item = {
-      name: name,
-      lastName: lastName,
-      email: email,
-      password: password,
+    informationUser = {
+      name: nameUser,
+      lastName: lastNameUser,
+      email: emailUser,
+      password: passwordUser,
     };
 
-    arrayInformationUser.unshift(item);
-
-    localStorage.setItem(
-      "userInformation",
-      JSON.stringify(arrayInformationUser)
-    );
-
-    drawTextAvatarAndNameUser();
+    localStorage.setItem("userInformation", JSON.stringify(informationUser));
   };
 
-  const drawTextAvatarAndNameUser = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-    let firsLetterName = informationUser[0].name[0];
-    let firstLetterLastName = informationUser[0].lastName[0];
-    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-    let userName = `${informationUser[0].name} ${informationUser[0].lastName}`;
-
-    setTextAvatar(letterAvatar);
-    setUserName(userName);
-  };
-
-  if (intoDashboard) {
-    return <DashboardComponent textAvatar={textAvatar} userName={userName} />;
+  if (isLoggedIn) {
+    return <Navigate to="/dashboard" />;
+  } else if (logInAccount) {
+    return <Navigate to="/" />;
   } else {
     return (
       <Fragment>
@@ -83,20 +88,25 @@ const SignUp = () => {
             <div className="login-container-nav">
               <nav className="login-link">
                 <span>Already have an account?</span>
-                <Link to="/" className="link-l">
+                <span
+                  className="link-l"
+                  onClick={() => {
+                    setLogInAccount(true);
+                  }}
+                >
                   SIGN IN
-                </Link>
+                </span>
               </nav>
             </div>
-
             <div className="title-and-message">
               <h1 className="title-sign-up">Get started absolutely free.</h1>
-              <p className="message-sign-up">Enter your details below.</p>
+              <p className="message-sign-up" style={messageSignUp.messageColor}>
+                {messageSignUp.text}
+              </p>
             </div>
             <form className="form-sign-up">
               <TextField
                 className={classes.textFieldStyle}
-                id="Name"
                 label="First name"
                 variant="standard"
                 type="text"
@@ -107,9 +117,12 @@ const SignUp = () => {
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
                 InputProps={{ disableUnderline: true }}
+                onChange={(e) => {
+                  setNameUser(e.target.value);
+                }}
+                value={nameUser}
               ></TextField>
               <TextField
-                id="LastName"
                 label="Last name"
                 variant="standard"
                 type="text"
@@ -121,9 +134,12 @@ const SignUp = () => {
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
                 InputProps={{ disableUnderline: true }}
+                onChange={(e) => {
+                  setLastNameUser(e.target.value);
+                }}
+                value={lastNameUser}
               ></TextField>
               <TextField
-                id="email"
                 label="Email"
                 variant="standard"
                 type="email"
@@ -135,11 +151,15 @@ const SignUp = () => {
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
                 InputProps={{ disableUnderline: true }}
+                onChange={(e) => {
+                  setEmailUser(e.target.value);
+                }}
+                value={emailUser}
               ></TextField>
               <TextField
-                id="Password"
                 label="Password"
                 variant="standard"
+                type="password"
                 className={classes.textFieldStyle}
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Password"
@@ -148,11 +168,15 @@ const SignUp = () => {
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
                 InputProps={{ disableUnderline: true }}
+                onChange={(e) => {
+                  setPasswordUser(e.target.value);
+                }}
+                value={passwordUser}
               ></TextField>
               <TextField
                 className={classes.textFieldStyle}
-                id="repeatPassword"
                 label="Repeat password"
+                type="password"
                 variant="standard"
                 InputLabelProps={{ className: "textfield-label" }}
                 name="repeatPassword"
@@ -161,6 +185,10 @@ const SignUp = () => {
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
                 InputProps={{ disableUnderline: true }}
+                onChange={(e) => {
+                  setRepeatPasswordUser(e.target.value);
+                }}
+                value={repeatPasswordUser}
               ></TextField>
               <Button
                 className="botton-sign-up"

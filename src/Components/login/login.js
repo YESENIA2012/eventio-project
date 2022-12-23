@@ -29,7 +29,6 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
-
   const { classes } = styles();
 
   const passwordAndUsernameNotMatchMessage = () => {
@@ -57,127 +56,124 @@ const Login = () => {
       UsernameNotExistMessage();
       return;
     } else {
-      informationUser.forEach((element) => {
-        if (element.email !== emailText || element.password !== passwordText) {
-          passwordAndUsernameNotMatchMessage();
-        } else if (
-          emailText === element.email &&
-          passwordText === element.password
-        ) {
-          isLoggedInVar = true;
-        } else {
-          UsernameNotExistMessage();
-        }
-      });
+      if (
+        informationUser.email === emailText &&
+        informationUser.password !== passwordText
+      ) {
+        passwordAndUsernameNotMatchMessage();
+      } else if (
+        emailText === informationUser.email &&
+        passwordText === informationUser.password
+      ) {
+        isLoggedInVar = true;
+      } else if (informationUser.email !== emailText) {
+        UsernameNotExistMessage();
+      }
     }
 
     setIsLoggedIn(isLoggedInVar);
   };
 
   if (isLoggedIn) {
-    return <Navigate to="dashboard" />;
-  }
-
-  if (goCreateAccount) {
-    return <Navigate to="sign-up" />;
-  }
-
-  return (
-    <Fragment>
-      <div className="login">
-        <Image />
-        <section className="section-login">
-          <div className="nav-container">
-            <nav className="sign-in-link">
-              <span>Don’t have account?</span>
-              <span
-                onClick={() => {
-                  setGoCreateAccount(true);
+    return <Navigate to="/dashboard" />;
+  } else if (goCreateAccount) {
+    return <Navigate to="/sign-up" />;
+  } else {
+    return (
+      <Fragment>
+        <div className="login">
+          <Image />
+          <section className="section-login">
+            <div className="nav-container">
+              <nav className="sign-in-link">
+                <span>Don’t have account?</span>
+                <span
+                  onClick={() => {
+                    setGoCreateAccount(true);
+                  }}
+                  className="link-s"
+                >
+                  SIGN UP
+                </span>
+              </nav>
+            </div>
+            <div className="title-and-message">
+              <h1 className="title-login">Sing in to Eventio.</h1>
+              <p className="message-login" style={messageSignIn.messageColor}>
+                {messageSignIn.text}
+              </p>
+            </div>
+            <form className="form-login">
+              <TextField
+                label="Email"
+                variant="standard"
+                type="email"
+                className={classes.textFieldStyle}
+                InputLabelProps={{ className: "textfield-label" }}
+                name="Email"
+                sx={{
+                  "& .MuiInputLabel-root": {},
+                  borderBottom: messageSignIn.borderBottonStyle,
                 }}
-                className="link-s"
+                InputProps={{ disableUnderline: true }}
+                onChange={(e) => {
+                  setEmailText(e.target.value);
+                }}
+                value={emailText}
+              ></TextField>
+              <TextField
+                label="Password"
+                variant="standard"
+                type={showPassword ? "text" : "password"}
+                className={classes.textFieldStyle}
+                InputLabelProps={{
+                  className: "textfield-label",
+                }}
+                name="Password"
+                sx={{
+                  "& .MuiInputLabel-root": {},
+                  borderBottom: messageSignIn.borderBottonStyle,
+                }}
+                InputProps={{
+                  disableUnderline: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {showPassword ? (
+                        <VisibilityIcon
+                          className="icon-visibility"
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
+                        />
+                      ) : (
+                        <VisibilityOff
+                          className="icon-visibility"
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
+                        />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
+                onChange={(e) => {
+                  setPasswordText(e.target.value);
+                }}
+                value={passwordText}
+              ></TextField>
+              <Button
+                className="button-login"
+                variant="contained"
+                onClick={processLogin}
               >
-                SIGN UP
-              </span>
-            </nav>
-          </div>
-          <div className="title-and-message">
-            <h1 className="title-login">Sing in to Eventio.</h1>
-            <p className="message-login" style={messageSignIn.messageColor}>
-              {messageSignIn.text}
-            </p>
-          </div>
-          <form className="form-login">
-            <TextField
-              id="Email"
-              label="Email"
-              variant="standard"
-              type="email"
-              className={classes.textFieldStyle}
-              InputLabelProps={{ className: "textfield-label" }}
-              name="Email"
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: messageSignIn.borderBottonStyle,
-              }}
-              InputProps={{ disableUnderline: true }}
-              onChange={(e) => {
-                setEmailText(e.target.value);
-              }}
-              value={emailText}
-            ></TextField>
-            <TextField
-              id="Password"
-              label="Password"
-              variant="standard"
-              type={showPassword ? "text" : "password"}
-              className={classes.textFieldStyle}
-              InputLabelProps={{
-                className: "textfield-label",
-              }}
-              name="Password"
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: messageSignIn.borderBottonStyle,
-              }}
-              InputProps={{
-                disableUnderline: true,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {showPassword ? (
-                      <VisibilityIcon
-                        className="icon-visibility"
-                        onClick={() => {
-                          setShowPassword(!showPassword);
-                        }}
-                      />
-                    ) : (
-                      <VisibilityOff
-                        className="icon-visibility"
-                        onClick={() => {
-                          setShowPassword(!showPassword);
-                        }}
-                      />
-                    )}
-                  </InputAdornment>
-                ),
-              }}
-              onChange={(e) => {
-                setPasswordText(e.target.value);
-              }}
-              value={passwordText}
-            ></TextField>
-            <Button
-              className="button-login"
-              variant="contained"
-              onClick={processLogin}
-            >
-              SIGN IN
-            </Button>
-          </form>
-        </section>
-      </div>
-    </Fragment>
-  );
+                SIGN IN
+              </Button>
+            </form>
+          </section>
+        </div>
+      </Fragment>
+    );
+  }
 };
 
 export default Login;
