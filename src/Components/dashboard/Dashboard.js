@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Avatar, Button } from "@mui/material";
@@ -9,7 +10,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import DetailEvent from "../eventClicked/DetailEvent";
-import NewEvent from "../newEvent/NewEvent";
 import "./dashboardStyles.scss";
 
 const DashboardComponent = () => {
@@ -18,20 +18,26 @@ const DashboardComponent = () => {
   const [viewEvents, setViewEvents] = useState(true);
   const [eventClicked, setEventClicked] = useState("");
   const [hiddenDashboard, setHiddenDashboard] = useState(false);
-  const [eventsList, setEventsList] = useState(
-    JSON.parse(localStorage.getItem("Events"))
-  );
+  const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
+  const [goToFutureEvents, setGoToFutureEvents] = useState(false);
+  const [goToPastEvents, setGoToPastEvents] = useState(false);
+  const [pageNumber, setPageNumber] = useState(0);
 
-  const [showCreateNewEventCompnent, setShowCreateNewEventCompnent] =
-    useState(false);
+  const eventsList = JSON.parse(localStorage.getItem("Events"));
+  const eventsPerPage = 6;
+  const pageCount = Math.ceil(eventsList.length / eventsPerPage);
+  const pagesVisited = pageNumber * eventsPerPage;
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
 
   const paintAvatarAndName = () => {
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
 
-    let firsLetterName = informationUser[0].name[0];
-    let firstLetterLastName = informationUser[0].lastName[0];
+    let firsLetterName = informationUser.name[0];
+    let firstLetterLastName = informationUser.lastName[0];
     let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-    let userName = `${informationUser[0].name} ${informationUser[0].lastName}`;
+    let userName = `${informationUser.name} ${informationUser.lastName}`;
 
     setTextAvatar(letterAvatar);
     setUserName(userName);
@@ -65,58 +71,61 @@ const DashboardComponent = () => {
   if (eventsList === null) {
     return;
   }
-  const items = eventsList.map((element, index) => {
-    const handleButtonEvent = (e) => {
-      let textButton = e.target.innerText;
 
-      if (textButton === "EDIT") {
-        console.log("Editar el evento");
-      } else if (textButton === "JOIN") {
-        e.target.innerText = "LEAVE";
-      } else {
-        e.target.innerText = "JOIN";
-      }
-    };
+  const displayEvents = eventsList
+    .slice(pagesVisited, pagesVisited + eventsPerPage)
+    .map((element, index) => {
+      const handleButtonEvent = (e) => {
+        let textButton = e.target.innerText;
 
-    return (
-      <div
-        key={index}
-        className={
-          viewEvents
-            ? `element-${index} element`
-            : `element-${index} element-column`
+        if (textButton === "EDIT") {
+          console.log("Editar el evento");
+        } else if (textButton === "JOIN") {
+          e.target.innerText = "LEAVE";
+        } else {
+          e.target.innerText = "JOIN";
         }
-        onClick={(e) => showDetailEventClicked(e)}
-      >
-        <div className="date-time-container">
-          <spam className="date">{element.date}</spam>
-          <span className="dash">-</span>
-          <spam className="time">{element.time}</spam>
-        </div>
-        <h4 className="title-event">{element.nameEvent}</h4>
-        <p className="p-host">{element.host}</p>
-        <p className="description-event">{element.descriptionEvent}</p>
-        <div className="button-attendees-capacity-container ">
-          <span className="attendees">
-            <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
-            <span>{element.attendees}</span>
-            <span className="of-text">of</span>
-            <span>{element.capacity}</span>
-          </span>
-          <Button
-            variant="contained"
-            className="button-event"
-            onClick={handleButtonEvent}
-          >
-            {element.stateEvent}
-          </Button>
-        </div>
-      </div>
-    );
-  });
+      };
 
-  if (showCreateNewEventCompnent) {
-    return <NewEvent />;
+      return (
+        <div
+          key={index}
+          className={
+            viewEvents
+              ? `element-${index} element`
+              : `element-${index} element-column`
+          }
+          onClick={(e) => showDetailEventClicked(e)}
+        >
+          <div className="date-time-container">
+            <spam className="date">{element.date}</spam>
+            <span className="dash">-</span>
+            <spam className="time">{element.time}</spam>
+          </div>
+          <h4 className="title-event">{element.nameEvent}</h4>
+          <p className="p-host">{element.host}</p>
+          <p className="description-event">{element.descriptionEvent}</p>
+          <div className="button-attendees-capacity-container ">
+            <span className="attendees">
+              <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
+              <span>{element.attendees}</span>
+              <span className="of-text">of</span>
+              <span>{element.capacity}</span>
+            </span>
+            <Button
+              variant="contained"
+              className="button-event"
+              onClick={handleButtonEvent}
+            >
+              {element.stateEvent}
+            </Button>
+          </div>
+        </div>
+      );
+    });
+
+  if (goToCreateNewEvent) {
+    return <Navigate to="/createEvent" />;
   } else {
     return (
       <div className="event-container">
@@ -145,20 +154,32 @@ const DashboardComponent = () => {
               <Link to="dashboard" className="link-1">
                 All events
               </Link>
-              <Link to="dashboard" className="link-2">
+              <span
+                className="link-2"
+                onClick={() => {
+                  setGoToFutureEvents(true);
+                }}
+              >
                 Future Events
-              </Link>
-              <Link to="dashboard" className="link-3">
+              </span>
+              <Link
+                className="link-3"
+                onClick={() => {
+                  setGoToPastEvents(true);
+                }}
+              >
                 Past Events
               </Link>
             </nav>
             <div className="view-icon">
               <ViewModuleIcon
+                className="view-module"
                 onClick={() => {
                   setViewEvents(true);
                 }}
               />
               <ViewStreamIcon
+                className="view-stream"
                 onClick={() => {
                   setViewEvents(false);
                 }}
@@ -170,19 +191,29 @@ const DashboardComponent = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {items}
+            {displayEvents}
           </div>
           ;
+          <ReactPaginate
+            previousLabel={"Previous"}
+            nextLabel={"Next"}
+            pageCount={pageCount}
+            onPageChange={changePage}
+            containerClassName={"pagination-bttns"}
+            previousLinkClassName={"previous-bttn"}
+            nextLinkClassName={"next-bttn"}
+            disabledClassName={"pagination-disable"}
+            activeClassName={"pagination-ative"}
+          />
           <div className="add-new-event-container">
             <AddCircleIcon
               className="add-new-event-button"
               onClick={() => {
-                setShowCreateNewEventCompnent(true);
+                setGoToCreateNewEvent(true);
               }}
             />
           </div>
         </div>
-
         <DetailEvent
           eventClicked={eventClicked}
           hiddenEventsList={hiddenDashboard}
