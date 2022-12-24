@@ -26,9 +26,7 @@ const NewEvent = () => {
   const [capacityPeopleEvent, setCapacityPeopleEvent] = useState("");
   const { classes } = styles();
 
-  const saveNewEventInLocalStorage = (e) => {
-    e.preventDefault();
-
+  const saveNewEventInLocalStorage = () => {
     let stateEvent = "EDIT";
     let id = mockedEventsCopy.length;
 
