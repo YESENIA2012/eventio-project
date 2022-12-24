@@ -19,16 +19,16 @@ const styles = makeStyles()((theme) => {
 
 const NewEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
+  const [titleEvent, setTitleEvent] = useState("");
+  const [descriptionEvent, setDescriptionEvent] = useState("");
+  const [dateEvent, setDateEvent] = useState("");
+  const [timeEvent, setTimeEvent] = useState("");
+  const [capacityPeopleEvent, setCapacityPeopleEvent] = useState("");
   const { classes } = styles();
 
-  const createNewEventFunction = (e) => {
+  const saveNewEventInLocalStorage = (e) => {
     e.preventDefault();
 
-    let nameEvent = document.querySelector("#title-event").value;
-    let description = document.querySelector("#description-event").value;
-    let date = document.querySelector("#date-event").value;
-    let time = document.querySelector("#time-event").value;
-    let capacity = document.querySelector("#capacity-event").value;
     let stateEvent = "EDIT";
     let id = mockedEventsCopy.length;
 
@@ -37,23 +37,23 @@ const NewEvent = () => {
 
     mockedEventsCopy.push({
       id: id,
-      date: date,
-      time: time,
-      nameEvent: nameEvent,
+      date: dateEvent,
+      time: timeEvent,
+      nameEvent: titleEvent,
       host: host,
-      descriptionEvent: description,
+      descriptionEvent: descriptionEvent,
       attendees: 1,
-      capacity: capacity,
+      capacity: capacityPeopleEvent,
       stateEvent: stateEvent,
     });
 
     localStorage.setItem("Events", JSON.stringify(mockedEventsCopy));
 
-    document.querySelector("#title-event").value = "";
-    document.querySelector("#description-event").value = "";
-    document.querySelector("#date-event").value = "";
-    document.querySelector("#time-event").value = "";
-    document.querySelector("#capacity-event").value = "";
+    setTitleEvent("");
+    setDescriptionEvent("");
+    setDateEvent("");
+    setTimeEvent("");
+    setCapacityPeopleEvent("");
   };
 
   if (goToDashboard) {
@@ -76,7 +76,6 @@ const NewEvent = () => {
           <TextField
             label="Title"
             type="text"
-            id="title-event"
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
@@ -85,6 +84,10 @@ const NewEvent = () => {
             }}
             InputProps={{ disableUnderline: true }}
             InputLabelProps={{ className: "text-label" }}
+            onChange={(e) => {
+              setTitleEvent(e.target.value);
+            }}
+            value={titleEvent}
           ></TextField>
           <TextField
             label="Description"
@@ -98,11 +101,14 @@ const NewEvent = () => {
             }}
             InputProps={{ disableUnderline: true }}
             InputLabelProps={{ className: "text-label" }}
+            onChange={(e) => {
+              setDescriptionEvent(e.target.value);
+            }}
+            value={descriptionEvent}
           ></TextField>
           <TextField
             label="Date"
             type="text"
-            id="date-event"
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
@@ -111,11 +117,14 @@ const NewEvent = () => {
             }}
             InputProps={{ disableUnderline: true }}
             InputLabelProps={{ className: "text-label" }}
+            onChange={(e) => {
+              setDateEvent(e.target.value);
+            }}
+            value={dateEvent}
           ></TextField>
           <TextField
             label="Time"
             type="text"
-            id="time-event"
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
@@ -124,11 +133,14 @@ const NewEvent = () => {
             }}
             InputProps={{ disableUnderline: true }}
             InputLabelProps={{ className: "text-label" }}
+            onChange={(e) => {
+              setTimeEvent(e.target.value);
+            }}
+            value={timeEvent}
           ></TextField>
           <TextField
             label="Capacity"
             type="text"
-            id="capacity-event"
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
@@ -137,11 +149,15 @@ const NewEvent = () => {
             }}
             InputProps={{ disableUnderline: true }}
             InputLabelProps={{ className: "text-label" }}
+            onChange={(e) => {
+              setCapacityPeopleEvent(e.target.value);
+            }}
+            value={capacityPeopleEvent}
           ></TextField>
           <Button
             variant="contained"
             className="new-event-button"
-            onClick={createNewEventFunction}
+            onClick={saveNewEventInLocalStorage}
           >
             CREATE NEW EVENT
           </Button>
