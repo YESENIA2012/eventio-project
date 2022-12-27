@@ -70,4 +70,17 @@ const mockedEvents = [
 
 let mockedEventsCopy = [...mockedEvents];
 
+const paintAvatarAndName = (setTextAvatar, setUserName) => {
+  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
+  let firsLetterName = informationUser.name[0];
+  let firstLetterLastName = informationUser.lastName[0];
+  let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+  let userName = `${informationUser.name} ${informationUser.lastName}`;
+
+  setTextAvatar(letterAvatar);
+  setUserName(userName);
+};
+
+export { paintAvatarAndName };
 export { mockedEventsCopy };
