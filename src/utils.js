@@ -1,3 +1,5 @@
+import { makeStyles } from "tss-react/mui";
+
 const mockedEvents = [
   {
     id: 0,
@@ -70,4 +72,13 @@ const mockedEvents = [
 
 let mockedEventsCopy = [...mockedEvents];
 
+const styles = makeStyles()((theme) => {
+  return {
+    textFieldStyle: {
+      marginBottom: 14,
+    },
+  };
+});
+
+export { styles };
 export { mockedEventsCopy };
