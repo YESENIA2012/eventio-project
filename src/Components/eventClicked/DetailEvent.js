@@ -1,8 +1,7 @@
 import PersonIcon from "@mui/icons-material/Person";
+import { Button } from "@mui/material";
 
 import "./detailEventStyle.scss";
-
-import { Button } from "@mui/material";
 
 const DetailEvent = (props) => {
   const { eventClicked, goToDetailEvent } = props;

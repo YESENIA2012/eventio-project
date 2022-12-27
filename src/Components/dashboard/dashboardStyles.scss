@@ -10,9 +10,17 @@
     width: 100%;
     height: 80px;
 
-    .user-name-text {
-      width: 120px;
-      margin-left: 5px;
+    .avatar-name-container {
+      @include styleFile.align-element-with-flex(center);
+
+      .user-name-text {
+        width: 120px;
+        margin-left: 5px;
+      }
+    }
+
+    .avatar-name-container:hover {
+      cursor: pointer;
     }
 
     .back-button {
@@ -24,12 +32,12 @@
       }
     }
 
-    .back-button-hidden {
-      opacity: 0;
-    }
-
     .back-button:hover {
       cursor: pointer;
+    }
+
+    .back-button-hidden {
+      opacity: 0;
     }
   }
 
@@ -269,7 +277,7 @@
       background-color: rgb(100, 207, 140);
     }
 
-    .pagination-ative a {
+    .pagination-active a {
       color: white;
       background-color: rgb(100, 207, 140);
     }

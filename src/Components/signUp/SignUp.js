@@ -2,18 +2,10 @@ import { Fragment, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField } from "@mui/material";
-import { makeStyles } from "tss-react/mui";
 
 import Image from "../image/ImageContainer";
+import { styles } from "../../utils";
 import "./styleSignUp.scss";
-
-const styles = makeStyles()((theme) => {
-  return {
-    textFieldStyle: {
-      marginBottom: 14,
-    },
-  };
-});
 
 const SignUp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,21 +23,16 @@ const SignUp = () => {
   const { classes } = styles();
 
   const enterDashboardFunction = (e) => {
-    let isLoggedInVar = false;
     const userInformation = JSON.parse(localStorage.getItem("userInformation"));
 
     if (userInformation !== null && userInformation.email === emailUser) {
       theUserExistsMessage();
-      isLoggedInVar = false;
     } else if (passwordUser === repeatPasswordUser && passwordUser !== "") {
       saveInformationUser();
-      isLoggedInVar = true;
+      setIsLoggedIn(true);
     } else {
       passWordNotMatchMessage();
-      isLoggedInVar = false;
     }
-
-    setIsLoggedIn(isLoggedInVar);
   };
 
   const theUserExistsMessage = () => {

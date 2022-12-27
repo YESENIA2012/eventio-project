@@ -10,9 +10,10 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import DetailEvent from "../eventClicked/DetailEvent";
+import { paintAvatarAndName } from "../../utils";
 import "./dashboardStyles.scss";
 
-const DashboardComponent = () => {
+const Dashboard = () => {
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
@@ -21,34 +22,24 @@ const DashboardComponent = () => {
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToFutureEvents, setGoToFutureEvents] = useState(false);
   const [goToPastEvents, setGoToPastEvents] = useState(false);
+  const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
+  const [eventToEdit, setEventToEdit] = useState("");
 
   const eventsList = JSON.parse(localStorage.getItem("Events"));
   const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
+
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
 
-  const paintAvatarAndName = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-    let firsLetterName = informationUser.name[0];
-    let firstLetterLastName = informationUser.lastName[0];
-    let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-    let userName = `${informationUser.name} ${informationUser.lastName}`;
-
-    setTextAvatar(letterAvatar);
-    setUserName(userName);
-  };
-
   useEffect(() => {
-    paintAvatarAndName();
+    paintAvatarAndName(setTextAvatar, setUserName);
   }, []);
 
   const showDetailEventClicked = (e) => {
-    let goToDetailEvent = false;
     let elementClassName = e.target.className;
     let classNamePosition = elementClassName.split(" ");
     let eventId = classNamePosition[0].split("-");
@@ -61,11 +52,28 @@ const DashboardComponent = () => {
     ) {
       return;
     } else {
-      goToDetailEvent = true;
+      setGoToDetailEvent(true);
     }
 
-    setGoToDetailEvent(goToDetailEvent);
     setEventClicked(elementClickedId);
+  };
+
+  const goToEditEventFunction = (e) => {
+    let nameClassAtTheElement = e.target.className;
+    let arrayClass = nameClassAtTheElement.split(" ");
+    let eventToEdit = Number(arrayClass[12]);
+
+    if (
+      eventToEdit === undefined ||
+      eventToEdit === null ||
+      isNaN(eventToEdit)
+    ) {
+      return;
+    } else {
+      setGoToEditEvent(true);
+    }
+
+    setEventToEdit(eventToEdit);
   };
 
   if (eventsList === null) {
@@ -79,7 +87,7 @@ const DashboardComponent = () => {
         let textButton = e.target.innerText;
 
         if (textButton === "EDIT") {
-          console.log("Editar el evento");
+          goToEditEventFunction(e);
         } else if (textButton === "JOIN") {
           e.target.innerText = "LEAVE";
         } else {
@@ -114,8 +122,10 @@ const DashboardComponent = () => {
             </span>
             <Button
               variant="contained"
-              className="button-event"
-              onClick={handleButtonEvent}
+              className={`button-event ${element.id}`}
+              onClick={(e) => {
+                handleButtonEvent(e);
+              }}
             >
               {element.stateEvent}
             </Button>
@@ -126,6 +136,8 @@ const DashboardComponent = () => {
 
   if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
+  } else if (goToEditEvent) {
+    return <Navigate to="/EditEvent" state={{ eventToEdit }} />;
   } else {
     return (
       <div className="event-container">
@@ -139,8 +151,10 @@ const DashboardComponent = () => {
             <ArrowBackIcon />
             <span>Back to events</span>
           </div>
-          <Avatar>{textAvatar}</Avatar>
-          <span className="user-name-text">{userName}</span>
+          <div className="avatar-name-container" onClick={() => {}}>
+            <Avatar>{textAvatar}</Avatar>
+            <span className="user-name-text">{userName}</span>
+          </div>
         </section>
         <div
           className={
@@ -203,7 +217,7 @@ const DashboardComponent = () => {
             previousLinkClassName={"previous-bttn"}
             nextLinkClassName={"next-bttn"}
             disabledClassName={"pagination-disable"}
-            activeClassName={"pagination-ative"}
+            activeClassName={"pagination-active"}
           />
           <div className="add-new-event-container">
             <AddCircleIcon
@@ -223,4 +237,4 @@ const DashboardComponent = () => {
   }
 };
 
-export default DashboardComponent;
+export default Dashboard;

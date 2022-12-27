@@ -1,3 +1,5 @@
+import { makeStyles } from "tss-react/mui";
+
 const mockedEvents = [
   {
     id: 0,
@@ -70,4 +72,27 @@ const mockedEvents = [
 
 let mockedEventsCopy = [...mockedEvents];
 
+const paintAvatarAndName = (setTextAvatar, setUserName) => {
+  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
+  let firsLetterName = informationUser.name[0];
+  let firstLetterLastName = informationUser.lastName[0];
+  let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+  let userName = `${informationUser.name} ${informationUser.lastName}`;
+
+  setTextAvatar(letterAvatar);
+  setUserName(userName);
+};
+
+const styles = makeStyles()((theme) => {
+  return {
+    textFieldStyle: {
+      marginBottom: 14,
+      width: "80%",
+    },
+  };
+});
+
+export { styles };
 export { mockedEventsCopy };
+export { paintAvatarAndName };
