@@ -1,5 +1,5 @@
-const DashboardComponent = () => {
+const Dashboard = () => {
   return <div>It is located on the dashboard</div>;
 };
 
-export default DashboardComponent;
+export default Dashboard;

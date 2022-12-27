@@ -2,20 +2,12 @@ import React, { useState, Fragment } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
-import { makeStyles } from "tss-react/mui";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
+import { styles } from "../../utils";
 import "./styleLogin.scss";
-
-const styles = makeStyles()((theme) => {
-  return {
-    textFieldStyle: {
-      marginBottom: 14,
-    },
-  };
-});
 
 const Login = () => {
   const [messageSignIn, setMessageSignIn] = useState({
@@ -23,16 +15,14 @@ const Login = () => {
     messageColor: { color: "rgb(150, 157, 166)" },
     borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
   });
-
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
-
   const { classes } = styles();
 
-  const passwordAndUsernameNotMatchMessage = () => {
+  const failedLoginMessage = () => {
     setMessageSignIn({
       text: "Oops! That email and password combination is not valid.",
       messageColor: { color: "rgb(237, 85, 151)" },
@@ -40,7 +30,7 @@ const Login = () => {
     });
   };
 
-  const UsernameNotExistMessage = () => {
+  const UserDoesNotExistsMessage = () => {
     setMessageSignIn({
       text: "Oops! Username does not exist",
       messageColor: { color: "rgb(237, 85, 151)" },
@@ -49,30 +39,26 @@ const Login = () => {
   };
 
   const processLogin = () => {
-    let isLoggedInVar = false;
-
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
 
     if (informationUser === null) {
-      UsernameNotExistMessage();
+      UserDoesNotExistsMessage();
       return;
     } else {
       if (
         informationUser.email === emailText &&
         informationUser.password !== passwordText
       ) {
-        passwordAndUsernameNotMatchMessage();
+        failedLoginMessage();
       } else if (
         emailText === informationUser.email &&
         passwordText === informationUser.password
       ) {
-        isLoggedInVar = true;
+        setIsLoggedIn(true);
       } else if (informationUser.email !== emailText) {
-        UsernameNotExistMessage();
+        UserDoesNotExistsMessage();
       }
     }
-
-    setIsLoggedIn(isLoggedInVar);
   };
 
   if (isLoggedIn) {
