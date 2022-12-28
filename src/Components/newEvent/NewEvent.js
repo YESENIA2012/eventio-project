@@ -3,19 +3,9 @@ import { useState } from "react";
 
 import { Button, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { makeStyles } from "tss-react/mui";
 
-import { mockedEventsCopy } from "../../utils";
+import { mockedEventsCopy, styles } from "../../utils";
 import "./newEventStyle.scss";
-
-const styles = makeStyles()((theme) => {
-  return {
-    textFieldStyle: {
-      marginBottom: 14,
-      width: "80%",
-    },
-  };
-});
 
 const NewEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
