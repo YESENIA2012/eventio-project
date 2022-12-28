@@ -1,0 +1,93 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+$font-color: rgb(150, 157, 166);
+.event-container {
+  @include styleFile.display-type(column);
+
+  .name-avatar-container {
+    @include styleFile.align-element-with-flex(end);
+    width: 100%;
+    height: 80px;
+
+    .name-and-avatar {
+      @include styleFile.align-element-with-flex(center);
+
+      .user-name {
+        width: 120px;
+        margin-left: 5px;
+      }
+    }
+
+    .avatar-and-name:hover {
+      cursor: pointer;
+    }
+  }
+
+  .title-container {
+    @include styleFile.align-element-with-flex(space-between);
+    @include styleFile.style-font(13px);
+    width: 88%;
+    margin: 10px auto 30px auto;
+    font-size: 13px;
+
+    .delete-event {
+      color: rgb(237, 85, 151);
+      width: 120px;
+      @include styleFile.align-element-with-flex(space-around);
+    }
+
+    .delete-event:hover {
+      cursor: pointer;
+    }
+  }
+
+  .check-icon-container {
+    @include styleFile.align-element-with-flex(flex-end);
+    margin-right: 30px;
+
+    .check-icon {
+      background-color: styleFile.$background-color-button;
+      border-radius: 50%;
+      font-size: 13px;
+      height: 50px;
+      width: 50px;
+      color: white;
+      margin-top: 130px;
+    }
+
+    .check-icon:hover {
+      cursor: pointer;
+    }
+  }
+
+  .box-event {
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    height: auto;
+    margin: auto;
+
+    .container-event {
+      @include styleFile.align-element-with-flex(center);
+      width: 60%;
+
+      .information-event {
+        @include styleFile.align-element-with-flex(center);
+        @include styleFile.border-background-events-element;
+        flex-direction: column;
+        width: 100%;
+        padding: 20px 0 30px 0;
+
+        .text-label {
+          @include styleFile.style-font(13px);
+        }
+      }
+    }
+  }
+
+  .attendees-container {
+    @include styleFile.border-background-events-element;
+    width: 30%;
+    height: 250px;
+    padding: 25px;
+  }
+}

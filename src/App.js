@@ -1,16 +1,15 @@
-import Login from "./Components/login/Login";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import SignUp from "./Components/signUp/SignUp";
+import Dashboard from "./components/dashboard/Dashboard";
+import EditEvent from "./components/editEvent/EditEvents";
 import "./styles/app.scss";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="sign-up" element={<SignUp />} />
-        {/* <Route path="contact" element={<Contact />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/EditEvent" element={<EditEvent />} />
       </Routes>
     </div>
   );
