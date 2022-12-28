@@ -1,7 +1,5 @@
-import "./styleSignUp.scss";
-
 const SignUp = () => {
-  return <div></div>;
+  return <div>Sign Up component</div>;
 };
 
 export default SignUp;
