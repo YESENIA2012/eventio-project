@@ -12,15 +12,20 @@
 
     .avatar-name-container {
       @include styleFile.align-element-with-flex(center);
+      margin-right: 30px;
 
       .user-name-text {
-        width: 120px;
+        width: 70px;
         margin-left: 5px;
       }
-    }
 
-    .avatar-name-container:hover {
-      cursor: pointer;
+      .arrow-container {
+        height: 40px;
+      }
+
+      .arrow-container:hover {
+        cursor: pointer;
+      }
     }
 
     .back-button {

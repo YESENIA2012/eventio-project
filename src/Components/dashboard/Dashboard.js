@@ -8,6 +8,7 @@ import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import DetailEvent from "../eventClicked/DetailEvent";
 import { paintAvatarAndName } from "../../utils";
@@ -25,8 +26,11 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
   const [eventToEdit, setEventToEdit] = useState("");
+  const [eventsDrawToDashboard, setEventsDrawToDashboard] = useState("");
+  const [eventsList, setEventList] = useState(
+    JSON.parse(localStorage.getItem("Events"))
+  );
 
-  const eventsList = JSON.parse(localStorage.getItem("Events"));
   const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
@@ -38,6 +42,10 @@ const Dashboard = () => {
   useEffect(() => {
     paintAvatarAndName(setTextAvatar, setUserName);
   }, []);
+
+  useEffect(() => {
+    setEventsDrawToDashboard(displayEvents);
+  }, [eventsList]);
 
   const showDetailEventClicked = (e) => {
     let elementClassName = e.target.className;
@@ -76,6 +84,25 @@ const Dashboard = () => {
     setEventToEdit(eventToEdit);
   };
 
+  const saveStateEvent = (e, text) => {
+    let nameClassAtTheElement = e.target.className;
+    let arrayClass = nameClassAtTheElement.split(" ");
+    let eventToEditState = Number(arrayClass[12]);
+
+    if (
+      eventToEdit === undefined ||
+      eventToEdit === null ||
+      isNaN(eventToEdit)
+    ) {
+      return;
+    } else {
+      eventsList[eventToEditState].stateEvent = text;
+    }
+
+    localStorage.setItem("Events", JSON.stringify(eventsList));
+    setEventList(JSON.parse(localStorage.getItem("Events")));
+  };
+
   if (eventsList === null) {
     return;
   }
@@ -89,9 +116,9 @@ const Dashboard = () => {
         if (textButton === "EDIT") {
           goToEditEventFunction(e);
         } else if (textButton === "JOIN") {
-          e.target.innerText = "LEAVE";
+          saveStateEvent(e, "LEAVE");
         } else {
-          e.target.innerText = "JOIN";
+          saveStateEvent(e, "JOIN");
         }
       };
 
@@ -151,9 +178,12 @@ const Dashboard = () => {
             <ArrowBackIcon />
             <span>Back to events</span>
           </div>
-          <div className="avatar-name-container" onClick={() => {}}>
+          <div className="avatar-name-container">
             <Avatar>{textAvatar}</Avatar>
             <span className="user-name-text">{userName}</span>
+            <span className="arrow-container" onClick={() => {}}>
+              <ArrowDropDownIcon />
+            </span>
           </div>
         </section>
         <div
@@ -205,7 +235,7 @@ const Dashboard = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {displayEvents}
+            {eventsDrawToDashboard}
           </div>
           ;
           <ReactPaginate
