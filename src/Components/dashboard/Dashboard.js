@@ -8,6 +8,7 @@ import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import DetailEvent from "../eventClicked/DetailEvent";
 import { paintAvatarAndName } from "../../utils";
@@ -25,8 +26,13 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
   const [eventToEdit, setEventToEdit] = useState("");
+  const [eventsList, setEventList] = useState(
+    JSON.parse(localStorage.getItem("Events"))
+  );
+  const [seeModal, setSeeModal] = useState(false);
+  const [goToProfile, setGoToProfile] = useState(false);
+  const [signOut, setSignOut] = useState(false);
 
-  const eventsList = JSON.parse(localStorage.getItem("Events"));
   const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
@@ -75,6 +81,25 @@ const Dashboard = () => {
     setEventToEdit(eventToEdit);
   };
 
+  const saveStateEvent = (e, text) => {
+    let nameClassAtTheElement = e.target.className;
+    let arrayClass = nameClassAtTheElement.split(" ");
+    let eventToEditState = Number(arrayClass[12]);
+
+    if (
+      eventToEdit === undefined ||
+      eventToEdit === null ||
+      isNaN(eventToEdit)
+    ) {
+      return;
+    } else {
+      eventsList[eventToEditState].stateEvent = text;
+    }
+
+    localStorage.setItem("Events", JSON.stringify(eventsList));
+    setEventList(JSON.parse(localStorage.getItem("Events")));
+  };
+
   if (eventsList === null) {
     return;
   }
@@ -88,9 +113,9 @@ const Dashboard = () => {
         if (textButton === "EDIT") {
           goToEditEventFunction(e);
         } else if (textButton === "JOIN") {
-          e.target.innerText = "LEAVE";
+          saveStateEvent(e, "LEAVE");
         } else {
-          e.target.innerText = "JOIN";
+          saveStateEvent(e, "JOIN");
         }
       };
 
@@ -134,7 +159,11 @@ const Dashboard = () => {
   if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/EditEvent" state={{ eventToEdit }} />;
+    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+  } else if (signOut) {
+    return <Navigate to="/" />;
+  } else if (goToProfile) {
+    return <Navigate to="/profile" />;
   } else {
     return (
       <div className="event-container">
@@ -148,8 +177,18 @@ const Dashboard = () => {
             <ArrowBackIcon />
             <span>Back to events</span>
           </div>
-          <Avatar>{textAvatar}</Avatar>
-          <span className="user-name-text">{userName}</span>
+          <div className="avatar-name-container">
+            <Avatar>{textAvatar}</Avatar>
+            <span className="user-name-text">{userName}</span>
+            <span
+              className="arrow-container"
+              onClick={() => {
+                setSeeModal(!seeModal);
+              }}
+            >
+              <ArrowDropDownIcon />
+            </span>
+          </div>
         </section>
         <div
           className={
@@ -180,6 +219,28 @@ const Dashboard = () => {
                 Past Events
               </span>
             </nav>
+            <div
+              className={seeModal ? "modal-container" : "hide-modal-container"}
+            >
+              <nav className="profile-sign-out-container">
+                <span
+                  className="profile-link"
+                  onClick={() => {
+                    setGoToProfile(true);
+                  }}
+                >
+                  View Profile
+                </span>
+                <span
+                  className="sign-out-button"
+                  onClick={() => {
+                    setSignOut(true);
+                  }}
+                >
+                  Sign Out
+                </span>
+              </nav>
+            </div>
             <div className="view-icon">
               <ViewModuleIcon
                 className="view-module"
