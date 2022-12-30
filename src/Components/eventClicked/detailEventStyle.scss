@@ -1,0 +1,15 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
+.container-event-section {
+  @include styleFile.display-type(column);
+  align-items: center;
+  position: absolute;
+  background-color: rgb(249, 249, 251);
+  margin-top: 100px;
+  width: 100%;
+  height: auto;
+}
+
+.event-detail-hidden {
+  opacity: 0;
+}

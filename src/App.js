@@ -1,7 +1,10 @@
-import Login from "./Components/login/Login";
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import SignUp from "./Components/signUp/SignUp";
+import Dashboard from "./components/dashboard/Dashboard";
+import NewEvent from "./components/newEvent/NewEvent";
+import { EditEvent } from "./components/eventEdit";
+import Login from "./components/Login";
+import Profile from "./components/Profile";
 import "./styles/app.scss";
 
 function App() {
@@ -9,8 +12,10 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="sign-up" element={<SignUp />} />
-        {/* <Route path="contact" element={<Contact />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/createEvent" element={<NewEvent />} />
+        <Route path="/editEvent" element={<EditEvent />} />
+        <Route path="/profile" element={<EditEvent />} />
       </Routes>
     </div>
   );
