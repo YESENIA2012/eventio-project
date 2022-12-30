@@ -30,11 +30,13 @@ const Dashboard = () => {
   const [eventsList, setEventList] = useState(
     JSON.parse(localStorage.getItem("Events"))
   );
+  const [seeModal, setSeeModal] = useState(false);
+  const [goToProfile, setGoToProfile] = useState(false);
+  const [signOut, setSignOut] = useState(false);
 
   const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
-
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
@@ -164,7 +166,11 @@ const Dashboard = () => {
   if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/EditEvent" state={{ eventToEdit }} />;
+    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+  } else if (signOut) {
+    return <Navigate to="/" />;
+  } else if (goToProfile) {
+    return <Navigate to="/profile" />;
   } else {
     return (
       <div className="event-container">
@@ -181,7 +187,12 @@ const Dashboard = () => {
           <div className="avatar-name-container">
             <Avatar>{textAvatar}</Avatar>
             <span className="user-name-text">{userName}</span>
-            <span className="arrow-container" onClick={() => {}}>
+            <span
+              className="arrow-container"
+              onClick={() => {
+                setSeeModal(!seeModal);
+              }}
+            >
               <ArrowDropDownIcon />
             </span>
           </div>
@@ -215,6 +226,28 @@ const Dashboard = () => {
                 Past Events
               </span>
             </nav>
+            <div
+              className={seeModal ? "modal-container" : "hide-modal-container"}
+            >
+              <nav className="profile-sign-out-container">
+                <span
+                  className="profile-link"
+                  onClick={() => {
+                    setGoToProfile(true);
+                  }}
+                >
+                  View Profile
+                </span>
+                <span
+                  className="sign-out-button"
+                  onClick={() => {
+                    setSignOut(true);
+                  }}
+                >
+                  Sign Out
+                </span>
+              </nav>
+            </div>
             <div className="view-icon">
               <ViewModuleIcon
                 className="view-module"

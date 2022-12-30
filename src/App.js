@@ -5,6 +5,7 @@ import SignUp from "./components/signUp/SignUp";
 import Dashboard from "./components/dashboard/Dashboard";
 import NewEvent from "./components/newEvent/NewEvent";
 import EditEvent from "./components/editEvent/EditEvents";
+import Profile from "./components/profile/Profile";
 import Error404 from "./components/error/Error404";
 import "./styles/app.scss";
 
@@ -16,7 +17,8 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/createEvent" element={<NewEvent />} />
-        <Route path="/EditEvent" element={<EditEvent />} />
+        <Route path="/editEvent" element={<EditEvent />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
     </div>
