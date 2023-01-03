@@ -12,8 +12,12 @@ import "./detailEventStyle.scss";
 const DetailEvent = () => {
   const location = useLocation();
   const eventClicked = location.state.eventClicked;
-  const events = JSON.parse(localStorage.getItem("Events"));
   const [goToDashboard, setGoToDashboard] = useState(false);
+  const [goToEditEvent, setGoToEditEvent] = useState(false);
+  const [eventToEdit, setEventToEdit] = useState("");
+  const [eventsList, setEventList] = useState(
+    JSON.parse(localStorage.getItem("Events"))
+  );
 
   const drawEvent = () => {
     if (
@@ -27,26 +31,39 @@ const DetailEvent = () => {
         <div className="container-event">
           <div className="information-event">
             <div className="time-date-container">
-              <span className="date-d">{events[eventClicked].date}</span>
+              <span className="date-d">{eventsList[eventClicked].date}</span>
               <span className="dash-d">-</span>
-              <span className="time-d">{events[eventClicked].time}</span>
+              <span className="time-d">{eventsList[eventClicked].time}</span>
             </div>
-            <h1 className="title">{events[eventClicked].nameEvent}</h1>
-            <p className="host-e">{events[eventClicked].host}</p>
+            <h1 className="title">{eventsList[eventClicked].nameEvent}</h1>
+            <p className="host-e">{eventsList[eventClicked].host}</p>
             <p className="description-event-e">
-              {events[eventClicked].descriptionEvent}
+              {eventsList[eventClicked].descriptionEvent}
             </p>
             <div className="attendees-capacity-button-container">
               <div className="attendees-capacity-container">
                 <PersonIcon className="person-icon" />
                 <span className="attendees">
-                  {events[eventClicked].attendees}
+                  {eventsList[eventClicked].attendees}
                 </span>
                 <span className="of-text-d">of</span>
-                <span>{events[eventClicked].capacity}</span>
+                <span>{eventsList[eventClicked].capacity}</span>
               </div>
-              <Button variant="contained" className="button-event-detail">
-                {events[eventClicked].stateEvent}
+              <Button
+                variant="contained"
+                className={`button-event-detail ${eventsList[eventClicked].id}`}
+                onClick={(e) => {
+                  handleButtonEvent(
+                    e,
+                    setGoToEditEvent,
+                    setEventToEdit,
+                    eventToEdit,
+                    eventsList,
+                    setEventList
+                  );
+                }}
+              >
+                {eventsList[eventClicked].stateEvent}
               </Button>
             </div>
           </div>
@@ -58,6 +75,8 @@ const DetailEvent = () => {
 
   if (goToDashboard) {
     return <Navigate to="/dashboard" />;
+  } else if (goToEditEvent) {
+    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
   } else {
     return (
       <div className="container-event-section">

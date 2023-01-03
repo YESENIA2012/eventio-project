@@ -145,5 +145,3 @@ export { styles };
 export { mockedEventsCopy };
 export { paintAvatarAndName };
 export { handleButtonEvent };
-export { saveStateEvent };
-export { goToEditEventFunction };
