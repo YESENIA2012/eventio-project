@@ -9,7 +9,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import AvatarUser from "../avatarUser/AvatarUser";
-import { handleButtonEvent } from "../../utils";
+import { handleButtonEvent, showDetailEventClicked } from "../../utils";
 import "./dashboardStyles.scss";
 
 const Dashboard = () => {
@@ -33,25 +33,6 @@ const Dashboard = () => {
     setPageNumber(selected);
   };
 
-  const showDetailEventClicked = (e) => {
-    let elementClassName = e.target.className;
-    let classNamePosition = elementClassName.split(" ");
-    let eventId = classNamePosition[0].split("-");
-    let elementClickedId = Number(eventId[1]);
-
-    if (
-      elementClickedId === undefined ||
-      isNaN(elementClickedId) ||
-      elementClickedId === "" ||
-      elementClickedId === null
-    ) {
-      return;
-    } else {
-      setGoToDetailEvent(true);
-      setEventClicked(elementClickedId);
-    }
-  };
-
   if (eventsList === null) {
     return;
   }
@@ -67,7 +48,9 @@ const Dashboard = () => {
               ? `element-${index} element`
               : `element-${index} element-column`
           }
-          onClick={(e) => showDetailEventClicked(e)}
+          onClick={(e) =>
+            showDetailEventClicked(e, setGoToDetailEvent, setEventClicked)
+          }
         >
           <div className="date-time-container">
             <spam className="date">{element.date}</spam>
@@ -144,14 +127,12 @@ const Dashboard = () => {
               <ViewModuleIcon
                 className="view-module"
                 onClick={() => {
-                  console.log("yesenia");
                   setViewEvents(true);
                 }}
               />
               <ViewStreamIcon
                 className="view-stream"
                 onClick={() => {
-                  console.log("paola");
                   setViewEvents(false);
                 }}
               />

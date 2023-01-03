@@ -15,7 +15,6 @@ const Login = () => {
     messageColor: { color: "rgb(150, 157, 166)" },
     borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
   });
-
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);

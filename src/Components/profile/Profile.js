@@ -1,10 +1,18 @@
 import { useState, useEffect } from "react";
+import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
-import { Avatar } from "@mui/material";
+
+import { Avatar, Button } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
-import { paintAvatarAndName } from "../../utils";
+
+import {
+  paintAvatarAndName,
+  showDetailEventClicked,
+  handleButtonEvent,
+} from "../../utils";
 import "./profileStyle.scss";
 
 const Profile = () => {
@@ -18,9 +26,21 @@ const Profile = () => {
   const [goToProfile, setGoToProfile] = useState(false);
   const [signOut, setSignOut] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
+  const [eventClicked, setEventClicked] = useState("");
+  const [goToDetailEvent, setGoToDetailEvent] = useState(false);
+  const [goToEditEvent, setGoToEditEvent] = useState(false);
+  const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState(
     JSON.parse(localStorage.getItem("Events"))
   );
+
+  const [pageNumber, setPageNumber] = useState(0);
+  const eventsPerPage = 3;
+  const pageCount = Math.ceil(eventsList.length / eventsPerPage);
+  const pagesVisited = pageNumber * eventsPerPage;
+  const changePage = ({ selected }) => {
+    setPageNumber(selected);
+  };
 
   useEffect(() => {
     paintAvatarAndName(setTextAvatar, setUserName);
@@ -38,60 +58,59 @@ const Profile = () => {
     setLastNameUser(lastName);
     setEmailUser(email);
   };
-  /* 
+
   const displayEvents = eventsList
-  .slice(pagesVisited, pagesVisited + eventsPerPage)
-  .map((element, index) => {
-    const handleButtonEvent = (e) => {
-      let textButton = e.target.innerText;
-
-      if (textButton === "EDIT") {
-        goToEditEventFunction(e);
-      } else if (textButton === "JOIN") {
-        saveStateEvent(e, "LEAVE");
-      } else {
-        saveStateEvent(e, "JOIN");
-      }
-    };
-
-    return (
-      <div
-        key={index}
-        className={
-          viewEvents
-            ? `element-${index} element`
-            : `element-${index} element-column`
-        }
-        onClick={(e) => showDetailEventClicked(e)}
-      >
-        <div className="date-time-container">
-          <spam className="date">{element.date}</spam>
-          <span className="dash">-</span>
-          <spam className="time">{element.time}</spam>
-        </div>
-        <h4 className="title-event">{element.nameEvent}</h4>
-        <p className="p-host">{element.host}</p>
-        <p className="description-event">{element.descriptionEvent}</p>
-        <div className="button-attendees-capacity-container ">
-          <span className="attendees">
-            <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
-            <span>{element.attendees}</span>
-            <span className="of-text">of</span>
-            <span>{element.capacity}</span>
-          </span>
-          <Button
-            variant="contained"
-            className={`button-event ${element.id}`}
-            onClick={(e) => {
-              handleButtonEvent(e);
-            }}
+    .slice(pagesVisited, pagesVisited + eventsPerPage)
+    .map((element, index) => {
+      if (element.stateEvent === "EDIT" || element.stateEvent === "LEAVE") {
+        return (
+          <div
+            key={index}
+            className={
+              viewEvents
+                ? `element-${index} element`
+                : `element-${index} element-column`
+            }
+            onClick={(e) =>
+              showDetailEventClicked(e, setGoToDetailEvent, setEventClicked)
+            }
           >
-            {element.stateEvent}
-          </Button>
-        </div>
-      </div>
-    );
-  }); */
+            <div className="date-time-container">
+              <spam className="date">{element.date}</spam>
+              <span className="dash">-</span>
+              <spam className="time">{element.time}</spam>
+            </div>
+            <h4 className="title-event">{element.nameEvent}</h4>
+            <p className="p-host">{element.host}</p>
+            <p className="description-event">{element.descriptionEvent}</p>
+            <div className="button-attendees-capacity-container ">
+              <span className="attendees">
+                <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
+                <span>{element.attendees}</span>
+                <span className="of-text">of</span>
+                <span>{element.capacity}</span>
+              </span>
+              <Button
+                variant="contained"
+                className={`button-event ${element.id}`}
+                onClick={(e) => {
+                  handleButtonEvent(
+                    e,
+                    setGoToEditEvent,
+                    setEventToEdit,
+                    eventToEdit,
+                    eventsList,
+                    setEventList
+                  );
+                }}
+              >
+                {element.stateEvent}
+              </Button>
+            </div>
+          </div>
+        );
+      }
+    });
 
   if (signOut) {
     return <Navigate to="/" />;
@@ -99,6 +118,8 @@ const Profile = () => {
     return <Navigate to="/profile" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
+  } else if (goToDetailEvent) {
+    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else {
     return (
       <div className="profile-container">
@@ -124,6 +145,39 @@ const Profile = () => {
             <h4 className="user-name-p">{lastNameUser}</h4>
           </div>
         </div>
+        <div className="dashboard-view">
+          <span>My Events</span>
+          <span>
+            <ViewModuleIcon
+              onClick={() => {
+                setViewEvents(true);
+              }}
+            />
+            <ViewStreamIcon
+              onClick={() => {
+                setViewEvents(false);
+              }}
+            />
+          </span>
+        </div>
+        <div
+          className={
+            viewEvents ? "dashboard-view-row" : "dashboard-view-column"
+          }
+        >
+          {displayEvents}
+        </div>
+        <ReactPaginate
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          pageCount={pageCount}
+          onPageChange={changePage}
+          containerClassName={"pagination-bttns"}
+          previousLinkClassName={"previous-bttn"}
+          nextLinkClassName={"next-bttn"}
+          disabledClassName={"pagination-disable"}
+          activeClassName={"pagination-active"}
+        />
         <div
           className={
             seeModal
@@ -158,26 +212,6 @@ const Profile = () => {
             </span>
           </nav>
         </div>
-        <div className="dashboard-view">
-          <span>My Events</span>
-          <span>
-            <ViewModuleIcon
-              onClick={() => {
-                setViewEvents(true);
-              }}
-            />
-            <ViewStreamIcon
-              onClick={() => {
-                setViewEvents(false);
-              }}
-            />
-          </span>
-        </div>
-        <div
-          className={
-            viewEvents ? "dashboard-view-row" : "dashboard-view-column"
-          }
-        ></div>
       </div>
     );
   }

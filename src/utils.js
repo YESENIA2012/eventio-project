@@ -141,7 +141,27 @@ const handleButtonEvent = (
   }
 };
 
+const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
+  let elementClassName = e.target.className;
+  let classNamePosition = elementClassName.split(" ");
+  let eventId = classNamePosition[0].split("-");
+  let elementClickedId = Number(eventId[1]);
+
+  if (
+    elementClickedId === undefined ||
+    isNaN(elementClickedId) ||
+    elementClickedId === "" ||
+    elementClickedId === null
+  ) {
+    return;
+  } else {
+    setGoToDetailEvent(true);
+    setEventClicked(elementClickedId);
+  }
+};
+
 export { styles };
 export { mockedEventsCopy };
 export { paintAvatarAndName };
 export { handleButtonEvent };
+export { showDetailEventClicked };

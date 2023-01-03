@@ -15,34 +15,54 @@ const NewEvent = () => {
   const [dateEvent, setDateEvent] = useState("");
   const [timeEvent, setTimeEvent] = useState("");
   const [capacityPeopleEvent, setCapacityPeopleEvent] = useState("");
+  const [message, setMessage] = useState({
+    text: "Enter details below.",
+    messageColor: { color: "rgb(150, 157, 166)" },
+  });
   const { classes } = styles();
 
   const saveNewEventInLocalStorage = () => {
     let stateEvent = "EDIT";
     let id = mockedEventsCopy.length;
 
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-    let host = `${informationUser.name} ${informationUser.lastName}`;
+    if (
+      titleEvent === "" ||
+      descriptionEvent === "" ||
+      dateEvent === "" ||
+      timeEvent === "" ||
+      capacityPeopleEvent === ""
+    ) {
+      setMessage({
+        text: "Please fill in the blanks.",
+        messageColor: { color: "rgb(237, 85, 151)" },
+      });
+      return;
+    } else {
+      const informationUser = JSON.parse(
+        localStorage.getItem("userInformation")
+      );
+      let host = `${informationUser.name} ${informationUser.lastName}`;
 
-    mockedEventsCopy.push({
-      id: id,
-      date: dateEvent,
-      time: timeEvent,
-      nameEvent: titleEvent,
-      host: host,
-      descriptionEvent: descriptionEvent,
-      attendees: 1,
-      capacity: capacityPeopleEvent,
-      stateEvent: stateEvent,
-    });
+      mockedEventsCopy.push({
+        id: id,
+        date: dateEvent,
+        time: timeEvent,
+        nameEvent: titleEvent,
+        host: host,
+        descriptionEvent: descriptionEvent,
+        attendees: 1,
+        capacity: capacityPeopleEvent,
+        stateEvent: stateEvent,
+      });
 
-    localStorage.setItem("Events", JSON.stringify(mockedEventsCopy));
+      localStorage.setItem("Events", JSON.stringify(mockedEventsCopy));
 
-    setTitleEvent("");
-    setDescriptionEvent("");
-    setDateEvent("");
-    setTimeEvent("");
-    setCapacityPeopleEvent("");
+      setTitleEvent("");
+      setDescriptionEvent("");
+      setDateEvent("");
+      setTimeEvent("");
+      setCapacityPeopleEvent("");
+    }
   };
 
   if (goToDashboard) {
@@ -62,6 +82,9 @@ const NewEvent = () => {
         </div>
         <div className="create-new-event">
           <h3>Create new event</h3>
+          <p className="message" style={message.messageColor}>
+            {message.text}
+          </p>
           <TextField
             label="Title"
             type="text"

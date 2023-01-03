@@ -125,7 +125,7 @@
     justify-content: space-between;
     display: flex;
     width: 80%;
-    margin: auto;
+    margin: 30px auto auto auto;
 
     span {
       font-weight: bolder;
@@ -137,6 +137,65 @@
     flex-flow: wrap;
     width: 95%;
     margin: auto;
+
+    .element {
+      @include styleFile.display-type(column);
+      justify-content: space-evenly;
+      margin: 6px;
+      width: 25%;
+      height: 200px;
+      padding: 20px;
+      @include styleFile.border-background-events-element;
+
+      .date-time-container {
+        @include styleFile.style-font(13px);
+        font-weight: styleFile.$font-weigth-400;
+
+        .dash {
+          margin: 0 5px 0 5px;
+        }
+      }
+
+      .title-event {
+        margin-bottom: 0;
+        font-weight: styleFile.$font-weigth-bolder;
+      }
+
+      .p-host {
+        margin-top: 0;
+        font-weight: styleFile.$font-weigth-bolder;
+        @include styleFile.style-font(13px);
+      }
+
+      .description-event {
+        width: 180px;
+        @include styleFile.style-font(13px);
+        font-weight: styleFile.$font-weigth-400;
+      }
+
+      .button-attendees-capacity-container {
+        @include styleFile.align-element-with-flex(space-between);
+
+        .attendees {
+          display: flex;
+          align-items: center;
+          @include styleFile.style-font(13px);
+          font-weight: styleFile.$font-weigth-400;
+        }
+
+        .of-text {
+          margin: 0 5px 0 5px;
+        }
+      }
+
+      .button-event:hover {
+        background-color: styleFile.$background-color-button;
+      }
+    }
+
+    .element:hover {
+      cursor: pointer;
+    }
   }
 
   .dashboard-view-column {
@@ -144,5 +203,97 @@
     align-items: center;
     margin: 10px auto 60px auto;
     width: 80%;
+
+    .element-column {
+      @include styleFile.align-element-with-flex(space-between);
+      margin-bottom: 10px;
+      padding: 5px 18px 5px 18px;
+      height: 50px;
+      width: 100%;
+      @include styleFile.border-background-events-element;
+
+      .date-time-container {
+        @include styleFile.style-font(10px);
+        width: 130px;
+        font-weight: styleFile.$font-weigth-400;
+      }
+
+      .title-event {
+        font-size: 14px;
+        width: 180px;
+      }
+
+      .p-host {
+        width: 100px;
+        @include styleFile.style-font(13px);
+        font-weight: styleFile.$font-weigth-400;
+      }
+
+      .description-event {
+        width: 250px;
+        @include styleFile.style-font(13px);
+        font-weight: styleFile.$font-weigth-400;
+      }
+
+      .button-attendees-capacity-container {
+        @include styleFile.align-element-with-flex(space-between);
+
+        .attendees {
+          width: 120px;
+          @include styleFile.style-font(13px);
+          font-weight: styleFile.$font-weigth-400;
+
+          span {
+            height: 40px;
+          }
+
+          .of-text {
+            margin: 0 5px 0 5px;
+          }
+        }
+
+        .button-event:hover {
+          background-color: styleFile.$background-color-button;
+        }
+      }
+    }
+
+    .element-column :hover {
+      cursor: pointer;
+    }
+  }
+
+  .element .button-event,
+  .element-column .button-event {
+    width: 100px;
+    height: 30px;
+    background-color: styleFile.$background-color-button;
+    font-weight: bold;
+  }
+
+  .pagination-bttns {
+    @include styleFile.align-element-with-flex(center);
+    width: 80%;
+    height: 40px;
+    list-style: none;
+    margin: 30px auto auto auto;
+
+    a {
+      padding: 5px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid rgb(100, 207, 140);
+      cursor: pointer;
+    }
+
+    a:hover {
+      color: white;
+      background-color: rgb(100, 207, 140);
+    }
+
+    .pagination-active a {
+      color: white;
+      background-color: rgb(100, 207, 140);
+    }
   }
 }
