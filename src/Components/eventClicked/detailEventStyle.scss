@@ -7,7 +7,6 @@ $event-container-color: rgb(255, 255, 255);
   align-items: center;
   position: absolute;
   background-color: rgb(249, 249, 251);
-  margin-top: 100px;
   width: 100%;
   height: auto;
 
@@ -15,6 +14,24 @@ $event-container-color: rgb(255, 255, 255);
     font-size: 11px;
     width: 80%;
     text-align: left;
+  }
+
+  .header-component {
+    @include styleFile.align-element-with-flex(center);
+    width: 100%;
+
+    .back-button {
+      @include styleFile.align-element-with-flex(center);
+      width: 70%;
+
+      span {
+        margin-left: 10px;
+      }
+    }
+
+    .back-button:hover {
+      cursor: pointer;
+    }
   }
 
   .section-event-information {
@@ -98,8 +115,4 @@ $event-container-color: rgb(255, 255, 255);
       }
     }
   }
-}
-
-.event-detail-hidden {
-  opacity: 0;
 }

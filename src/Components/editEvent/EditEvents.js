@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 
-import { Avatar, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 
-import { paintAvatarAndName, styles } from "../../utils";
+import AvatarUser from "../avatarUser/AvatarUser";
+import { styles } from "../../utils";
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
   const location = useLocation();
   const eventToEdit = location.state.eventToEdit;
   const events = JSON.parse(localStorage.getItem("Events"));
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
   const [dateEvent, setDateEvent] = useState(events[eventToEdit].date);
   const [timeEvent, setTimeEvent] = useState(events[eventToEdit].time);
   const [titleEvent, setTitleEvent] = useState(events[eventToEdit].nameEvent);
@@ -27,10 +26,6 @@ const EditEvent = () => {
   const [backToDashboard, setBackToDashboard] = useState(false);
 
   const { classes } = styles();
-
-  useEffect(() => {
-    paintAvatarAndName(setTextAvatar, setUserName);
-  }, []);
 
   useEffect(() => {
     setItemToDraw(drawEventToEdit);
@@ -156,12 +151,9 @@ const EditEvent = () => {
   } else {
     return (
       <div className="event-container">
-        <section className="name-avatar-container" onClick={() => {}}>
-          <div className="name-and-avatar">
-            <Avatar>{textAvatar}</Avatar>
-            <span className="user-name">{userName}</span>
-          </div>
-        </section>
+        <div className="user-name-container-d">
+          <AvatarUser className="avatar-and-name" />
+        </div>
         <div className="title-container">
           <div className="title">DETAIL EVENT</div>
           <div className="delete-event" onClick={removeEventFromLocalStorage}>

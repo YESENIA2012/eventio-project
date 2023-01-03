@@ -1,14 +1,21 @@
+import { useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { handleButtonEvent } from "../../utils";
+
 import PersonIcon from "@mui/icons-material/Person";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 
+import AvatarUser from "../avatarUser/AvatarUser";
 import "./detailEventStyle.scss";
 
-const DetailEvent = (props) => {
-  const { eventClicked, goToDetailEvent } = props;
+const DetailEvent = () => {
+  const location = useLocation();
+  const eventClicked = location.state.eventClicked;
+  const events = JSON.parse(localStorage.getItem("Events"));
+  const [goToDashboard, setGoToDashboard] = useState(false);
 
   const drawEvent = () => {
-    const events = JSON.parse(localStorage.getItem("Events"));
-
     if (
       eventClicked === undefined ||
       isNaN(eventClicked) ||
@@ -49,16 +56,28 @@ const DetailEvent = (props) => {
     }
   };
 
-  return (
-    <div
-      className={
-        goToDetailEvent ? "container-event-section" : "event-detail-hidden"
-      }
-    >
-      <p className="p-title">DETAIL EVENT</p>
-      <section className="section-event-information">{drawEvent()}</section>
-    </div>
-  );
+  if (goToDashboard) {
+    return <Navigate to="/dashboard" />;
+  } else {
+    return (
+      <div className="container-event-section">
+        <header className="header-component">
+          <div
+            className="back-button"
+            onClick={() => {
+              setGoToDashboard(true);
+            }}
+          >
+            <ArrowBackIcon />
+            <span>Back to events</span>
+          </div>
+          <AvatarUser className="avatar-name" />
+        </header>
+        <p className="p-title">DETAIL EVENT</p>
+        <section className="section-event-information">{drawEvent()}</section>
+      </div>
+    );
+  }
 };
 
 export default DetailEvent;

@@ -1,22 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Avatar, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import PersonIcon from "@mui/icons-material/Person";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-import DetailEvent from "../eventClicked/DetailEvent";
-import { paintAvatarAndName } from "../../utils";
+import AvatarUser from "../avatarUser/AvatarUser";
+import { handleButtonEvent } from "../../utils";
 import "./dashboardStyles.scss";
 
 const Dashboard = () => {
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
   const [eventClicked, setEventClicked] = useState("");
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
@@ -26,13 +22,9 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
   const [eventToEdit, setEventToEdit] = useState("");
-  const [eventsDrawToDashboard, setEventsDrawToDashboard] = useState("");
   const [eventsList, setEventList] = useState(
     JSON.parse(localStorage.getItem("Events"))
   );
-  const [seeModal, setSeeModal] = useState(false);
-  const [goToProfile, setGoToProfile] = useState(false);
-  const [signOut, setSignOut] = useState(false);
 
   const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
@@ -40,14 +32,6 @@ const Dashboard = () => {
   const changePage = ({ selected }) => {
     setPageNumber(selected);
   };
-
-  useEffect(() => {
-    paintAvatarAndName(setTextAvatar, setUserName);
-  }, []);
-
-  useEffect(() => {
-    setEventsDrawToDashboard(displayEvents);
-  }, [eventsList]);
 
   const showDetailEventClicked = (e) => {
     let elementClassName = e.target.className;
@@ -58,51 +42,14 @@ const Dashboard = () => {
     if (
       elementClickedId === undefined ||
       isNaN(elementClickedId) ||
-      elementClickedId === ""
+      elementClickedId === "" ||
+      elementClickedId === null
     ) {
       return;
     } else {
       setGoToDetailEvent(true);
+      setEventClicked(elementClickedId);
     }
-
-    setEventClicked(elementClickedId);
-  };
-
-  const goToEditEventFunction = (e) => {
-    let nameClassAtTheElement = e.target.className;
-    let arrayClass = nameClassAtTheElement.split(" ");
-    let eventToEdit = Number(arrayClass[12]);
-
-    if (
-      eventToEdit === undefined ||
-      eventToEdit === null ||
-      isNaN(eventToEdit)
-    ) {
-      return;
-    } else {
-      setGoToEditEvent(true);
-    }
-
-    setEventToEdit(eventToEdit);
-  };
-
-  const saveStateEvent = (e, text) => {
-    let nameClassAtTheElement = e.target.className;
-    let arrayClass = nameClassAtTheElement.split(" ");
-    let eventToEditState = Number(arrayClass[12]);
-
-    if (
-      eventToEdit === undefined ||
-      eventToEdit === null ||
-      isNaN(eventToEdit)
-    ) {
-      return;
-    } else {
-      eventsList[eventToEditState].stateEvent = text;
-    }
-
-    localStorage.setItem("Events", JSON.stringify(eventsList));
-    setEventList(JSON.parse(localStorage.getItem("Events")));
   };
 
   if (eventsList === null) {
@@ -112,18 +59,6 @@ const Dashboard = () => {
   const displayEvents = eventsList
     .slice(pagesVisited, pagesVisited + eventsPerPage)
     .map((element, index) => {
-      const handleButtonEvent = (e) => {
-        let textButton = e.target.innerText;
-
-        if (textButton === "EDIT") {
-          goToEditEventFunction(e);
-        } else if (textButton === "JOIN") {
-          saveStateEvent(e, "LEAVE");
-        } else {
-          saveStateEvent(e, "JOIN");
-        }
-      };
-
       return (
         <div
           key={index}
@@ -153,7 +88,14 @@ const Dashboard = () => {
               variant="contained"
               className={`button-event ${element.id}`}
               onClick={(e) => {
-                handleButtonEvent(e);
+                handleButtonEvent(
+                  e,
+                  setGoToEditEvent,
+                  setEventToEdit,
+                  eventToEdit,
+                  eventsList,
+                  setEventList
+                );
               }}
             >
               {element.stateEvent}
@@ -167,43 +109,15 @@ const Dashboard = () => {
     return <Navigate to="/createEvent" />;
   } else if (goToEditEvent) {
     return <Navigate to="/editEvent" state={{ eventToEdit }} />;
-  } else if (signOut) {
-    return <Navigate to="/" />;
-  } else if (goToProfile) {
-    return <Navigate to="/profile" />;
+  } else if (goToDetailEvent) {
+    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else {
     return (
       <div className="event-container">
-        <section className="user-name-container">
-          <div
-            className={goToDetailEvent ? "back-button" : "back-button-hidden"}
-            onClick={() => {
-              setGoToDetailEvent(false);
-            }}
-          >
-            <ArrowBackIcon />
-            <span>Back to events</span>
-          </div>
-          <div className="avatar-name-container">
-            <Avatar>{textAvatar}</Avatar>
-            <span className="user-name-text">{userName}</span>
-            <span
-              className="arrow-container"
-              onClick={() => {
-                setSeeModal(!seeModal);
-              }}
-            >
-              <ArrowDropDownIcon />
-            </span>
-          </div>
-        </section>
-        <div
-          className={
-            goToDetailEvent
-              ? "container-dashboard-hidden"
-              : "container-dashboard"
-          }
-        >
+        <div className="user-name-container-d">
+          <AvatarUser className="avatar-and-name" />
+        </div>
+        <div className="container-dashboard">
           <div className="nav-icon-container">
             <nav className="nav-link-container">
               <span to="dashboard" className="link-1">
@@ -226,38 +140,18 @@ const Dashboard = () => {
                 Past Events
               </span>
             </nav>
-            <div
-              className={seeModal ? "modal-container" : "hide-modal-container"}
-            >
-              <nav className="profile-sign-out-container">
-                <span
-                  className="profile-link"
-                  onClick={() => {
-                    setGoToProfile(true);
-                  }}
-                >
-                  View Profile
-                </span>
-                <span
-                  className="sign-out-button"
-                  onClick={() => {
-                    setSignOut(true);
-                  }}
-                >
-                  Sign Out
-                </span>
-              </nav>
-            </div>
             <div className="view-icon">
               <ViewModuleIcon
                 className="view-module"
                 onClick={() => {
+                  console.log("yesenia");
                   setViewEvents(true);
                 }}
               />
               <ViewStreamIcon
                 className="view-stream"
                 onClick={() => {
+                  console.log("paola");
                   setViewEvents(false);
                 }}
               />
@@ -268,7 +162,7 @@ const Dashboard = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {eventsDrawToDashboard}
+            {displayEvents}
           </div>
           ;
           <ReactPaginate
@@ -291,10 +185,6 @@ const Dashboard = () => {
             />
           </div>
         </div>
-        <DetailEvent
-          eventClicked={eventClicked}
-          goToDetailEvent={goToDetailEvent}
-        />
       </div>
     );
   }

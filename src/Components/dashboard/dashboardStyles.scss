@@ -5,44 +5,15 @@
   height: auto;
   background-color: rgb(249, 249, 251);
 
-  .user-name-container {
-    @include styleFile.align-element-with-flex(end);
-    width: 100%;
-    height: 80px;
+  .user-name-container-d {
+    display: flex;
+    justify-content: end;
+    width: 95%;
 
-    .avatar-name-container {
-      @include styleFile.align-element-with-flex(center);
-      margin-right: 30px;
-
-      .user-name-text {
-        width: 70px;
-        margin-left: 5px;
-      }
-
-      .arrow-container {
-        height: 40px;
-      }
-
-      .arrow-container:hover {
-        cursor: pointer;
-      }
-    }
-
-    .back-button {
-      @include styleFile.align-element-with-flex(center);
-      width: 70%;
-
-      span {
-        margin-left: 10px;
-      }
-    }
-
-    .back-button:hover {
-      cursor: pointer;
-    }
-
-    .back-button-hidden {
-      opacity: 0;
+    .avatar-and-name {
+      @include styleFile.align-element-with-flex(end);
+      width: 100%;
+      height: 80px;
     }
   }
 
@@ -97,48 +68,6 @@
       .view-stream:hover {
         cursor: pointer;
       }
-    }
-
-    .modal-container {
-      position: absolute;
-      margin: 100px 0 0 70%;
-
-      .profile-sign-out-container {
-        @include styleFile.align-element-with-flex(space-evenly);
-        @include styleFile.border-background-events-element;
-        flex-direction: column;
-        width: 250px;
-        height: 150px;
-
-        .profile-link {
-          @include styleFile.align-element-with-flex(center);
-          height: 25px;
-          width: 80%;
-          text-align: center;
-          border-radius: 15%;
-          border: 2px solid rgb(100, 207, 140);
-          box-shadow: 0 1px 1px rgba(229, 232, 236, 0.5);
-        }
-
-        .profile-link:hover {
-          cursor: pointer;
-        }
-
-        .sign-out-button {
-          @include styleFile.align-element-with-flex(center);
-          height: 25px;
-          width: 80%;
-          border-top: 1px solid rgb(150, 157, 166);
-        }
-
-        .sign-out-button:hover {
-          cursor: pointer;
-        }
-      }
-    }
-
-    .hide-modal-container {
-      opacity: 0;
     }
   }
 
@@ -294,10 +223,6 @@
     .add-new-event-button:hover {
       cursor: pointer;
     }
-  }
-
-  .container-dashboard-hidden {
-    opacity: 0;
   }
 
   .icon-hide-person {
