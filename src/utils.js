@@ -1,5 +1,3 @@
-import { makeStyles } from "tss-react/mui";
-
 const mockedEvents = [
   {
     id: 0,
@@ -71,15 +69,6 @@ const mockedEvents = [
 ];
 
 let mockedEventsCopy = [...mockedEvents];
-
-const styles = makeStyles()((theme) => {
-  return {
-    textFieldStyle: {
-      marginBottom: 14,
-      width: "80%",
-    },
-  };
-});
 
 const paintAvatarAndName = (setTextAvatar, setUserName) => {
   const informationUser = JSON.parse(localStorage.getItem("userInformation"));
@@ -160,7 +149,6 @@ const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
   }
 };
 
-export { styles };
 export { mockedEventsCopy };
 export { paintAvatarAndName };
 export { handleButtonEvent };
