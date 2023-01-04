@@ -1,14 +1,8 @@
 import "./detailEventStyle.scss";
 
-const DetailEvent = (props) => {
-  const { goToDetailEvent } = props;
-
+const DetailEvent = () => {
   return (
-    <div
-      className={
-        goToDetailEvent ? "container-event-section" : "event-detail-hidden"
-      }
-    >
+    <div>
       <p className="container-event-section">EVENT DETAILS</p>
     </div>
   );
