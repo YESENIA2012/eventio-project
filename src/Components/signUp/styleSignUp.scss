@@ -62,7 +62,7 @@
         color: styleFile.$color-gray !important;
       }
 
-      .button-sign-up {
+      .botton-sign-up {
         width: 50%;
         height: 46px;
         margin-top: 40px;
@@ -71,8 +71,38 @@
         background-color: styleFile.$background-color-button;
       }
 
-      .button-sign-up:hover {
+      .botton-sign-up:hover {
         background-color: styleFile.$background-color-button;
+      }
+    }
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .sign-up {
+    @include styleFile.align-element-with-flex(center);
+
+    .section-sign-up {
+      @include styleFile.align-element-with-flex(flex-end);
+      width: 100%;
+      height: 660px;
+
+      .login-container-nav {
+        width: auto;
+        margin-right: inherit;
+        position: inherit;
+      }
+
+      .title-and-message {
+        .title-sign-up,
+        .message-sign-up {
+          text-align: center;
+        }
+      }
+
+      .form-sign-up {
+        @include styleFile.align-element-with-flex(center);
+        width: 90%;
       }
     }
   }

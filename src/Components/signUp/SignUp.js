@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 
 import { Button, TextField } from "@mui/material";
 
-import { styles } from "../../utils";
 import Image from "../image/ImageContainer";
+import { styles } from "../../utils";
 import "./styleSignUp.scss";
 
 const SignUp = () => {
@@ -19,9 +19,10 @@ const SignUp = () => {
     text: "Enter your detalls below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
+
   const { classes } = styles();
 
-  const enterDashboardFunction = () => {
+  const enterDashboardFunction = (e) => {
     const userInformation = JSON.parse(localStorage.getItem("userInformation"));
 
     if (userInformation !== null && userInformation.email === emailUser) {
@@ -48,7 +49,7 @@ const SignUp = () => {
     });
   };
 
-  const saveInformationUser = () => {
+  const saveInformationUser = (name, lastName, email, password) => {
     let informationUser = null;
 
     informationUser = {
@@ -75,7 +76,6 @@ const SignUp = () => {
               <nav className="login-link">
                 <span>Already have an account?</span>
                 <span
-                  to="/"
                   className="link-l"
                   onClick={() => {
                     setLogInAccount(true);
@@ -145,8 +145,8 @@ const SignUp = () => {
               ></TextField>
               <TextField
                 label="Password"
-                type="password"
                 variant="standard"
+                type="password"
                 className={classes.textFieldStyle}
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Password"
@@ -162,8 +162,8 @@ const SignUp = () => {
               ></TextField>
               <TextField
                 className={classes.textFieldStyle}
-                type="password"
                 label="Repeat password"
+                type="password"
                 variant="standard"
                 InputLabelProps={{ className: "textfield-label" }}
                 name="repeatPassword"
@@ -178,7 +178,7 @@ const SignUp = () => {
                 value={repeatPasswordUser}
               ></TextField>
               <Button
-                className="button-sign-up"
+                className="botton-sign-up"
                 onClick={enterDashboardFunction}
               >
                 SIGN UP
