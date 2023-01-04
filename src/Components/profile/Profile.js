@@ -35,7 +35,7 @@ const Profile = () => {
   );
 
   const [pageNumber, setPageNumber] = useState(0);
-  const eventsPerPage = 3;
+  const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
   const changePage = ({ selected }) => {
@@ -58,6 +58,10 @@ const Profile = () => {
     setLastNameUser(lastName);
     setEmailUser(email);
   };
+
+  if (eventsList === null) {
+    return;
+  }
 
   const displayEvents = eventsList
     .slice(pagesVisited, pagesVisited + eventsPerPage)
