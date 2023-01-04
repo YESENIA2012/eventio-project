@@ -1,0 +1,67 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
+.profile-sign-out-container {
+  @include styleFile.align-element-with-flex(space-evenly);
+  @include styleFile.border-background-events-element;
+  flex-direction: column;
+  width: 250px;
+  height: 150px;
+
+  .profile-link {
+    @include styleFile.align-element-with-flex(center);
+    height: 25px;
+    width: 80%;
+    text-align: center;
+    border-radius: 15%;
+    border: 2px solid rgb(100, 207, 140);
+    box-shadow: 0 1px 1px rgba(229, 232, 236, 0.5);
+  }
+
+  .profile-link:hover {
+    cursor: pointer;
+  }
+
+  .sign-out-button {
+    @include styleFile.align-element-with-flex(center);
+    height: 25px;
+    width: 80%;
+    border-top: 1px solid rgb(150, 157, 166);
+  }
+
+  .sign-out-button:hover {
+    cursor: pointer;
+  }
+
+  .profile-sign-out-container {
+    @include styleFile.align-element-with-flex(space-evenly);
+    @include styleFile.border-background-events-element;
+    flex-direction: column;
+    width: 250px;
+    height: 150px;
+
+    .profile-link {
+      @include styleFile.align-element-with-flex(center);
+      height: 25px;
+      width: 80%;
+      text-align: center;
+      border-radius: 15%;
+      border: 2px solid rgb(100, 207, 140);
+      box-shadow: 0 1px 1px rgba(229, 232, 236, 0.5);
+    }
+
+    .profile-link:hover {
+      cursor: pointer;
+    }
+
+    .sign-out-button {
+      @include styleFile.align-element-with-flex(center);
+      height: 25px;
+      width: 80%;
+      border-top: 1px solid rgb(150, 157, 166);
+    }
+
+    .sign-out-button:hover {
+      cursor: pointer;
+    }
+  }
+}
