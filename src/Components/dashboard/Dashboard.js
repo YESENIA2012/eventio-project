@@ -88,83 +88,13 @@ const Dashboard = () => {
       );
     });
 
-  if (goToCreateNewEvent) {
-    return <Navigate to="/createEvent" />;
-  } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
-  } else if (goToDetailEvent) {
+  if (goToDetailEvent) {
     return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else {
     return (
       <div className="event-container">
-        <div className="user-name-container-d">
-          <AvatarUser className="avatar-and-name" />
-        </div>
         <div className="container-dashboard">
-          <div className="nav-icon-container">
-            <nav className="nav-link-container">
-              <span to="dashboard" className="link-1">
-                All events
-              </span>
-              <span
-                className="link-2"
-                onClick={() => {
-                  setGoToFutureEvents(true);
-                }}
-              >
-                Future Events
-              </span>
-              <span
-                className="link-3"
-                onClick={() => {
-                  setGoToPastEvents(true);
-                }}
-              >
-                Past Events
-              </span>
-            </nav>
-            <div className="view-icon">
-              <ViewModuleIcon
-                className="view-module"
-                onClick={() => {
-                  setViewEvents(true);
-                }}
-              />
-              <ViewStreamIcon
-                className="view-stream"
-                onClick={() => {
-                  setViewEvents(false);
-                }}
-              />
-            </div>
-          </div>
-          <div
-            className={
-              viewEvents ? "box-event-view-row" : "box-event-view-column"
-            }
-          >
-            {displayEvents}
-          </div>
-          ;
-          <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
-            pageCount={pageCount}
-            onPageChange={changePage}
-            containerClassName={"pagination-bttns"}
-            previousLinkClassName={"previous-bttn"}
-            nextLinkClassName={"next-bttn"}
-            disabledClassName={"pagination-disable"}
-            activeClassName={"pagination-active"}
-          />
-          <div className="add-new-event-container">
-            <AddCircleIcon
-              className="add-new-event-button"
-              onClick={() => {
-                setGoToCreateNewEvent(true);
-              }}
-            />
-          </div>
+          <div className="box-event-view-row">{displayEvents}</div>;
         </div>
       </div>
     );
