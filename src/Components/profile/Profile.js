@@ -124,6 +124,8 @@ const Profile = () => {
     return <Navigate to="/dashboard" />;
   } else if (goToDetailEvent) {
     return <Navigate to="/detailEvent" state={{ eventClicked }} />;
+  } else if (goToEditEvent) {
+    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
   } else {
     return (
       <div className="profile-container">

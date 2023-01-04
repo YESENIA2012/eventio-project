@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { handleButtonEvent } from "../../utils";
 
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
@@ -12,6 +13,7 @@ import "./detailEventStyle.scss";
 const DetailEvent = () => {
   const location = useLocation();
   const eventClicked = location.state.eventClicked;
+  const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
@@ -73,7 +75,9 @@ const DetailEvent = () => {
     }
   };
 
-  if (goToDashboard) {
+  if (goToCreateNewEvent) {
+    return <Navigate to="/createEvent" />;
+  } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
   } else if (goToEditEvent) {
     return <Navigate to="/editEvent" state={{ eventToEdit }} />;
@@ -94,6 +98,14 @@ const DetailEvent = () => {
         </header>
         <p className="p-title">DETAIL EVENT</p>
         <section className="section-event-information">{drawEvent()}</section>
+        <div className="add-new-event-container">
+          <AddCircleIcon
+            className="add-new-event-button"
+            onClick={() => {
+              setGoToCreateNewEvent(true);
+            }}
+          />
+        </div>
       </div>
     );
   }

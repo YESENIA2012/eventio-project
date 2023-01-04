@@ -61,3 +61,32 @@
     }
   }
 }
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .error-component-container {
+    width: 100%;
+    height: 740px;
+
+    .error-container {
+      height: 550px;
+      margin: inherit;
+      width: 100%;
+      justify-content: space-around;
+
+      .link-container {
+        position: inherit;
+        margin-top: inherit;
+        width: 95%;
+        margin-right: 20px;
+      }
+
+      .error-text {
+        width: 80%;
+
+        .refresh-button {
+          margin: 20px auto;
+        }
+      }
+    }
+  }
+}
