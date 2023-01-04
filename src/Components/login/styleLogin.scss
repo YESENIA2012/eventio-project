@@ -55,7 +55,6 @@
 
     .form-login {
       @include styleFile.display-type(column);
-      flex-direction: column;
       width: 45%;
       margin-top: 20px;
 
@@ -83,6 +82,36 @@
 
       .button-login:hover {
         background-color: styleFile.$background-color-button;
+      }
+    }
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .login {
+    @include styleFile.align-element-with-flex(center);
+
+    .section-login {
+      @include styleFile.align-element-with-flex(flex-end);
+      width: 100%;
+      height: 550px;
+
+      .nav-container {
+        width: auto;
+        margin-right: inherit;
+        position: inherit;
+      }
+
+      .title-and-message {
+        .title-login,
+        .message-login {
+          text-align: center;
+        }
+      }
+
+      .form-login {
+        @include styleFile.align-element-with-flex(center);
+        width: 90%;
       }
     }
   }

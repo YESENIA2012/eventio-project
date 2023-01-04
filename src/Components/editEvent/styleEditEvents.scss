@@ -91,3 +91,29 @@ $font-color: rgb(150, 157, 166);
     padding: 25px;
   }
 }
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .event-container {
+    .box-event {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+
+      .container-event {
+        width: 100%;
+      }
+
+      .attendees-container {
+        opacity: 0;
+        height: 0px;
+      }
+    }
+
+    .check-icon-container {
+      margin-right: 20px;
+      .check-icon {
+        margin-top: 70px;
+      }
+    }
+  }
+}

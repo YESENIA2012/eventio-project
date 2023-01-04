@@ -10,12 +10,6 @@ $event-container-color: rgb(255, 255, 255);
   width: 100%;
   height: auto;
 
-  .p-title {
-    font-size: 11px;
-    width: 80%;
-    text-align: left;
-  }
-
   .header-component {
     @include styleFile.align-element-with-flex(center);
     width: 100%;
@@ -32,6 +26,12 @@ $event-container-color: rgb(255, 255, 255);
     .back-button:hover {
       cursor: pointer;
     }
+  }
+
+  .p-title {
+    font-size: 11px;
+    width: 80%;
+    text-align: left;
   }
 
   .section-event-information {
@@ -112,6 +112,38 @@ $event-container-color: rgb(255, 255, 255);
         @include styleFile.border-background-events-element;
         height: auto;
         padding: 20px;
+      }
+    }
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .container-event-section {
+    height: 600px;
+    display: flex;
+    justify-content: space-evenly;
+
+    .header-component {
+      @include styleFile.align-element-with-flex(flex-end);
+      .back-button {
+        opacity: 0;
+      }
+    }
+
+    .section-event-information {
+      width: 100%;
+      .container-event {
+        @include styleFile.display-type(column);
+
+        .information-event,
+        .name-attendees {
+          width: 90%;
+        }
+
+        .name-attendees {
+          margin-top: 20px;
+          height: 90px;
+        }
       }
     }
   }
