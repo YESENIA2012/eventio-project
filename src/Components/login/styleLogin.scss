@@ -1,84 +1,89 @@
-$font-color: rgb(150, 157, 166);
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
 .login {
-  display: flex;
-  flex-direction: row;
-}
+  @include styleFile.display-type(row);
 
-.sign-in-button {
-  position: absolute;
-  margin-top: -680px;
-  margin-left: 700px;
-  width: 180px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
+  .section-login {
+    @include styleFile.align-element-with-flex(center);
+    flex-direction: column;
+    width: 70%;
 
-.sign-in-button span {
-  font-size: 14px;
-  color: $font-color;
-}
+    .nav-container {
+      @include styleFile.align-element-with-flex(flex-end);
+      position: absolute;
+      margin-top: -680px;
+      width: 70%;
+      margin-right: 50px;
 
-.button-s {
-  text-decoration: none;
-  background-color: white;
-  color: rgb(66, 66, 66);
-  font-weight: 300;
-  font-size: 14px;
-}
+      .sign-in-link {
+        @include styleFile.align-element-with-flex(space-around);
+        width: 180px;
 
-.button-s:hover {
-  cursor: pointer;
-}
+        span {
+          @include styleFile.style-font(14px);
+        }
 
-.section-login {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 70%;
-  align-items: center;
-}
+        .link-s {
+          text-decoration: none;
+          background-color: white;
+          color: rgb(66, 66, 66);
+          font-weight: 300;
+          font-size: 14px;
+        }
 
-.title-and-message {
-  display: flex;
-  flex-direction: column;
-  width: 45%;
-}
+        .link-s:hover {
+          cursor: pointer;
+        }
+      }
+    }
 
-h1 {
-  font-weight: 900;
-  font-size: 23px;
-}
+    .title-and-message {
+      @include styleFile.display-type(column);
+      width: 45%;
 
-.message-login {
-  margin-top: -10px;
-  font-size: 14px;
-  color: $font-color;
-}
+      .title-login {
+        font-weight: 900;
+        font-size: 23px;
+      }
 
-.form-login {
-  display: flex;
-  flex-direction: column;
-  width: 45%;
-  margin-top: 20px;
-}
+      .message-login {
+        margin-top: -10px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    }
 
-#textfield {
-  width: 100%;
-}
+    .form-login {
+      @include styleFile.display-type(column);
+      flex-direction: column;
+      width: 45%;
+      margin-top: 20px;
 
-.textfield-label {
-  font-size: 14px !important;
-  color: $font-color !important;
-}
+      .textfield-label {
+        font-size: 14px !important;
+        color: styleFile.$color-gray !important;
+      }
 
-.button-login {
-  width: 50%;
-  height: 46px;
-}
+      .icon-visibility {
+        color: rgb(224, 227, 230);
+      }
 
-.form-login .button-login {
-  margin: 40px auto;
-  width: 40%;
-  color: white;
+      .icon-visibility:hover {
+        cursor: pointer;
+      }
+
+      .button-login {
+        width: 50%;
+        height: 46px;
+        margin-top: 40px;
+        width: 40%;
+        color: white;
+        background-color: styleFile.$background-color-button;
+      }
+
+      .button-login:hover {
+        background-color: styleFile.$background-color-button;
+      }
+    }
+  }
 }
