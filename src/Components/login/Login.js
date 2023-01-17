@@ -46,8 +46,6 @@ const Login = () => {
   };
 
   const processLogin = () => {
-    console.log(informationUser.isLoggedIn);
-
     if (informationUser === null) {
       UserDoesNotExistsMessage();
       return;
