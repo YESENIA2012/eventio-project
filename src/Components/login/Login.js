@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
@@ -20,7 +20,14 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
+  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
   const { classes } = styles();
+
+  useEffect(() => {
+    if (informationUser.isLoggedIn) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const failedLoginMessage = () => {
     setMessageSignIn({
@@ -39,7 +46,7 @@ const Login = () => {
   };
 
   const processLogin = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+    console.log(informationUser.isLoggedIn);
 
     if (informationUser === null) {
       UserDoesNotExistsMessage();
@@ -110,7 +117,6 @@ const Login = () => {
                 value={emailText}
               ></TextField>
               <TextField
-                id="Password"
                 label="Password"
                 variant="standard"
                 type={showPassword ? "text" : "password"}

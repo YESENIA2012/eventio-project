@@ -1,7 +1,9 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, InputAdornment } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
 import { styles } from "../../utils";
@@ -10,6 +12,8 @@ import "./styleSignUp.scss";
 const SignUp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [logInAccount, setLogInAccount] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [nameUser, setNameUser] = useState("");
   const [lastNameUser, setLastNameUser] = useState("");
   const [emailUser, setEmailUser] = useState("");
@@ -19,12 +23,16 @@ const SignUp = () => {
     text: "Enter your detalls below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
-
+  const userInformation = JSON.parse(localStorage.getItem("userInformation"));
   const { classes } = styles();
 
-  const enterDashboardFunction = (e) => {
-    const userInformation = JSON.parse(localStorage.getItem("userInformation"));
+  useEffect(() => {
+    if (userInformation.isLoggedIn) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
+  const enterDashboardFunction = (e) => {
     if (userInformation !== null && userInformation.email === emailUser) {
       theUserExistsMessage();
     } else if (passwordUser === repeatPasswordUser && passwordUser !== "") {
@@ -57,6 +65,7 @@ const SignUp = () => {
       lastName: lastNameUser,
       email: emailUser,
       password: passwordUser,
+      isLoggedIn: true,
     };
 
     localStorage.setItem("userInformation", JSON.stringify(informationUser));
@@ -146,7 +155,7 @@ const SignUp = () => {
               <TextField
                 label="Password"
                 variant="standard"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className={classes.textFieldStyle}
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Password"
@@ -154,7 +163,28 @@ const SignUp = () => {
                   "& .MuiInputLabel-root": {},
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
-                InputProps={{ disableUnderline: true }}
+                InputProps={{
+                  disableUnderline: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {showPassword ? (
+                        <VisibilityIcon
+                          className="icon-visibility"
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
+                        />
+                      ) : (
+                        <VisibilityOff
+                          className="icon-visibility"
+                          onClick={() => {
+                            setShowPassword(!showPassword);
+                          }}
+                        />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
                 onChange={(e) => {
                   setPasswordUser(e.target.value);
                 }}
@@ -163,7 +193,7 @@ const SignUp = () => {
               <TextField
                 className={classes.textFieldStyle}
                 label="Repeat password"
-                type="password"
+                type={showRepeatPassword ? "text" : "password"}
                 variant="standard"
                 InputLabelProps={{ className: "textfield-label" }}
                 name="repeatPassword"
@@ -171,7 +201,28 @@ const SignUp = () => {
                   "& .MuiInputLabel-root": {},
                   borderBottom: "1px solid rgb(179, 175, 177)",
                 }}
-                InputProps={{ disableUnderline: true }}
+                InputProps={{
+                  disableUnderline: true,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      {showRepeatPassword ? (
+                        <VisibilityIcon
+                          className="icon-visibility"
+                          onClick={() => {
+                            setShowRepeatPassword(!showRepeatPassword);
+                          }}
+                        />
+                      ) : (
+                        <VisibilityOff
+                          className="icon-visibility"
+                          onClick={() => {
+                            setShowRepeatPassword(!showRepeatPassword);
+                          }}
+                        />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
                 onChange={(e) => {
                   setRepeatPasswordUser(e.target.value);
                 }}
