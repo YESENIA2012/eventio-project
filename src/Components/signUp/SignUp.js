@@ -39,7 +39,7 @@ const SignUp = () => {
 
   const enterDashboardFunction = () => {
     const userInformation = JSON.parse(localStorage.getItem("userInformation"));
-    if (!userInformation && userInformation.email === emailUser) {
+    if (userInformation && userInformation.email === emailUser) {
       theUserExistsMessage();
     } else if (passwordUser && passwordUser === repeatPasswordUser) {
       saveUserInformation();
