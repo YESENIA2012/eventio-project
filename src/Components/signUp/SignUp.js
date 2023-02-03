@@ -8,10 +8,14 @@ import { VisibilityOff } from "@mui/icons-material";
 import Image from "../image/ImageContainer";
 import { styles } from "../../utils";
 import "./styleSignUp.scss";
+const textFieldBorderStyle = {
+  "& .MuiInputLabel-root": {},
+  borderBottom: "1px solid rgb(179, 175, 177)",
+};
 
 const SignUp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [logInAccount, setLogInAccount] = useState(false);
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [nameUser, setNameUser] = useState("");
@@ -23,20 +27,22 @@ const SignUp = () => {
     text: "Enter your detalls below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
-  const userInformation = JSON.parse(localStorage.getItem("userInformation"));
+
   const { classes } = styles();
 
   useEffect(() => {
-    if (userInformation.isLoggedIn) {
+    const userInformation = JSON.parse(localStorage.getItem("userInformation"));
+    if (userInformation && userInformation.isLoggedIn) {
       setIsLoggedIn(true);
     }
   }, []);
 
-  const enterDashboardFunction = (e) => {
-    if (userInformation !== null && userInformation.email === emailUser) {
+  const enterDashboardFunction = () => {
+    const userInformation = JSON.parse(localStorage.getItem("userInformation"));
+    if (!userInformation && userInformation.email === emailUser) {
       theUserExistsMessage();
-    } else if (passwordUser === repeatPasswordUser && passwordUser !== "") {
-      saveInformationUser();
+    } else if (passwordUser && passwordUser === repeatPasswordUser) {
+      saveUserInformation();
       setIsLoggedIn(true);
     } else {
       passWordNotMatchMessage();
@@ -57,10 +63,10 @@ const SignUp = () => {
     });
   };
 
-  const saveInformationUser = (name, lastName, email, password) => {
-    let informationUser = null;
+  const saveUserInformation = () => {
+    let userInformation = null;
 
-    informationUser = {
+    userInformation = {
       name: nameUser,
       lastName: lastNameUser,
       email: emailUser,
@@ -68,12 +74,12 @@ const SignUp = () => {
       isLoggedIn: true,
     };
 
-    localStorage.setItem("userInformation", JSON.stringify(informationUser));
+    localStorage.setItem("userInformation", JSON.stringify(userInformation));
   };
 
   if (isLoggedIn) {
     return <Navigate to="/dashboard" />;
-  } else if (logInAccount) {
+  } else if (redirectToLogin) {
     return <Navigate to="/" />;
   } else {
     return (
@@ -87,7 +93,7 @@ const SignUp = () => {
                 <span
                   className="link-l"
                   onClick={() => {
-                    setLogInAccount(true);
+                    setRedirectToLogin(true);
                   }}
                 >
                   SIGN IN
@@ -108,10 +114,7 @@ const SignUp = () => {
                 type="text"
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Name"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: "1px solid rgb(179, 175, 177)",
-                }}
+                sx={textFieldBorderStyle}
                 InputProps={{ disableUnderline: true }}
                 onChange={(e) => {
                   setNameUser(e.target.value);
@@ -125,10 +128,7 @@ const SignUp = () => {
                 className={classes.textFieldStyle}
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Last name"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: "1px solid rgb(179, 175, 177)",
-                }}
+                sx={textFieldBorderStyle}
                 InputProps={{ disableUnderline: true }}
                 onChange={(e) => {
                   setLastNameUser(e.target.value);
@@ -142,10 +142,7 @@ const SignUp = () => {
                 className={classes.textFieldStyle}
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Email"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: "1px solid rgb(179, 175, 177)",
-                }}
+                sx={textFieldBorderStyle}
                 InputProps={{ disableUnderline: true }}
                 onChange={(e) => {
                   setEmailUser(e.target.value);
@@ -159,10 +156,7 @@ const SignUp = () => {
                 className={classes.textFieldStyle}
                 InputLabelProps={{ className: "textfield-label" }}
                 name="Password"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: "1px solid rgb(179, 175, 177)",
-                }}
+                sx={textFieldBorderStyle}
                 InputProps={{
                   disableUnderline: true,
                   endAdornment: (
@@ -197,10 +191,7 @@ const SignUp = () => {
                 variant="standard"
                 InputLabelProps={{ className: "textfield-label" }}
                 name="repeatPassword"
-                sx={{
-                  "& .MuiInputLabel-root": {},
-                  borderBottom: "1px solid rgb(179, 175, 177)",
-                }}
+                sx={textFieldBorderStyle}
                 InputProps={{
                   disableUnderline: true,
                   endAdornment: (

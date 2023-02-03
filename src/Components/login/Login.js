@@ -18,14 +18,15 @@ const Login = () => {
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedInHook, setIsLoggedInHook] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
-  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+
   const { classes } = styles();
 
   useEffect(() => {
-    if (informationUser.isLoggedIn) {
-      setIsLoggedIn(true);
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+    if (informationUser && informationUser.isLoggedIn) {
+      setIsLoggedInHook(true);
     }
   }, []);
 
@@ -46,7 +47,8 @@ const Login = () => {
   };
 
   const processLogin = () => {
-    if (informationUser === null) {
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+    if (!informationUser) {
       UserDoesNotExistsMessage();
       return;
     } else {
@@ -59,14 +61,14 @@ const Login = () => {
         emailText === informationUser.email &&
         passwordText === informationUser.password
       ) {
-        setIsLoggedIn(true);
+        setIsLoggedInHook(true);
       } else if (informationUser.email !== emailText) {
         UserDoesNotExistsMessage();
       }
     }
   };
 
-  if (isLoggedIn) {
+  if (isLoggedInHook) {
     return <Navigate to="/dashboard" />;
   } else if (goCreateAccount) {
     return <Navigate to="/sign-up" />;
