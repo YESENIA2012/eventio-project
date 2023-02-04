@@ -12,7 +12,7 @@ import {
   userExistsMessageStyle,
   messagePassWordNotMatchStyles,
   messageSignupStyles,
-} from "../login/materialStyles";
+} from "./materialStylesSignUp";
 import "./styleSignUp.scss";
 
 const SignUp = () => {

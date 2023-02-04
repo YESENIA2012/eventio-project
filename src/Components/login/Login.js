@@ -6,11 +6,13 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
+
 import {
   messageSignInStyle,
   failedLoginMessageStyle,
   UserDoesNotExistsMessageStyle,
-} from "../signUp/materialStylesLogin";
+} from "./materialStyles";
+
 import { styles, getFromLocalStorage } from "../../utils";
 import "./styleLogin.scss";
 
