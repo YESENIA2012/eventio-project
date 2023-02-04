@@ -9,4 +9,9 @@ const styles = makeStyles()(() => {
   };
 });
 
-export { styles };
+const getFromLocalStorage = () => {
+  const dataUser = JSON.parse(localStorage.getItem("userInformation"));
+  return dataUser;
+};
+
+export { styles, getFromLocalStorage };
