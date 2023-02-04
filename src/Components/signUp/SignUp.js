@@ -30,7 +30,7 @@ const SignUp = () => {
   const { classes } = styles();
 
   useEffect(() => {
-    const userInformation = JSON.parse(localStorage.getItem("userInformation"));
+    const userInformation = getFromLocalStorage();
     if (userInformation && userInformation.isLoggedIn) {
       setIsLoggedIn(true);
     }
