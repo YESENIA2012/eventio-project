@@ -6,12 +6,14 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
-import { styles } from "../../utils";
+import { styles, getFromLocalStorage } from "../../utils";
+import {
+  textFieldBorderStyle,
+  userExistsMessageStyle,
+  messagePassWordNotMatchStyles,
+  messageSignupStyles,
+} from "../login/materialStyles";
 import "./styleSignUp.scss";
-const textFieldBorderStyle = {
-  "& .MuiInputLabel-root": {},
-  borderBottom: "1px solid rgb(179, 175, 177)",
-};
 
 const SignUp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,10 +25,7 @@ const SignUp = () => {
   const [emailUser, setEmailUser] = useState("");
   const [passwordUser, setPasswordUser] = useState("");
   const [repeatPasswordUser, setRepeatPasswordUser] = useState("");
-  const [messageSignUp, setMessageSignUp] = useState({
-    text: "Enter your detalls below.",
-    messageColor: { color: "rgb(150, 157, 166)" },
-  });
+  const [messageSignUp, setMessageSignUp] = useState(messageSignupStyles);
 
   const { classes } = styles();
 
@@ -38,29 +37,15 @@ const SignUp = () => {
   }, []);
 
   const enterDashboardFunction = () => {
-    const userInformation = JSON.parse(localStorage.getItem("userInformation"));
+    const userInformation = getFromLocalStorage();
     if (userInformation && userInformation.email === emailUser) {
-      theUserExistsMessage();
+      setMessageSignUp(userExistsMessageStyle);
     } else if (passwordUser && passwordUser === repeatPasswordUser) {
       saveUserInformation();
       setIsLoggedIn(true);
     } else {
-      passWordNotMatchMessage();
+      setMessageSignUp(messagePassWordNotMatchStyles);
     }
-  };
-
-  const theUserExistsMessage = () => {
-    setMessageSignUp({
-      text: "The user already exists. Log In.",
-      messageColor: { color: "rgb(237, 85, 151)" },
-    });
-  };
-
-  const passWordNotMatchMessage = () => {
-    setMessageSignUp({
-      text: "Passwords do not match.",
-      messageColor: { color: "rgb(237, 85, 151)" },
-    });
   };
 
   const saveUserInformation = () => {
