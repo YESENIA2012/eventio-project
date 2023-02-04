@@ -6,15 +6,16 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
-import { styles } from "../../utils";
+import {
+  messageSignInStyle,
+  failedLoginMessageStyle,
+  UserDoesNotExistsMessageStyle,
+} from "../signUp/materialStylesLogin";
+import { styles, getFromLocalStorage } from "../../utils";
 import "./styleLogin.scss";
 
 const Login = () => {
-  const [messageSignIn, setMessageSignIn] = useState({
-    text: "Enter your detalls below.",
-    messageColor: { color: "rgb(150, 157, 166)" },
-    borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
-  });
+  const [messageSignIn, setMessageSignIn] = useState(messageSignInStyle);
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,46 +25,30 @@ const Login = () => {
   const { classes } = styles();
 
   useEffect(() => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+    const informationUser = getFromLocalStorage();
     if (informationUser && informationUser.isLoggedIn) {
       setIsLoggedIn(true);
     }
   }, []);
 
-  const failedLoginMessage = () => {
-    setMessageSignIn({
-      text: "Oops! That email and password combination is not valid.",
-      messageColor: { color: "rgb(237, 85, 151)" },
-      borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
-    });
-  };
-
-  const UserDoesNotExistsMessage = () => {
-    setMessageSignIn({
-      text: "Oops! Username does not exist",
-      messageColor: { color: "rgb(237, 85, 151)" },
-      borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
-    });
-  };
-
   const processLogin = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+    const informationUser = getFromLocalStorage();
     if (!informationUser) {
-      UserDoesNotExistsMessage();
+      setMessageSignIn(UserDoesNotExistsMessageStyle);
       return;
     } else {
       if (
         informationUser.email === emailText &&
         informationUser.password !== passwordText
       ) {
-        failedLoginMessage();
+        setMessageSignIn(failedLoginMessageStyle);
       } else if (
         emailText === informationUser.email &&
         passwordText === informationUser.password
       ) {
         setIsLoggedIn(true);
       } else if (informationUser.email !== emailText) {
-        UserDoesNotExistsMessage();
+        setMessageSignIn(UserDoesNotExistsMessageStyle);
       }
     }
   };
