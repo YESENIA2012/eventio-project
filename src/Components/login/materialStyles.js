@@ -10,7 +10,7 @@ const failedLoginMessageStyle = {
   borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
 };
 
-const UserDoesNotExistsMessageStyle = {
+const userDoesNotExistsMessageStyle = {
   text: "Oops! Username does not exist",
   messageColor: { color: "rgb(237, 85, 151)" },
   borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
@@ -19,5 +19,5 @@ const UserDoesNotExistsMessageStyle = {
 export {
   messageSignInStyle,
   failedLoginMessageStyle,
-  UserDoesNotExistsMessageStyle,
+  userDoesNotExistsMessageStyle,
 };

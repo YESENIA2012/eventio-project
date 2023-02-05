@@ -10,7 +10,7 @@ import Image from "../image/ImageContainer";
 import {
   messageSignInStyle,
   failedLoginMessageStyle,
-  UserDoesNotExistsMessageStyle,
+  userDoesNotExistsMessageStyle,
 } from "./materialStyles";
 
 import { styles, getFromLocalStorage } from "../../utils";
@@ -33,25 +33,29 @@ const Login = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setMessageSignIn(messageSignInStyle);
+  }, [emailText, passwordText]);
+
   const processLogin = () => {
     const informationUser = getFromLocalStorage();
     if (!informationUser) {
-      setMessageSignIn(UserDoesNotExistsMessageStyle);
+      setMessageSignIn(userDoesNotExistsMessageStyle);
       return;
-    } else {
-      if (
-        informationUser.email === emailText &&
-        informationUser.password !== passwordText
-      ) {
-        setMessageSignIn(failedLoginMessageStyle);
-      } else if (
-        emailText === informationUser.email &&
-        passwordText === informationUser.password
-      ) {
-        setIsLoggedIn(true);
-      } else if (informationUser.email !== emailText) {
-        setMessageSignIn(UserDoesNotExistsMessageStyle);
-      }
+    }
+
+    if (
+      informationUser.email === emailText &&
+      informationUser.password !== passwordText
+    ) {
+      setMessageSignIn(failedLoginMessageStyle);
+    } else if (
+      emailText === informationUser.email &&
+      passwordText === informationUser.password
+    ) {
+      setIsLoggedIn(true);
+    } else if (informationUser.email !== emailText) {
+      setMessageSignIn(userDoesNotExistsMessageStyle);
     }
   };
 

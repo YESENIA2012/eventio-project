@@ -1,3 +1,5 @@
+const messageColor = { color: "rgb(237, 85, 151)" };
+
 const textFieldBorderStyle = {
   "& .MuiInputLabel-root": {},
   borderBottom: "1px solid rgb(179, 175, 177)",
@@ -5,12 +7,12 @@ const textFieldBorderStyle = {
 
 const userExistsMessageStyle = {
   text: "The user already exists. Log In.",
-  messageColor: { color: "rgb(237, 85, 151)" },
+  messageColor,
 };
 
 const messagePassWordNotMatchStyles = {
   text: "Passwords do not match.",
-  messageColor: { color: "rgb(237, 85, 151)" },
+  messageColor,
 };
 
 const messageSignupStyles = {

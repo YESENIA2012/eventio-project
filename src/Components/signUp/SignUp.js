@@ -36,6 +36,10 @@ const SignUp = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setMessageSignUp(messageSignupStyles);
+  }, [emailUser, passwordUser, repeatPasswordUser]);
+
   const enterDashboardFunction = () => {
     const userInformation = getFromLocalStorage();
     if (userInformation && userInformation.email === emailUser) {
