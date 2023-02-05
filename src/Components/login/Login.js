@@ -99,7 +99,7 @@ const Login = () => {
                 name="Email"
                 sx={{
                   "& .MuiInputLabel-root": {},
-                  borderBottom: messageSignIn.borderBottonStyle,
+                  borderBottom: messageSignIn.failBorderBotton,
                 }}
                 InputProps={{ disableUnderline: true }}
                 onChange={(e) => {
@@ -118,7 +118,7 @@ const Login = () => {
                 name="Password"
                 sx={{
                   "& .MuiInputLabel-root": {},
-                  borderBottom: messageSignIn.borderBottonStyle,
+                  borderBottom: messageSignIn.failBorderBotton,
                 }}
                 onChange={(e) => {
                   setPasswordText(e.target.value);
