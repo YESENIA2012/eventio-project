@@ -23,7 +23,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
-  const [ErrorInfoMessage, setErrorInfoMessage] = useState(false);
+  const [errorInfoMessage, setErrorInfoMessage] = useState(false);
 
   const { classes } = styles();
 
@@ -35,7 +35,7 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if (ErrorInfoMessage) {
+    if (errorInfoMessage) {
       setMessageSignIn(messageSignInStyle);
       setErrorInfoMessage(false);
     }
