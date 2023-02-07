@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect, useRef } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
@@ -23,9 +23,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
-  const [errorInformationEntered, setErrorInformationEntered] = useState(false);
-  const prevEmailValue = useRef("");
-  const prevPasswordValue = useRef("");
+  const [ErrorInfoMessage, setErrorInfoMessage] = useState(false);
 
   const { classes } = styles();
 
@@ -36,14 +34,18 @@ const Login = () => {
     }
   }, []);
 
-  const processLogin = () => {
-    prevEmailValue.current = emailText;
-    prevPasswordValue.current = passwordText;
+  useEffect(() => {
+    if (ErrorInfoMessage) {
+      setMessageSignIn(messageSignInStyle);
+      setErrorInfoMessage(false);
+    }
+  }, [emailText, passwordText]);
 
+  const processLogin = () => {
     const informationUser = getFromLocalStorage();
     if (!informationUser) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
-      setErrorInformationEntered(true);
+      setErrorInfoMessage(true);
       return;
     }
 
@@ -54,7 +56,7 @@ const Login = () => {
       informationUser.password !== passwordText
     ) {
       setMessageSignIn(failedLoginMessageStyle);
-      setErrorInformationEntered(true);
+      setErrorInfoMessage(true);
     } else if (
       emailText === informationUser.email &&
       passwordText === informationUser.password
@@ -62,24 +64,9 @@ const Login = () => {
       setIsLoggedIn(true);
     } else if (informationUser.email !== emailText) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
-      setErrorInformationEntered(true);
+      setErrorInfoMessage(true);
     }
   };
-
-  const changeMessageError = () => {
-    if (
-      (prevEmailValue.current !== emailText && prevEmailValue.current !== "") ||
-      (prevPasswordValue.current !== passwordText &&
-        prevPasswordValue.current !== "")
-    ) {
-      setMessageSignIn(messageSignInStyle);
-      setErrorInformationEntered(false);
-    }
-  };
-
-  if (errorInformationEntered) {
-    changeMessageError();
-  }
 
   if (isLoggedIn) {
     return <Navigate to="/dashboard" />;

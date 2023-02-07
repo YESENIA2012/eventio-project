@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect, useRef } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
@@ -27,9 +27,6 @@ const SignUp = () => {
   const [repeatPasswordUser, setRepeatPasswordUser] = useState("");
   const [messageSignUp, setMessageSignUp] = useState(messageSignupStyles);
   const [errorInformationEntered, setErrorInformationEntered] = useState(false);
-  const prevEmailValue = useRef("");
-  const prevPasswordValue = useRef("");
-  const prevRepeatPassword = useRef("");
 
   const { classes } = styles();
 
@@ -40,11 +37,14 @@ const SignUp = () => {
     }
   }, []);
 
-  const enterDashboardFunction = () => {
-    prevEmailValue.current = emailUser;
-    prevPasswordValue.current = passwordUser;
-    prevRepeatPassword.current = repeatPasswordUser;
+  useEffect(() => {
+    if (errorInformationEntered) {
+      setMessageSignUp(messageSignupStyles);
+      setErrorInformationEntered(false);
+    }
+  }, [emailUser, passwordUser, repeatPasswordUser]);
 
+  const enterDashboardFunction = () => {
     const userInformation = getFromLocalStorage();
     if (userInformation && userInformation.email === emailUser) {
       setMessageSignUp(userExistsMessageStyle);
@@ -57,23 +57,6 @@ const SignUp = () => {
       setErrorInformationEntered(true);
     }
   };
-
-  const changeMessageError = () => {
-    if (
-      (prevEmailValue.current !== emailUser && prevEmailValue.current !== "") ||
-      (prevPasswordValue.current !== passwordUser &&
-        prevPasswordValue.current !== "") ||
-      (prevRepeatPassword.current !== repeatPasswordUser &&
-        prevRepeatPassword.current !== "")
-    ) {
-      setMessageSignUp(messageSignupStyles);
-      setErrorInformationEntered(false);
-    }
-  };
-
-  if (errorInformationEntered) {
-    changeMessageError();
-  }
 
   const saveUserInformation = () => {
     let userInformation = null;
