@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment, useEffect, useRef } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
@@ -23,6 +23,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
+  const [errorInformationEntered, setErrorInformationEntered] = useState(false);
+  const prevEmailValue = useRef("");
+  const prevPasswordValue = useRef("");
 
   const { classes } = styles();
 
@@ -33,22 +36,25 @@ const Login = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setMessageSignIn(messageSignInStyle);
-  }, [emailText, passwordText]);
-
   const processLogin = () => {
+    prevEmailValue.current = emailText;
+    prevPasswordValue.current = passwordText;
+
     const informationUser = getFromLocalStorage();
     if (!informationUser) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
+      setErrorInformationEntered(true);
       return;
     }
 
-    if (
+    if (emailText === "" && passwordText === "") {
+      setMessageSignIn(messageSignInStyle);
+    } else if (
       informationUser.email === emailText &&
       informationUser.password !== passwordText
     ) {
       setMessageSignIn(failedLoginMessageStyle);
+      setErrorInformationEntered(true);
     } else if (
       emailText === informationUser.email &&
       passwordText === informationUser.password
@@ -56,8 +62,24 @@ const Login = () => {
       setIsLoggedIn(true);
     } else if (informationUser.email !== emailText) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
+      setErrorInformationEntered(true);
     }
   };
+
+  const changeMessageError = () => {
+    if (
+      (prevEmailValue.current !== emailText && prevEmailValue.current !== "") ||
+      (prevPasswordValue.current !== passwordText &&
+        prevPasswordValue.current !== "")
+    ) {
+      setMessageSignIn(messageSignInStyle);
+      setErrorInformationEntered(false);
+    }
+  };
+
+  if (errorInformationEntered) {
+    changeMessageError();
+  }
 
   if (isLoggedIn) {
     return <Navigate to="/dashboard" />;
