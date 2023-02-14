@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, TextField, InputAdornment } from "@mui/material";
@@ -6,58 +6,65 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
-import { styles } from "../../utils";
+
+import {
+  messageSignInStyle,
+  failedLoginMessageStyle,
+  userDoesNotExistsMessageStyle,
+} from "./materialStyles";
+
+import { styles, getFromLocalStorage } from "../../utils";
 import "./styleLogin.scss";
 
 const Login = () => {
-  const [messageSignIn, setMessageSignIn] = useState({
-    text: "Enter your detalls below.",
-    messageColor: { color: "rgb(150, 157, 166)" },
-    borderBottonStyle: { borderBottom: "1px solid rgb(179, 175, 177)" },
-  });
+  const [messageSignIn, setMessageSignIn] = useState(messageSignInStyle);
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
+  const [errorInfoMessage, setErrorInfoMessage] = useState(false);
+
   const { classes } = styles();
 
-  const failedLoginMessage = () => {
-    setMessageSignIn({
-      text: "Oops! That email and password combination is not valid.",
-      messageColor: { color: "rgb(237, 85, 151)" },
-      borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
-    });
-  };
+  useEffect(() => {
+    const informationUser = getFromLocalStorage();
+    if (informationUser && informationUser.isLoggedIn) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
-  const UserDoesNotExistsMessage = () => {
-    setMessageSignIn({
-      text: "Oops! Username does not exist",
-      messageColor: { color: "rgb(237, 85, 151)" },
-      borderBottonStyle: { borderBottom: "1px solid rgb(237, 85, 151)" },
-    });
-  };
+  useEffect(() => {
+    if (errorInfoMessage) {
+      setMessageSignIn(messageSignInStyle);
+      setErrorInfoMessage(false);
+    }
+  }, [emailText, passwordText]);
 
   const processLogin = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-    if (informationUser === null) {
-      UserDoesNotExistsMessage();
+    const informationUser = getFromLocalStorage();
+    if (!informationUser) {
+      setMessageSignIn(userDoesNotExistsMessageStyle);
+      setErrorInfoMessage(true);
       return;
-    } else {
-      if (
-        informationUser.email === emailText &&
-        informationUser.password !== passwordText
-      ) {
-        failedLoginMessage();
-      } else if (
-        emailText === informationUser.email &&
-        passwordText === informationUser.password
-      ) {
-        setIsLoggedIn(true);
-      } else if (informationUser.email !== emailText) {
-        UserDoesNotExistsMessage();
-      }
+    }
+
+    if (emailText === "" && passwordText === "") {
+      setMessageSignIn(messageSignInStyle);
+    } else if (
+      informationUser.email === emailText &&
+      informationUser.password !== passwordText
+    ) {
+      setMessageSignIn(failedLoginMessageStyle);
+      setErrorInfoMessage(true);
+    } else if (
+      emailText === informationUser.email &&
+      passwordText === informationUser.password
+    ) {
+      setIsLoggedIn(true);
+    } else if (informationUser.email !== emailText) {
+      setMessageSignIn(userDoesNotExistsMessageStyle);
+      setErrorInfoMessage(true);
     }
   };
 
@@ -101,7 +108,7 @@ const Login = () => {
                 name="Email"
                 sx={{
                   "& .MuiInputLabel-root": {},
-                  borderBottom: messageSignIn.borderBottonStyle,
+                  borderBottom: messageSignIn.failBorderBotton,
                 }}
                 InputProps={{ disableUnderline: true }}
                 onChange={(e) => {
@@ -110,7 +117,6 @@ const Login = () => {
                 value={emailText}
               ></TextField>
               <TextField
-                id="Password"
                 label="Password"
                 variant="standard"
                 type={showPassword ? "text" : "password"}
@@ -121,7 +127,7 @@ const Login = () => {
                 name="Password"
                 sx={{
                   "& .MuiInputLabel-root": {},
-                  borderBottom: messageSignIn.borderBottonStyle,
+                  borderBottom: messageSignIn.failBorderBotton,
                 }}
                 onChange={(e) => {
                   setPasswordText(e.target.value);
