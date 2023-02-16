@@ -12,6 +12,8 @@ import {
   paintAvatarAndName,
   showDetailEventClicked,
   handleButtonEvent,
+  getFromLocalStorage,
+  signOutFunction,
 } from "../../utils";
 import "./profileStyle.scss";
 
@@ -23,7 +25,6 @@ const Profile = () => {
   const [lastNameUser, setLastNameUser] = useState("");
   const [emailUser, setEmailUser] = useState("");
   const [seeModal, setSeeModal] = useState(false);
-  const [goToProfile, setGoToProfile] = useState(false);
   const [signOut, setSignOut] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [eventClicked, setEventClicked] = useState("");
@@ -47,12 +48,27 @@ const Profile = () => {
     drawUserInformation();
   }, []);
 
-  const drawUserInformation = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+  useEffect(() => {
+    const informationUser = getFromLocalStorage();
+    if (informationUser && !informationUser.isLoggedIn) {
+      setSignOut(true);
+    }
+  }, []);
 
-    let name = informationUser.name;
-    let lastName = informationUser.lastName;
-    let email = informationUser.email;
+  /*   const signOutFunction = () => {
+    const userInformation = getFromLocalStorage();
+
+    userInformation.isLoggedIn = false;
+    setSignOut(true);
+    localStorage.setItem("userInformation", JSON.stringify(userInformation));
+  }; */
+
+  const drawUserInformation = () => {
+    const userInformation = getFromLocalStorage();
+
+    let name = userInformation.name;
+    let lastName = userInformation.lastName;
+    let email = userInformation.email;
 
     setNameUser(name);
     setLastNameUser(lastName);
@@ -118,8 +134,6 @@ const Profile = () => {
 
   if (signOut) {
     return <Navigate to="/" />;
-  } else if (goToProfile) {
-    return <Navigate to="/profile" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
   } else if (goToDetailEvent) {
@@ -155,11 +169,13 @@ const Profile = () => {
           <span>My Events</span>
           <span>
             <ViewModuleIcon
+              className="viewModule-icon"
               onClick={() => {
                 setViewEvents(true);
               }}
             />
             <ViewStreamIcon
+              className="viewStream-icon"
               onClick={() => {
                 setViewEvents(false);
               }}
@@ -192,14 +208,7 @@ const Profile = () => {
           }
         >
           <nav className="modal-container-p">
-            <span
-              className="profile-button"
-              onClick={() => {
-                setGoToProfile(true);
-              }}
-            >
-              View Profile
-            </span>
+            <span className="profile-button">View Profile</span>
             <span
               className="dashboard-button"
               onClick={() => {
@@ -211,7 +220,7 @@ const Profile = () => {
             <span
               className="sign-out-button-p"
               onClick={() => {
-                setSignOut(true);
+                signOutFunction(setSignOut);
               }}
             >
               Sign Out

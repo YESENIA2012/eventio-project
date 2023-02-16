@@ -5,6 +5,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import EditEvent from "./components/editEvent/EditEvents";
 import Profile from "./components/profile/Profile";
 import DetailEvent from "./components/eventClicked/DetailEvent";
+import SignUp from "./components/signUp/SignUp";
 import "./styles/app.scss";
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
         <Route path="/editEvent" element={<EditEvent />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/detailEvent" element={<DetailEvent />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </div>
   );
