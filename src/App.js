@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/login/Login";
-import Dashboard from "./components/dashboard/Dashboard";
-import EditEvent from "./components/editEvent/EditEvents";
+import Dashboard from "./components/dashboard";
+import EditEvent from "./components/dashboard/EditEvents";
 import Profile from "./components/profile/Profile";
-import DetailEvent from "./components/eventClicked/DetailEvent";
+import DetailEvent from "./components/dashboard/DetailEvent";
 import SignUp from "./components/signUp/SignUp";
 import "./styles/app.scss";
 

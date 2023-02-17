@@ -55,14 +55,6 @@ const Profile = () => {
     }
   }, []);
 
-  /*   const signOutFunction = () => {
-    const userInformation = getFromLocalStorage();
-
-    userInformation.isLoggedIn = false;
-    setSignOut(true);
-    localStorage.setItem("userInformation", JSON.stringify(userInformation));
-  }; */
-
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
 
