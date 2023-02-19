@@ -2,20 +2,19 @@ import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
 
-import { Avatar, Button } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import { Avatar } from "@mui/material";
+
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
 import {
   paintAvatarAndName,
-  showDetailEventClicked,
-  handleButtonEvent,
   getFromLocalStorage,
   signOutFunction,
 } from "../../utils";
 import "./profileStyle.scss";
+import { drawEventsProfile } from "../../drawEvents";
 
 const Profile = () => {
   const [textAvatar, setTextAvatar] = useState("");
@@ -39,9 +38,6 @@ const Profile = () => {
   const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
-  const changePage = ({ selected }) => {
-    setPageNumber(selected);
-  };
 
   useEffect(() => {
     paintAvatarAndName(setTextAvatar, setUserName);
@@ -70,59 +66,6 @@ const Profile = () => {
   if (eventsList === null) {
     return;
   }
-
-  const displayEvents = eventsList
-    .slice(pagesVisited, pagesVisited + eventsPerPage)
-    .map((element, index) => {
-      if (element.stateEvent === "EDIT" || element.stateEvent === "LEAVE") {
-        return (
-          <div
-            key={index}
-            className={
-              viewEvents
-                ? `element-${index} element`
-                : `element-${index} element-column`
-            }
-            onClick={(e) =>
-              showDetailEventClicked(e, setGoToDetailEvent, setEventClicked)
-            }
-          >
-            <div className="date-time-container">
-              <spam className="date">{element.date}</spam>
-              <span className="dash">-</span>
-              <spam className="time">{element.time}</spam>
-            </div>
-            <h4 className="title-event">{element.nameEvent}</h4>
-            <p className="p-host">{element.host}</p>
-            <p className="description-event">{element.descriptionEvent}</p>
-            <div className="button-attendees-capacity-container ">
-              <span className="attendees">
-                <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
-                <span>{element.attendees}</span>
-                <span className="of-text">of</span>
-                <span>{element.capacity}</span>
-              </span>
-              <Button
-                variant="contained"
-                className={`button-event ${element.id}`}
-                onClick={(e) => {
-                  handleButtonEvent(
-                    e,
-                    setGoToEditEvent,
-                    setEventToEdit,
-                    eventToEdit,
-                    eventsList,
-                    setEventList
-                  );
-                }}
-              >
-                {element.stateEvent}
-              </Button>
-            </div>
-          </div>
-        );
-      }
-    });
 
   if (signOut) {
     return <Navigate to="/" />;
@@ -179,13 +122,27 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {displayEvents}
+          {drawEventsProfile(
+            eventsList,
+            pagesVisited,
+            eventsPerPage,
+            viewEvents,
+            setGoToDetailEvent,
+            setEventClicked,
+            setGoToEditEvent,
+            setEventToEdit,
+            eventToEdit,
+            setEventList
+          )}
         </div>
         <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
           pageCount={pageCount}
-          onPageChange={changePage}
+          onPageChange={({ selected }) => {
+            console.log(selected);
+            setPageNumber(selected);
+          }}
           containerClassName={"pagination-bttns"}
           previousLinkClassName={"previous-bttn"}
           nextLinkClassName={"next-bttn"}
