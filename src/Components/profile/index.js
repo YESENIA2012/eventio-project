@@ -14,7 +14,7 @@ import {
   signOutFunction,
 } from "../../utils";
 import "./profileStyle.scss";
-import { drawEventsProfile } from "../../drawEvents";
+import EventCard from "../evenst/EventCard";
 
 const Profile = () => {
   const [textAvatar, setTextAvatar] = useState("");
@@ -26,16 +26,10 @@ const Profile = () => {
   const [seeModal, setSeeModal] = useState(false);
   const [signOut, setSignOut] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
-  const [eventClicked, setEventClicked] = useState("");
-  const [goToDetailEvent, setGoToDetailEvent] = useState(false);
-  const [goToEditEvent, setGoToEditEvent] = useState(false);
-  const [eventToEdit, setEventToEdit] = useState("");
-  const [eventsList, setEventList] = useState(
-    JSON.parse(localStorage.getItem("Events"))
-  );
+  const eventsList = JSON.parse(localStorage.getItem("Events"));
 
   const [pageNumber, setPageNumber] = useState(0);
-  const eventsPerPage = 6;
+  const eventsPerPage = 3;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
 
@@ -49,7 +43,7 @@ const Profile = () => {
     if (informationUser && !informationUser.isLoggedIn) {
       setSignOut(true);
     }
-  }, []);
+  }, [eventsList]);
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
@@ -71,10 +65,6 @@ const Profile = () => {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
-  } else if (goToDetailEvent) {
-    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
-  } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
   } else {
     return (
       <div className="profile-container">
@@ -122,25 +112,18 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {drawEventsProfile(
-            eventsList,
-            pagesVisited,
-            eventsPerPage,
-            viewEvents,
-            setGoToDetailEvent,
-            setEventClicked,
-            setGoToEditEvent,
-            setEventToEdit,
-            eventToEdit,
-            setEventList
-          )}
+          <EventCard
+            pagesVisited={pagesVisited}
+            eventsPerPage={eventsPerPage}
+            viewEvents={viewEvents}
+            goToDashboard={goToDashboard}
+          />
         </div>
         <ReactPaginate
           previousLabel={"Previous"}
           nextLabel={"Next"}
           pageCount={pageCount}
           onPageChange={({ selected }) => {
-            console.log(selected);
             setPageNumber(selected);
           }}
           containerClassName={"pagination-bttns"}
