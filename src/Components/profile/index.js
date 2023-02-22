@@ -29,7 +29,7 @@ const Profile = () => {
   const eventsList = JSON.parse(localStorage.getItem("Events"));
 
   const [pageNumber, setPageNumber] = useState(0);
-  const eventsPerPage = 3;
+  const eventsPerPage = 6;
   const pageCount = Math.ceil(eventsList.length / eventsPerPage);
   const pagesVisited = pageNumber * eventsPerPage;
 
