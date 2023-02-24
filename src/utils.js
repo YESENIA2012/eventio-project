@@ -10,7 +10,7 @@ const styles = makeStyles()(() => {
 });
 
 const paintAvatarAndName = (setTextAvatar, setUserName) => {
-  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+  const informationUser = getFromLocalStorage();
 
   let firsLetterName = informationUser.name[0];
   let firstLetterLastName = informationUser.lastName[0];
