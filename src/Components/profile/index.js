@@ -35,7 +35,6 @@ const Profile = () => {
   const [eventsList, setEventList] = useState(
     JSON.parse(localStorage.getItem("Events"))
   );
-  console.log(eventsList);
   const [pageNumber, setPageNumber] = useState(0);
   const eventsPerPage = 6;
   const pageCount =
