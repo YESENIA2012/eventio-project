@@ -13,53 +13,48 @@ const EventCard = (props) => {
     setEventToEdit,
     eventsList,
     setEventList,
-    date,
-    time,
-    nameEvent,
-    host,
-    descriptionEvent,
-    attendees,
-    capacity,
-    id,
-    stateEvent,
+    eventDetail,
   } = props;
 
-  return (
-    <Fragment>
-      <div className="date-time-container">
-        <spam className="date">{date}</spam>
-        <span className="dash">-</span>
-        <spam className="time">{time}</spam>
-      </div>
-      <h4 className="title-event">{nameEvent}</h4>
-      <p className="p-host">{host}</p>
-      <p className="description-event">{descriptionEvent}</p>
-      <div className="button-attendees-capacity-container ">
-        <span className="attendees">
-          <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
-          <span>{attendees}</span>
-          <span className="of-text">of</span>
-          <span>{capacity}</span>
-        </span>
-        <Button
-          variant="contained"
-          className={`button-event ${id}`}
-          onClick={(e) => {
-            handleButtonEvent(
-              e,
-              setGoToEditEvent,
-              setEventToEdit,
-              eventToEdit,
-              eventsList,
-              setEventList
-            );
-          }}
-        >
-          {stateEvent}
-        </Button>
-      </div>
-    </Fragment>
-  );
+  if (eventDetail.stateEvent === "EDIT" || eventDetail.stateEvent === "LEAVE") {
+    return (
+      <Fragment>
+        <div className="date-time-container">
+          <spam className="date">{eventDetail.date}</spam>
+          <span className="dash">-</span>
+          <spam className="time">{eventDetail.time}</spam>
+        </div>
+        <h4 className="title-event">{eventDetail.nameEvent}</h4>
+        <p className="p-host">{eventDetail.host}</p>
+        <p className="description-event">{eventDetail.descriptionEvent}</p>
+        <div className="button-attendees-capacity-container ">
+          <span className="attendees">
+            <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
+            <span>{eventDetail.attendees}</span>
+            <span className="of-text">of</span>
+            <span>{eventDetail.capacity}</span>
+          </span>
+          <Button
+            variant="contained"
+            className={`button-event ${eventDetail.id}`}
+            onClick={(stateEvent) => {
+              handleButtonEvent(
+                stateEvent,
+                eventDetail,
+                setGoToEditEvent,
+                setEventToEdit,
+                eventToEdit,
+                eventsList,
+                setEventList
+              );
+            }}
+          >
+            {eventDetail.stateEvent}
+          </Button>
+        </div>
+      </Fragment>
+    );
+  }
 };
 
 export default EventCard;

@@ -9,13 +9,14 @@ import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
 import {
-  paintAvatarAndName,
+  getAvatarAndName,
   getFromLocalStorage,
   signOutFunction,
   showDetailEventClicked,
 } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../evenst/EventCard";
+import { TryRounded } from "@mui/icons-material";
 
 const Profile = () => {
   const [textAvatar, setTextAvatar] = useState("");
@@ -34,27 +35,20 @@ const Profile = () => {
   const [eventsList, setEventList] = useState(
     JSON.parse(localStorage.getItem("Events"))
   );
-
+  console.log(eventsList);
   const [pageNumber, setPageNumber] = useState(0);
   const eventsPerPage = 6;
-  const pageCount = Math.ceil(eventsList.length / eventsPerPage);
+  const pageCount =
+    eventsList && eventsList.length
+      ? Math.ceil(eventsList.length / eventsPerPage)
+      : 0;
+
   const pagesVisited = pageNumber * eventsPerPage;
-  const currentEvents = eventsList.slice(
-    pagesVisited,
-    pagesVisited + eventsPerPage
-  );
 
-  useEffect(() => {
-    paintAvatarAndName(setTextAvatar, setUserName);
-    drawUserInformation();
-  }, []);
-
-  useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if (informationUser && !informationUser.isLoggedIn) {
-      setSignOut(true);
-    }
-  }, [eventsList]);
+  let currentEvents =
+    eventsList && eventsList.length
+      ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
+      : 0;
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
@@ -68,8 +62,30 @@ const Profile = () => {
     setEmailUser(email);
   };
 
-  if (eventsList === null) {
-    return;
+  useEffect(() => {
+    async function getAvatar() {
+      try {
+        const userData = await getAvatarAndName();
+        setTextAvatar(userData.letterAvatar);
+        setUserName(userData.userName);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getAvatar();
+    drawUserInformation();
+  }, []);
+
+  useEffect(() => {
+    const informationUser = getFromLocalStorage();
+    if (informationUser && !informationUser.isLoggedIn) {
+      setSignOut(true);
+    }
+  }, [eventsList]);
+
+  if (!eventsList) {
+    currentEvents = 0;
   }
 
   if (signOut) {
@@ -122,51 +138,47 @@ const Profile = () => {
             />
           </span>
         </div>
-        {}
         <div
           className={
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {currentEvents.map((event, index) => {
-            if (event.stateEvent === "EDIT" || event.stateEvent === "LEAVE") {
-              return (
-                <div
-                  key={event.id}
-                  className={
-                    viewEvents
-                      ? `element-${index} element`
-                      : `element-${index} element-column`
-                  }
-                  onClick={(e) => {
-                    showDetailEventClicked(
-                      e,
-                      setGoToDetailEvent,
-                      setEventClicked
-                    );
-                  }}
-                >
-                  <EventCard
-                    eventsList={eventsList}
-                    setEventList={setEventList}
-                    setGoToEditEvent={setGoToEditEvent}
-                    eventToEdit={eventToEdit}
-                    setEventToEdit={setEventToEdit}
-                    viewEvents={viewEvents}
-                    date={event.date}
-                    time={event.time}
-                    nameEvent={event.nameEvent}
-                    host={event.host}
-                    descriptionEvent={event.descriptionEvent}
-                    attendees={event.attendees}
-                    capacity={event.capacity}
-                    id={event.id}
-                    stateEvent={event.stateEvent}
-                  />
-                </div>
-              );
-            }
-          })}
+          {eventsList && eventsList.length
+            ? currentEvents.map((event, index) => {
+                if (
+                  event.stateEvent === "EDIT" ||
+                  event.stateEvent === "LEAVE"
+                ) {
+                  return (
+                    <div
+                      key={event.id}
+                      className={
+                        viewEvents
+                          ? `element-${index} element`
+                          : `element-${index} element-column`
+                      }
+                      onClick={(e) => {
+                        showDetailEventClicked(
+                          e,
+                          setGoToDetailEvent,
+                          setEventClicked
+                        );
+                      }}
+                    >
+                      <EventCard
+                        eventsList={eventsList}
+                        setEventList={setEventList}
+                        setGoToEditEvent={setGoToEditEvent}
+                        eventToEdit={eventToEdit}
+                        setEventToEdit={setEventToEdit}
+                        viewEvents={viewEvents}
+                        eventDetail={event}
+                      />
+                    </div>
+                  );
+                }
+              })
+            : 0}
         </div>
         <ReactPaginate
           previousLabel={"Previous"}
