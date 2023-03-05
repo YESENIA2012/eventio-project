@@ -6,7 +6,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 
 import Image from "../image/ImageContainer";
-import { styles, getFromLocalStorage, saveEvents } from "../../utils";
+import { styles, getFromLocalStorage, createFakeEvents } from "../../utils";
 import {
   textFieldBorderStyle,
   userExistsMessageStyle,
@@ -51,7 +51,7 @@ const SignUp = () => {
       setErrorInformationEntered(true);
     } else if (passwordUser && passwordUser === repeatPasswordUser) {
       saveUserInformation();
-      saveEvents();
+      createFakeEvents();
       setIsLoggedIn(true);
     } else {
       setMessageSignUp(messagePassWordNotMatchStyles);

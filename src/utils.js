@@ -173,14 +173,12 @@ const mockedEvents = [
   },
 ];
 
-const mockedEventsCopy = [...mockedEvents];
-
-const saveEvents = () => {
-  localStorage.setItem("Events", JSON.stringify(mockedEventsCopy));
+const createFakeEvents = () => {
+  localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
 export {
-  saveEvents,
+  createFakeEvents,
   styles,
   getFromLocalStorage,
   getAvatarAndName,
