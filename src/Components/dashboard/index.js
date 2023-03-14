@@ -1,5 +1,5 @@
 const Dashboard = () => {
-  return <div>It is located on the dashboard</div>;
+  return <div>Dashboard component</div>;
 };
 
 export default Dashboard;

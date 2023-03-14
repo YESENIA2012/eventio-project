@@ -62,6 +62,8 @@ const Login = () => {
       passwordText === informationUser.password
     ) {
       setIsLoggedIn(true);
+      informationUser.isLoggedIn = true;
+      localStorage.setItem("userInformation", JSON.stringify(informationUser));
     } else if (informationUser.email !== emailText) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
       setErrorInfoMessage(true);
