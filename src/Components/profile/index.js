@@ -15,8 +15,7 @@ import {
   showDetailEventClicked,
 } from "../../utils";
 import "./profileStyle.scss";
-import EventCard from "../evenst/EventCard";
-import { TryRounded } from "@mui/icons-material";
+import EventCard from "../events/EventCard";
 
 const Profile = () => {
   const [textAvatar, setTextAvatar] = useState("");
@@ -41,9 +40,7 @@ const Profile = () => {
     eventsList && eventsList.length
       ? Math.ceil(eventsList.length / eventsPerPage)
       : 0;
-
   const pagesVisited = pageNumber * eventsPerPage;
-
   let currentEvents =
     eventsList && eventsList.length
       ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
@@ -142,42 +139,45 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {eventsList && eventsList.length
-            ? currentEvents.map((event, index) => {
-                if (
-                  event.stateEvent === "EDIT" ||
-                  event.stateEvent === "LEAVE"
-                ) {
-                  return (
-                    <div
-                      key={event.id}
-                      className={
-                        viewEvents
-                          ? `element-${index} element`
-                          : `element-${index} element-column`
-                      }
-                      onClick={(e) => {
-                        showDetailEventClicked(
-                          e,
-                          setGoToDetailEvent,
-                          setEventClicked
-                        );
-                      }}
-                    >
-                      <EventCard
-                        eventsList={eventsList}
-                        setEventList={setEventList}
-                        setGoToEditEvent={setGoToEditEvent}
-                        eventToEdit={eventToEdit}
-                        setEventToEdit={setEventToEdit}
-                        viewEvents={viewEvents}
-                        eventDetail={event}
-                      />
-                    </div>
-                  );
-                }
-              })
-            : 0}
+          {currentEvents.length > 0 &&
+          currentEvents.some((event) => {
+            if (event.stateEvent === "EDIT" || event.stateEvent === "LEAVE") {
+              return true;
+            }
+          }) ? (
+            currentEvents.map((event, index) => {
+              return (
+                <div
+                  key={event.id}
+                  className={
+                    viewEvents
+                      ? `element-${index} element`
+                      : `element-${index} element-column`
+                  }
+                  onClick={(e) => {
+                    showDetailEventClicked(
+                      e,
+                      setGoToDetailEvent,
+                      setEventClicked
+                    );
+                  }}
+                >
+                  <EventCard
+                    event={event}
+                    eventsList={eventsList}
+                    setEventList={setEventList}
+                    setGoToEditEvent={setGoToEditEvent}
+                    eventToEdit={eventToEdit}
+                    setEventToEdit={setEventToEdit}
+                    viewEvents={viewEvents}
+                    eventDetail={event}
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <div>You have no events</div>
+          )}
         </div>
         <ReactPaginate
           previousLabel={"Previous"}
