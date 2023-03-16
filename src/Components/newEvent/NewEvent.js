@@ -4,8 +4,12 @@ import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { styles } from "../../utils";
-import { mockedEventsCopy } from "../../utils";
+import {
+  styles,
+  getFromLocalStorage,
+  getEventsFromLocalStorage,
+} from "../../utils";
+
 import "./newEventStyle.scss";
 
 const NewEvent = () => {
@@ -19,11 +23,13 @@ const NewEvent = () => {
     text: "Enter details below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
+  const eventsList = getEventsFromLocalStorage();
+
   const { classes } = styles();
 
   const saveNewEventInLocalStorage = () => {
-    let stateEvent = "EDIT";
-    let id = mockedEventsCopy.length;
+    const stateEvent = "EDIT";
+    const id = eventsList.length;
 
     if (
       titleEvent === "" ||
@@ -38,12 +44,11 @@ const NewEvent = () => {
       });
       return;
     } else {
-      const informationUser = JSON.parse(
-        localStorage.getItem("userInformation")
-      );
+      const informationUser = getFromLocalStorage();
+      const idUser = informationUser.idUser;
       let host = `${informationUser.name} ${informationUser.lastName}`;
 
-      mockedEventsCopy.push({
+      eventsList.push({
         id: id,
         date: dateEvent,
         time: timeEvent,
@@ -53,9 +58,10 @@ const NewEvent = () => {
         attendees: 1,
         capacity: capacityPeopleEvent,
         stateEvent: stateEvent,
+        users: [idUser],
       });
 
-      localStorage.setItem("Events", JSON.stringify(mockedEventsCopy));
+      localStorage.setItem("Events", JSON.stringify(eventsList));
 
       setTitleEvent("");
       setDescriptionEvent("");
