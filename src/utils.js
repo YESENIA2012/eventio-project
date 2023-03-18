@@ -107,8 +107,36 @@ const getFromLocalStorage = () => {
   return dataUser;
 };
 
-const getEventsFromLocalStorage = () => {
-  return JSON.parse(localStorage.getItem("Events"));
+const getEventsFromLocalStorage = (pageNumber) => {
+  const userInformation = getFromLocalStorage();
+  const userId = userInformation.idUser;
+  const events = JSON.parse(localStorage.getItem("Events"));
+
+  const eventsPerPage = 6;
+
+  const pageCount =
+    events && events.length ? Math.ceil(events.length / eventsPerPage) : 0;
+
+  const pagesVisited = pageNumber * eventsPerPage;
+
+  let currentEvents =
+    events && events.length
+      ? events
+          .slice(pagesVisited, pagesVisited + eventsPerPage)
+          .map((event) => {
+            if (event.users.includes(userId)) {
+              return event;
+            } else {
+              return null;
+            }
+          })
+          .filter((event) => event !== null)
+      : 0;
+  return {
+    eventsList: events,
+    currentEvents: currentEvents,
+    pageCount: pageCount,
+  };
 };
 
 const signOutFunction = (setSignOut) => {

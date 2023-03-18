@@ -1,14 +1,11 @@
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { Button, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import {
-  styles,
-  getFromLocalStorage,
-  getEventsFromLocalStorage,
-} from "../../utils";
+import { styles, getFromLocalStorage } from "../../utils";
 
 import "./newEventStyle.scss";
 
@@ -23,13 +20,12 @@ const NewEvent = () => {
     text: "Enter details below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
-  const eventsList = getEventsFromLocalStorage();
+  const eventsList = JSON.parse(localStorage.getItem("Events"));
 
   const { classes } = styles();
 
   const saveNewEventInLocalStorage = () => {
     const stateEvent = "EDIT";
-    const id = eventsList.length;
 
     if (
       titleEvent === "" ||
@@ -49,7 +45,7 @@ const NewEvent = () => {
       let host = `${informationUser.name} ${informationUser.lastName}`;
 
       eventsList.push({
-        id: id,
+        id: uuidv4(),
         date: dateEvent,
         time: timeEvent,
         nameEvent: titleEvent,

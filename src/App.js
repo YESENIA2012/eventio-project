@@ -6,7 +6,7 @@ import EditEvent from "./components/dashboard/EditEvents";
 import Profile from "./components/profile";
 import DetailEvent from "./components/dashboard/DetailEvent";
 import SignUp from "./components/signUp/SignUp";
-import NewEvent from "./components/newEvent/NewEvent";
+import NewEvent from "./components/events/NewEvent";
 import "./styles/app.scss";
 
 function App() {

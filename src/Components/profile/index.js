@@ -19,6 +19,7 @@ import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
 
 const Profile = () => {
+  const [pageNumber, setPageNumber] = useState(0);
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
@@ -32,34 +33,15 @@ const Profile = () => {
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const [eventsList, setEventList] = useState(getEventsFromLocalStorage());
-  const [pageNumber, setPageNumber] = useState(0);
-  const userInformation = getFromLocalStorage();
-  const userId = userInformation.idUser;
-  const eventsPerPage = 6;
-
-  const pageCount =
-    eventsList && eventsList.length
-      ? Math.ceil(eventsList.length / eventsPerPage)
-      : 0;
-
-  const pagesVisited = pageNumber * eventsPerPage;
-
-  let currentEvents =
-    eventsList && eventsList.length
-      ? eventsList
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
-          .map((event) => {
-            if (event.users.includes(userId)) {
-              return event;
-            } else {
-              return null;
-            }
-          })
-          .filter((event) => event !== null)
-      : 0;
+  const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
+  const [eventsList, setEventList] = useState(
+    eventsFromLocalStorage.eventsList
+  );
+  const pageCount = eventsFromLocalStorage.pageCount;
+  let currentEvents = eventsFromLocalStorage.currentEvents;
 
   const drawUserInformation = () => {
+    const userInformation = getFromLocalStorage();
     let name = userInformation.name;
     let lastName = userInformation.lastName;
     let email = userInformation.email;
