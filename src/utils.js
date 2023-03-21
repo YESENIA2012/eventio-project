@@ -170,7 +170,7 @@ const mockedEvents = [
     attendees: 5,
     capacity: 50,
     stateEvent: "JOIN",
-    users: [],
+    users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
     id: 2,
@@ -183,7 +183,7 @@ const mockedEvents = [
     attendees: 5,
     capacity: 50,
     stateEvent: "JOIN",
-    users: [],
+    users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
     id: 3,
@@ -227,7 +227,14 @@ const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
+const signOffFunction = () => {
+  const informationUser = getFromLocalStorage();
+  informationUser.isLoggedIn = false;
+  localStorage.setItem("userInformation", JSON.stringify(informationUser));
+};
+
 export {
+  signOffFunction,
   createFakeEvents,
   styles,
   getFromLocalStorage,

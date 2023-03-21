@@ -14,6 +14,7 @@ import {
   signOutFunction,
   showDetailEventClicked,
   getEventsFromLocalStorage,
+  signOffFunction,
 } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
@@ -71,7 +72,7 @@ const Profile = () => {
     if (informationUser && !informationUser.isLoggedIn) {
       setSignOut(true);
     }
-  }, [eventsList]);
+  }, [signOut]);
 
   if (!eventsList) {
     currentEvents = 0;
@@ -200,6 +201,7 @@ const Profile = () => {
               className="sign-out-button-p"
               onClick={() => {
                 signOutFunction(setSignOut);
+                signOffFunction();
               }}
             >
               Sign Out
