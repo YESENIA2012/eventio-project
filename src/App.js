@@ -4,7 +4,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import NewEvent from "./components/newEvent/NewEvent";
 import { EditEvent } from "./components/eventEdit";
 import DetailEvent from "./components/eventClicked/DetailEvent";
-import Login from "./components/Login";
+import Login from "./components";
 import Profile from "./components/Profile";
 import "./styles/app.scss";
 

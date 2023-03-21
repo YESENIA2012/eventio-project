@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import "./modalStyle.scss";
+import { signOffFunction } from "../../utils";
 
 const Modal = () => {
   const [goToProfile, setGoToProfile] = useState(false);
@@ -26,6 +27,7 @@ const Modal = () => {
           className="sign-out-button"
           onClick={() => {
             setSignOut(true);
+            signOffFunction();
           }}
         >
           Sign Out
