@@ -1,0 +1,17 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
+.event-container {
+  @include styleFile.display-type(column);
+  height: auto;
+  background-color: rgb(249, 249, 251);
+
+  .add-new-event-container {
+    @include styleFile.align-element-with-flex(end);
+    margin-right: 50px;
+
+    .add-new-event-button {
+      font-size: 50px;
+      color: rgb(51, 59, 68);
+    }
+  }
+}

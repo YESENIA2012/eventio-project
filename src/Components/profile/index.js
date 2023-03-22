@@ -13,11 +13,14 @@ import {
   getFromLocalStorage,
   signOutFunction,
   showDetailEventClicked,
+  getEventsFromLocalStorage,
+  signOffFunction,
 } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
 
 const Profile = () => {
+  const [pageNumber, setPageNumber] = useState(0);
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
   const [viewEvents, setViewEvents] = useState(true);
@@ -31,24 +34,15 @@ const Profile = () => {
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
+  const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
   const [eventsList, setEventList] = useState(
-    JSON.parse(localStorage.getItem("Events"))
+    eventsFromLocalStorage.eventsList
   );
-  const [pageNumber, setPageNumber] = useState(0);
-  const eventsPerPage = 6;
-  const pageCount =
-    eventsList && eventsList.length
-      ? Math.ceil(eventsList.length / eventsPerPage)
-      : 0;
-  const pagesVisited = pageNumber * eventsPerPage;
-  let currentEvents =
-    eventsList && eventsList.length
-      ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
-      : 0;
+  const pageCount = eventsFromLocalStorage.pageCount;
+  let currentEvents = eventsFromLocalStorage.currentEvents;
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
-
     let name = userInformation.name;
     let lastName = userInformation.lastName;
     let email = userInformation.email;
@@ -78,7 +72,7 @@ const Profile = () => {
     if (informationUser && !informationUser.isLoggedIn) {
       setSignOut(true);
     }
-  }, [eventsList]);
+  }, [signOut]);
 
   if (!eventsList) {
     currentEvents = 0;
@@ -139,12 +133,7 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {currentEvents.length > 0 &&
-          currentEvents.some((event) => {
-            if (event.stateEvent === "EDIT" || event.stateEvent === "LEAVE") {
-              return true;
-            }
-          }) ? (
+          {currentEvents ? (
             currentEvents.map((event, index) => {
               return (
                 <div
@@ -163,7 +152,6 @@ const Profile = () => {
                   }}
                 >
                   <EventCard
-                    event={event}
                     eventsList={eventsList}
                     setEventList={setEventList}
                     setGoToEditEvent={setGoToEditEvent}
@@ -213,6 +201,7 @@ const Profile = () => {
               className="sign-out-button-p"
               onClick={() => {
                 signOutFunction(setSignOut);
+                signOffFunction();
               }}
             >
               Sign Out

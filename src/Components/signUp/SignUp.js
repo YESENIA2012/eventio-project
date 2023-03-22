@@ -1,6 +1,8 @@
 import { Fragment, useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { Button, TextField, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
@@ -68,6 +70,7 @@ const SignUp = () => {
       email: emailUser,
       password: passwordUser,
       isLoggedIn: true,
+      idUser: uuidv4(),
     };
 
     localStorage.setItem("userInformation", JSON.stringify(userInformation));
