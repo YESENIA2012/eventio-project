@@ -5,7 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Button, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { styles, getFromLocalStorage } from "../../utils";
+import {
+  styles,
+  getFromLocalStorage,
+  getEventsFromLocalStorage,
+} from "../../utils";
 
 import "./newEventStyle.scss";
 
@@ -20,7 +24,8 @@ const NewEvent = () => {
     text: "Enter details below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
-  const eventsList = JSON.parse(localStorage.getItem("Events"));
+  const eventsInLocalStorage = getEventsFromLocalStorage();
+  const eventsList = eventsInLocalStorage.eventsList;
 
   const { classes } = styles();
 

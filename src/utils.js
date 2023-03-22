@@ -111,9 +111,7 @@ const getEventsFromLocalStorage = (pageNumber) => {
   const userInformation = getFromLocalStorage();
   const userId = userInformation.idUser;
   const events = JSON.parse(localStorage.getItem("Events"));
-
   const eventsPerPage = 6;
-
   const pageCount =
     events && events.length ? Math.ceil(events.length / eventsPerPage) : 0;
 
@@ -132,6 +130,10 @@ const getEventsFromLocalStorage = (pageNumber) => {
           })
           .filter((event) => event !== null)
       : 0;
+
+  if (pageNumber === undefined) {
+    return { eventsList: events };
+  }
   return {
     eventsList: events,
     currentEvents: currentEvents,
