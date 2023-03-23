@@ -13,7 +13,7 @@ import {
   getEventsFromLocalStorage,
   getFromLocalStorage,
 } from "../../utils";
-import "./dashboardStyles.scss";
+import "./styleDashboard.scss";
 
 const Dashboard = () => {
   const [pageNumber, setPageNumber] = useState(0);
@@ -27,15 +27,11 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const [eventsList, setEventList] = useState(
-    eventsFromLocalStorage.eventsList
-  );
+  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
   const pageCount = eventsFromLocalStorage.pageCount;
-  const everyEvents = eventsFromLocalStorage.everyEvents;
 
   useEffect(() => {
     const informationUser = getFromLocalStorage();
-    console.log(informationUser.isLoggedIn);
     if (informationUser && !informationUser.isLoggedIn) {
       setIsLoggedOut(true);
     }
@@ -98,8 +94,8 @@ const Dashboard = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {everyEvents ? (
-              everyEvents.map((event, index) => {
+            {eventsList ? (
+              eventsList.map((event, index) => {
                 return (
                   <div
                     key={event.id}

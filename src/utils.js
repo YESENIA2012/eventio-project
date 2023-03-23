@@ -1,5 +1,4 @@
 import { makeStyles } from "tss-react/mui";
-import { v4 as uuidv4 } from "uuid";
 
 const styles = makeStyles()(() => {
   return {
@@ -10,84 +9,22 @@ const styles = makeStyles()(() => {
   };
 });
 
-const getFromLocalStorage = () => {
-  const dataUser = JSON.parse(localStorage.getItem("userInformation"));
-  return dataUser;
-};
-
-const saveUserInformation = () => {
-  let userInformation = null;
-
-  userInformation = {
-    name: "Yesenia",
-    lastName: "Gonzalez",
-    email: "g@gmail.com",
-    password: "dilan123",
-    isLoggedIn: true,
-    idUser: uuidv4(),
-  };
-
-  localStorage.setItem("userInformation", JSON.stringify(userInformation));
-};
-
-/* saveUserInformation(); */
-
-const getEventsFromLocalStorage = (pageNumber) => {
-  const userInformation = getFromLocalStorage();
-  const userId = userInformation.idUser;
-  const events = JSON.parse(localStorage.getItem("Events"));
-
-  const eventsPerPage = 6;
-
-  const pageCount =
-    events && events.length ? Math.ceil(events.length / eventsPerPage) : 0;
-
-  const pagesVisited = pageNumber * eventsPerPage;
-
-  const everyEvents =
-    events && events.length
-      ? events
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
-          .map((event) => {
-            return event;
-          })
-      : 0;
-
-  let currentEvents =
-    events && events.length
-      ? events
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
-          .map((event) => {
-            if (event.users.includes(userId)) {
-              return event;
-            } else {
-              return null;
-            }
-          })
-          .filter((event) => event !== null)
-      : 0;
-
-  return {
-    eventsList: events,
-    currentEvents: currentEvents,
-    pageCount: pageCount,
-    everyEvents: everyEvents,
-  };
-};
-
-const paintAvatarAndName = (setTextAvatar, setUserName) => {
-  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-  let firsLetterName = informationUser.name[0];
-  let firstLetterLastName = informationUser.lastName[0];
-  let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-  let userName = `${informationUser.name} ${informationUser.lastName}`;
-
-  setTextAvatar(letterAvatar);
-  setUserName(userName);
+const getAvatarAndName = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const informationUser = getFromLocalStorage();
+      const firsLetterName = informationUser.name[0];
+      const firstLetterLastName = informationUser.lastName[0];
+      const letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+      const userName = `${informationUser.name} ${informationUser.lastName}`;
+      resolve({ letterAvatar, userName });
+    }, 500);
+  });
 };
 
 const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
+  const informationUser = getFromLocalStorage();
+  const idUser = informationUser.idUser;
   let nameClassAtTheElement = e.target.className;
   let arrayClass = nameClassAtTheElement.split(" ");
   let eventToEditState = Number(arrayClass[12]);
@@ -96,6 +33,16 @@ const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
     return;
   } else {
     eventsList[eventToEditState].stateEvent = text;
+    if (text === "JOIN") {
+      const indexUserIdToDelete = eventsList[eventToEditState].users.findIndex(
+        (user) => user === idUser
+      );
+      eventsList[eventToEditState].users
+        .splice(indexUserIdToDelete, 1)
+        .filter((user) => user !== undefined);
+    } else if (text === "LEAVE") {
+      eventsList[eventToEditState].users.push(idUser);
+    }
   }
 
   localStorage.setItem("Events", JSON.stringify(eventsList));
@@ -117,21 +64,22 @@ const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
 };
 
 const handleButtonEvent = (
-  e,
+  stateEvent,
+  event,
   setGoToEditEvent,
   setEventToEdit,
   eventToEdit,
   eventsList,
   setEventList
 ) => {
-  let textButton = e.target.innerText;
+  let textButtonState = event.stateEvent;
 
-  if (textButton === "EDIT") {
-    goToEditEventFunction(e, setGoToEditEvent, setEventToEdit);
-  } else if (textButton === "JOIN") {
-    saveStateEvent(e, "LEAVE", eventToEdit, eventsList, setEventList);
+  if (textButtonState.toLowerCase() === "edit") {
+    goToEditEventFunction(stateEvent, setGoToEditEvent, setEventToEdit);
+  } else if (textButtonState.toLowerCase() === "join") {
+    saveStateEvent(stateEvent, "LEAVE", eventToEdit, eventsList, setEventList);
   } else {
-    saveStateEvent(e, "JOIN", eventToEdit, eventsList, setEventList);
+    saveStateEvent(stateEvent, "JOIN", eventToEdit, eventsList, setEventList);
   }
 };
 
@@ -152,6 +100,54 @@ const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
     setGoToDetailEvent(true);
     setEventClicked(elementClickedId);
   }
+};
+
+const getFromLocalStorage = () => {
+  const dataUser = JSON.parse(localStorage.getItem("userInformation"));
+  return dataUser;
+};
+
+const getEventsFromLocalStorage = (pageNumber = null) => {
+  const userInformation = getFromLocalStorage();
+  const userId = userInformation.idUser;
+  const events = JSON.parse(localStorage.getItem("Events"));
+  const eventsPerPage = 6;
+  const pageCount =
+    events && events.length ? Math.ceil(events.length / eventsPerPage) : 0;
+
+  const pagesVisited = pageNumber * eventsPerPage;
+
+  if (pageNumber === null) {
+    return { events: events };
+  }
+
+  let currentEvents =
+    events && events.length
+      ? events
+          .slice(pagesVisited, pagesVisited + eventsPerPage)
+          .map((event) => {
+            if (event.users.includes(userId)) {
+              return event;
+            } else {
+              return null;
+            }
+          })
+          .filter((event) => event !== null)
+      : 0;
+
+  return {
+    events: events,
+    currentEvents: currentEvents,
+    pageCount: pageCount,
+  };
+};
+
+const signOutFunction = (setSignOut) => {
+  const userInformation = getFromLocalStorage();
+
+  userInformation.isLoggedIn = false;
+  setSignOut(true);
+  localStorage.setItem("userInformation", JSON.stringify(userInformation));
 };
 
 const mockedEvents = [
@@ -177,7 +173,7 @@ const mockedEvents = [
     attendees: 5,
     capacity: 50,
     stateEvent: "JOIN",
-    users: [],
+    users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
     id: 2,
@@ -190,7 +186,7 @@ const mockedEvents = [
     attendees: 5,
     capacity: 50,
     stateEvent: "JOIN",
-    users: [],
+    users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
     id: 3,
@@ -234,8 +230,6 @@ const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
-createFakeEvents();
-
 const signOffFunction = () => {
   const informationUser = getFromLocalStorage();
   informationUser.isLoggedIn = false;
@@ -244,10 +238,12 @@ const signOffFunction = () => {
 
 export {
   signOffFunction,
+  createFakeEvents,
   styles,
   getFromLocalStorage,
-  getEventsFromLocalStorage,
-  paintAvatarAndName,
+  getAvatarAndName,
   handleButtonEvent,
   showDetailEventClicked,
+  signOutFunction,
+  getEventsFromLocalStorage,
 };
