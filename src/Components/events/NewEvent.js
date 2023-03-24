@@ -25,7 +25,7 @@ const NewEvent = () => {
     messageColor: { color: "rgb(150, 157, 166)" },
   });
   const eventsInLocalStorage = getEventsFromLocalStorage();
-  const eventsList = eventsInLocalStorage.eventsList;
+  const eventsList = eventsInLocalStorage.events;
 
   const { classes } = styles();
 

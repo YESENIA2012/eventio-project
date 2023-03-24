@@ -7,11 +7,11 @@
 
   .user-name-container-d {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     width: 95%;
 
     .avatar-and-name {
-      @include styleFile.align-element-with-flex(end);
+      @include styleFile.align-element-with-flex(flex-end);
       width: 100%;
       height: 80px;
     }
@@ -86,7 +86,7 @@
   }
 
   .add-new-event-container {
-    @include styleFile.align-element-with-flex(end);
+    @include styleFile.align-element-with-flex(flex-end);
     margin-right: 50px;
 
     .add-new-event-button {
