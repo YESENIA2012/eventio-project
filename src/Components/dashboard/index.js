@@ -28,7 +28,17 @@ const Dashboard = () => {
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
   const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
-  const pageCount = eventsFromLocalStorage.pageCount;
+  const eventsPerPage = 6;
+  const pageCount =
+    eventsList && eventsList.length
+      ? Math.ceil(eventsList.length / eventsPerPage)
+      : 0;
+  const pagesVisited = pageNumber * eventsPerPage;
+
+  const eventToDraw =
+    eventsList && eventsList.length
+      ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
+      : 0;
 
   useEffect(() => {
     const informationUser = getFromLocalStorage();
@@ -94,8 +104,8 @@ const Dashboard = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {eventsList ? (
-              eventsList.map((event, index) => {
+            {eventToDraw ? (
+              eventToDraw.map((event, index) => {
                 return (
                   <div
                     key={event.id}

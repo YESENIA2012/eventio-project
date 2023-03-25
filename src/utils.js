@@ -107,17 +107,13 @@ const getFromLocalStorage = () => {
   return dataUser;
 };
 
-const getEventsUser = (pageNumber, events, userId) => {
-  const eventsPerPage = 6;
-  const pageCount =
-    events && events.length ? Math.ceil(events.length / eventsPerPage) : 0;
-
-  const pagesVisited = pageNumber * eventsPerPage;
+const getEventsUser = (events, eventsPerPage, pagesVisited) => {
+  const userInformation = getFromLocalStorage();
+  const userId = userInformation.idUser;
 
   let currentEvents =
     events && events.length
       ? events
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
           .map((event) => {
             if (event.users.includes(userId)) {
               return event;
@@ -126,27 +122,33 @@ const getEventsUser = (pageNumber, events, userId) => {
             }
           })
           .filter((event) => event !== null)
+          .slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
 
-  return { eventsUser: currentEvents, pageCount: pageCount };
+  const pageCount =
+    events && events.length
+      ? Math.ceil(currentEvents.length / eventsPerPage)
+      : 0;
+
+  return { eventsUser: currentEvents, pageCountProfile: pageCount };
 };
 
 const getEventsFromLocalStorage = (pageNumber = null) => {
-  const userInformation = getFromLocalStorage();
-  const userId = userInformation.idUser;
   const events = JSON.parse(localStorage.getItem("Events"));
-  const eventUser = getEventsUser(pageNumber, events, userId);
-  const currentEvents = eventUser.eventsUser;
-  const pageCount = eventUser.pageCount;
 
   if (pageNumber === null) {
     return { events: events };
   }
 
+  const eventsPerPage = 6;
+  const pagesVisited = pageNumber * eventsPerPage;
+
+  const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited);
+
   return {
     events: events,
-    currentEvents: currentEvents,
-    pageCount: pageCount,
+    currentEvents: eventsUser.eventsUser,
+    pageCountProfile: eventsUser.pageCountProfile,
   };
 };
 
