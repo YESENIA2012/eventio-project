@@ -8,55 +8,53 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 
 import AvatarUser from "../avatarUser/AvatarUser";
+import { getEventsFromLocalStorage } from "../../utils";
 import "./detailEventStyle.scss";
 
 const DetailEvent = () => {
   const location = useLocation();
   const eventClicked = location.state.eventClicked;
+  console.log(typeof eventClicked);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const [eventsList, setEventList] = useState(
-    JSON.parse(localStorage.getItem("Events"))
-  );
+  const eventsFromLocalStorage = getEventsFromLocalStorage();
+  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
 
   const drawEvent = () => {
-    if (
-      eventClicked === undefined ||
-      isNaN(eventClicked) ||
-      eventClicked === ""
-    ) {
+    if (eventClicked === undefined || eventClicked === "") {
       return;
     } else {
+      const eventId = eventsList.findIndex(
+        (event) => event.id.toString() === eventClicked
+      );
+      const event = eventsList[eventId];
       return (
         <div className="container-event">
           <div className="information-event">
             <div className="time-date-container">
-              <span className="date-d">{eventsList[eventClicked].date}</span>
+              <span className="date-d">{event.date}</span>
               <span className="dash-d">-</span>
-              <span className="time-d">{eventsList[eventClicked].time}</span>
+              <span className="time-d">{event.time}</span>
             </div>
-            <h1 className="title">{eventsList[eventClicked].nameEvent}</h1>
-            <p className="host-e">{eventsList[eventClicked].host}</p>
-            <p className="description-event-e">
-              {eventsList[eventClicked].descriptionEvent}
-            </p>
+            <h1 className="title">{event.nameEvent}</h1>
+            <p className="host-e">{event.host}</p>
+            <p className="description-event-e">{event.descriptionEvent}</p>
             <div className="attendees-capacity-button-container">
               <div className="attendees-capacity-container">
                 <PersonIcon className="person-icon" />
-                <span className="attendees">
-                  {eventsList[eventClicked].attendees}
-                </span>
+                <span className="attendees">{event.attendees}</span>
                 <span className="of-text-d">of</span>
-                <span>{eventsList[eventClicked].capacity}</span>
+                <span>{event.capacity}</span>
               </div>
               <Button
                 variant="contained"
-                className={`button-event-detail ${eventsList[eventClicked].id}`}
+                className={`button-event-detail ${event.id}`}
                 onClick={(e) => {
                   handleButtonEvent(
                     e,
+                    event,
                     setGoToEditEvent,
                     setEventToEdit,
                     eventToEdit,
@@ -65,7 +63,7 @@ const DetailEvent = () => {
                   );
                 }}
               >
-                {eventsList[eventClicked].stateEvent}
+                {event.stateEvent}
               </Button>
             </div>
           </div>

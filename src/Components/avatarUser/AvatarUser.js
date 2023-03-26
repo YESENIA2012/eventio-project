@@ -3,7 +3,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useState, useEffect } from "react";
 
 import Modal from "../modal/Modal";
-import { paintAvatarAndName } from "../../utils";
+import { getAvatarAndName } from "../../utils";
 import "./avatarStyles.scss";
 
 const AvatarUser = () => {
@@ -12,7 +12,17 @@ const AvatarUser = () => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    paintAvatarAndName(setTextAvatar, setUserName);
+    async function getAvatar() {
+      try {
+        const userData = await getAvatarAndName();
+        setTextAvatar(userData.letterAvatar);
+        setUserName(userData.userName);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getAvatar();
   }, []);
 
   return (

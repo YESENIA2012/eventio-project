@@ -1,7 +1,7 @@
 @use "../../styles/mixinAndVariables.scss" as styleFile;
 
 .user-name-container {
-  @include styleFile.align-element-with-flex(end);
+  @include styleFile.align-element-with-flex(flex-end);
   width: 10%;
   height: 80px;
 
