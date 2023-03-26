@@ -2,8 +2,8 @@ import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { Button, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { Button, TextField } from "@mui/material";
 
 import {
   styles,
@@ -25,7 +25,7 @@ const NewEvent = () => {
     messageColor: { color: "rgb(150, 157, 166)" },
   });
   const eventsInLocalStorage = getEventsFromLocalStorage();
-  const eventsList = eventsInLocalStorage.eventsList;
+  const eventsList = eventsInLocalStorage.events;
 
   const { classes } = styles();
 

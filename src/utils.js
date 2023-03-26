@@ -54,12 +54,11 @@ const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
   let arrayClass = nameClassAtTheElement.split(" ");
   let eventToEdit = Number(arrayClass[12]);
 
-  if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
+  if (eventToEdit === undefined || eventToEdit === null) {
     return;
   } else {
     setGoToEditEvent(true);
   }
-
   setEventToEdit(eventToEdit);
 };
 
@@ -107,20 +106,13 @@ const getFromLocalStorage = () => {
   return dataUser;
 };
 
-const getEventsFromLocalStorage = (pageNumber) => {
+const getEventsUser = (events, eventsPerPage, pagesVisited) => {
   const userInformation = getFromLocalStorage();
   const userId = userInformation.idUser;
-  const events = JSON.parse(localStorage.getItem("Events"));
-  const eventsPerPage = 6;
-  const pageCount =
-    events && events.length ? Math.ceil(events.length / eventsPerPage) : 0;
-
-  const pagesVisited = pageNumber * eventsPerPage;
 
   let currentEvents =
     events && events.length
       ? events
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
           .map((event) => {
             if (event.users.includes(userId)) {
               return event;
@@ -129,15 +121,33 @@ const getEventsFromLocalStorage = (pageNumber) => {
             }
           })
           .filter((event) => event !== null)
+          .slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
 
-  if (pageNumber === undefined) {
-    return { eventsList: events };
+  const pageCount =
+    events && events.length
+      ? Math.ceil(currentEvents.length / eventsPerPage)
+      : 0;
+
+  return { eventsUser: currentEvents, pageCountProfile: pageCount };
+};
+
+const getEventsFromLocalStorage = (pageNumber = null) => {
+  const events = JSON.parse(localStorage.getItem("Events"));
+
+  if (pageNumber === null) {
+    return { events: events };
   }
+
+  const eventsPerPage = 6;
+  const pagesVisited = pageNumber * eventsPerPage;
+
+  const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited);
+
   return {
-    eventsList: events,
-    currentEvents: currentEvents,
-    pageCount: pageCount,
+    events: events,
+    currentEvents: eventsUser.eventsUser,
+    pageCountProfile: eventsUser.pageCountProfile,
   };
 };
 

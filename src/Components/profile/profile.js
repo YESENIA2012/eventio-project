@@ -35,10 +35,8 @@ const Profile = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const [eventsList, setEventList] = useState(
-    eventsFromLocalStorage.eventsList
-  );
-  const pageCount = eventsFromLocalStorage.pageCount;
+  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
+  const pageCount = eventsFromLocalStorage.pageCountProfile;
   let currentEvents = eventsFromLocalStorage.currentEvents;
 
   const drawUserInformation = () => {
@@ -82,10 +80,10 @@ const Profile = () => {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
-  } else if (goToDetailEvent) {
-    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else if (goToEditEvent) {
     return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+  } else if (goToDetailEvent) {
+    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else {
     return (
       <div className="profile-container">
@@ -152,12 +150,12 @@ const Profile = () => {
                   }}
                 >
                   <EventCard
-                    eventsList={eventsList}
-                    setEventList={setEventList}
+                    viewEvents={viewEvents}
                     setGoToEditEvent={setGoToEditEvent}
                     eventToEdit={eventToEdit}
                     setEventToEdit={setEventToEdit}
-                    viewEvents={viewEvents}
+                    eventsList={eventsList}
+                    setEventList={setEventList}
                     eventDetail={event}
                   />
                 </div>

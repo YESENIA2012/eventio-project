@@ -24,5 +24,3 @@ export {
   failedLoginMessageStyle,
   userDoesNotExistsMessageStyle,
 };
-
-//borderBottonStyle

@@ -1,0 +1,36 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
+.user-name-container {
+  @include styleFile.align-element-with-flex(flex-end);
+  width: 10%;
+  height: 80px;
+
+  .avatar-name-container {
+    @include styleFile.align-element-with-flex(center);
+    margin-right: 30px;
+
+    .user-name-text {
+      width: 70px;
+      margin-left: 5px;
+    }
+
+    .arrow-container {
+      height: 40px;
+    }
+
+    .arrow-container:hover {
+      cursor: pointer;
+    }
+  }
+
+  .modal-container {
+    margin-top: 210px;
+    position: absolute;
+  }
+
+  .hide-modal-container {
+    margin-top: -200px;
+    position: absolute;
+    opacity: 0;
+  }
+}
