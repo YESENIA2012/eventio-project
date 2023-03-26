@@ -54,12 +54,11 @@ const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
   let arrayClass = nameClassAtTheElement.split(" ");
   let eventToEdit = Number(arrayClass[12]);
 
-  if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
+  if (eventToEdit === undefined || eventToEdit === null) {
     return;
   } else {
     setGoToEditEvent(true);
   }
-
   setEventToEdit(eventToEdit);
 };
 

@@ -123,12 +123,12 @@ const Dashboard = () => {
                     }}
                   >
                     <EventCard
-                      eventsList={eventsList}
-                      setEventList={setEventList}
+                      viewEvents={viewEvents}
                       setGoToEditEvent={setGoToEditEvent}
                       eventToEdit={eventToEdit}
                       setEventToEdit={setEventToEdit}
-                      viewEvents={viewEvents}
+                      eventsList={eventsList}
+                      setEventList={setEventList}
                       eventDetail={event}
                     />
                   </div>
