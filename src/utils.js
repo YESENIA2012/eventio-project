@@ -25,9 +25,9 @@ const getAvatarAndName = () => {
 const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
   const informationUser = getFromLocalStorage();
   const idUser = informationUser.idUser;
-  let nameClassAtTheElement = e.target.className;
-  let arrayClass = nameClassAtTheElement.split(" ");
-  let eventToEditState = Number(arrayClass[12]);
+  const nameClassAtTheElement = e.target.className;
+  const arrayClass = nameClassAtTheElement.split(" ");
+  const eventToEditState = Number(arrayClass[12]);
 
   if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
     return;
@@ -50,9 +50,9 @@ const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
 };
 
 const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
-  let nameClassAtTheElement = e.target.className;
-  let arrayClass = nameClassAtTheElement.split(" ");
-  let eventToEdit = Number(arrayClass[12]);
+  const nameClassAtTheElement = e.target.className;
+  const arrayClass = nameClassAtTheElement.split(" ");
+  const eventToEdit = Number(arrayClass[12]);
 
   if (eventToEdit === undefined || eventToEdit === null) {
     return;
@@ -71,7 +71,7 @@ const handleButtonEvent = (
   eventsList,
   setEventList
 ) => {
-  let textButtonState = event.stateEvent;
+  const textButtonState = event.stateEvent;
 
   if (textButtonState.toLowerCase() === "edit") {
     goToEditEventFunction(stateEvent, setGoToEditEvent, setEventToEdit);
@@ -85,8 +85,13 @@ const handleButtonEvent = (
 const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
   const elementClassName = e.target.className;
   const classNamePosition = elementClassName.split(" ");
+
+  if (classNamePosition.includes("button-event")) {
+    return;
+  }
+
   const eventClassArray = classNamePosition[0].split("-");
-  let elementClickedId = eventClassArray
+  const elementClickedId = eventClassArray
     .filter((elementClass) => {
       return elementClass !== "element";
     })
@@ -113,7 +118,7 @@ const getEventsUser = (events, eventsPerPage, pagesVisited) => {
   const userInformation = getFromLocalStorage();
   const userId = userInformation.idUser;
 
-  let currentEvents =
+  const currentEvents =
     events && events.length
       ? events
           .map((event) => {

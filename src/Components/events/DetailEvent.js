@@ -14,7 +14,6 @@ import "./detailEventStyle.scss";
 const DetailEvent = () => {
   const location = useLocation();
   const eventClicked = location.state.eventClicked;
-  console.log(typeof eventClicked);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
@@ -72,6 +71,7 @@ const DetailEvent = () => {
       );
     }
   };
+
   if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
   } else if (goToDashboard) {
