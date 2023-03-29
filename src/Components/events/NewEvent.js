@@ -1,10 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import CloseIcon from "@mui/icons-material/Close";
-import { Button, TextField } from "@mui/material";
-
+import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
+import { Button, InputAdornment, TextField } from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
   styles,
   getFromLocalStorage,
@@ -17,9 +21,10 @@ const NewEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [titleEvent, setTitleEvent] = useState("");
   const [descriptionEvent, setDescriptionEvent] = useState("");
-  const [dateEvent, setDateEvent] = useState("");
-  const [timeEvent, setTimeEvent] = useState("");
+  const [dateEvent, setDateEvent] = useState(dayjs());
+  const [timeEvent, setTimeEvent] = useState(dayjs().format("h:mm A"));
   const [capacityPeopleEvent, setCapacityPeopleEvent] = useState("");
+  const [errorInfoMessage, setErrorInfoMessage] = useState(false);
   const [message, setMessage] = useState({
     text: "Enter details below.",
     messageColor: { color: "rgb(150, 157, 166)" },
@@ -27,10 +32,31 @@ const NewEvent = () => {
   const eventsInLocalStorage = getEventsFromLocalStorage();
   const eventsList = eventsInLocalStorage.events;
 
+  const dateFormats = {
+    /* shortDate: "DD/MM/YYYY",
+    longDate: "D [de] MMMM [de] YYYY", */
+    time: "h:mm A",
+    customDate: "ddd MMM DD YYYY",
+  };
+
+  dayjs.locale("en");
+
   const { classes } = styles();
+
+  useEffect(() => {
+    if (errorInfoMessage) {
+      setMessage({
+        text: "Enter details below.",
+        messageColor: { color: "rgb(150, 157, 166)" },
+      });
+      setErrorInfoMessage(false);
+    }
+  }, [titleEvent, descriptionEvent, dateEvent, timeEvent, capacityPeopleEvent]);
 
   const saveNewEventInLocalStorage = () => {
     const stateEvent = "EDIT";
+    let dateToSave = dateEvent;
+    dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
 
     if (
       titleEvent === "" ||
@@ -39,6 +65,7 @@ const NewEvent = () => {
       timeEvent === "" ||
       capacityPeopleEvent === ""
     ) {
+      setErrorInfoMessage(true);
       setMessage({
         text: "Please fill in the blanks.",
         messageColor: { color: "rgb(237, 85, 151)" },
@@ -51,7 +78,7 @@ const NewEvent = () => {
 
       eventsList.push({
         id: uuidv4(),
-        date: dateEvent,
+        date: dateToSave,
         time: timeEvent,
         nameEvent: titleEvent,
         host: host,
@@ -66,7 +93,7 @@ const NewEvent = () => {
 
       setTitleEvent("");
       setDescriptionEvent("");
-      setDateEvent("");
+      setDateEvent(dayjs());
       setTimeEvent("");
       setCapacityPeopleEvent("");
     }
@@ -98,7 +125,6 @@ const NewEvent = () => {
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
-              "& .MuiInputLabel-root": {},
               borderBottom: "1px solid rgb(179, 175, 177)",
             }}
             InputProps={{ disableUnderline: true }}
@@ -114,7 +140,6 @@ const NewEvent = () => {
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
-              "& .MuiInputLabel-root": {},
               borderBottom: "1px solid rgb(179, 175, 177)",
             }}
             InputProps={{ disableUnderline: true }}
@@ -124,33 +149,40 @@ const NewEvent = () => {
             }}
             value={descriptionEvent}
           ></TextField>
-          <TextField
-            label="Date"
-            type="text"
-            variant="standard"
-            className={classes.textFieldStyle}
-            sx={{
-              "& .MuiInputLabel-root": {},
-              borderBottom: "1px solid rgb(179, 175, 177)",
-            }}
-            InputProps={{ disableUnderline: true }}
-            InputLabelProps={{ className: "text-label" }}
-            onChange={(e) => {
-              setDateEvent(e.target.value);
-            }}
-            value={dateEvent}
-          ></TextField>
+          <LocalizationProvider
+            dateAdapter={AdapterDayjs}
+            dateFormats={dateFormats}
+          >
+            <DatePicker
+              className={classes.textFieldStyle}
+              value={dateEvent}
+              onChange={(date) => {
+                setDateEvent(dayjs(date));
+              }}
+              format={dateFormats.customDate}
+              sx={{
+                borderBottom: "1px solid rgb(179, 175, 177)",
+              }}
+              InputProps={{ disableUnderline: false }}
+            />
+          </LocalizationProvider>
           <TextField
             label="Time"
             type="text"
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
-              "& .MuiInputLabel-root": {},
               borderBottom: "1px solid rgb(179, 175, 177)",
             }}
-            InputProps={{ disableUnderline: true }}
-            InputLabelProps={{ className: "text-label" }}
+            InputProps={{
+              disableUnderline: true,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <AccessAlarmsIcon />
+                </InputAdornment>
+              ),
+            }}
+            InputLabelProps={{ className: "text-label-time" }}
             onChange={(e) => {
               setTimeEvent(e.target.value);
             }}
@@ -162,7 +194,6 @@ const NewEvent = () => {
             variant="standard"
             className={classes.textFieldStyle}
             sx={{
-              "& .MuiInputLabel-root": {},
               borderBottom: "1px solid rgb(179, 175, 177)",
             }}
             InputProps={{ disableUnderline: true }}

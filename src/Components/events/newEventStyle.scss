@@ -46,6 +46,26 @@
       color: styleFile.$color-gray !important;
     }
 
+    .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+      border: none;
+    }
+
+    .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+      color: styleFile.$color-gray !important;
+      font-size: 13px;
+      border-radius: 0%;
+      border-color: styleFile.$color-gray !important;
+      padding-right: 7px;
+    }
+
+    .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+      padding: 15px 12px 10px 0;
+    }
+
+    .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+      color: styleFile.$color-gray;
+    }
+
     .new-event-button {
       margin-top: 30px;
       background-color: styleFile.$background-color-button;

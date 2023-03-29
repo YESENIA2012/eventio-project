@@ -8,6 +8,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 
 import AvatarUser from "../avatarUser/AvatarUser";
+
 import { getEventsFromLocalStorage } from "../../utils";
 import "./detailEventStyle.scss";
 
@@ -22,13 +23,14 @@ const DetailEvent = () => {
   const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
 
   const drawEvent = () => {
-    if (eventClicked === undefined || eventClicked === "") {
+    if (!eventClicked) {
       return;
     } else {
       const eventId = eventsList.findIndex(
         (event) => event.id.toString() === eventClicked
       );
       const event = eventsList[eventId];
+
       return (
         <div className="container-event">
           <div className="information-event">

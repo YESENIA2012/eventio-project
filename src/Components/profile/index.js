@@ -37,7 +37,7 @@ const Profile = () => {
   const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
   const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
   const pageCount = eventsFromLocalStorage.pageCountProfile;
-  const currentEvents = eventsFromLocalStorage.currentEvents;
+  let currentEvents = eventsFromLocalStorage.currentEvents;
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
