@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import CloseIcon from "@mui/icons-material/Close";
-import AccessAlarmsIcon from "@mui/icons-material/AccessAlarms";
-import { Button, InputAdornment, TextField } from "@mui/material";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { Button, TextField } from "@mui/material";
 import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import {
   styles,
   getFromLocalStorage,
@@ -33,8 +32,6 @@ const NewEvent = () => {
   const eventsList = eventsInLocalStorage.events;
 
   const dateFormats = {
-    /* shortDate: "DD/MM/YYYY",
-    longDate: "D [de] MMMM [de] YYYY", */
     time: "h:mm A",
     customDate: "ddd MMM DD YYYY",
   };
@@ -153,7 +150,8 @@ const NewEvent = () => {
             dateAdapter={AdapterDayjs}
             dateFormats={dateFormats}
           >
-            <DatePicker
+            <MobileDatePicker
+              label="Date"
               className={classes.textFieldStyle}
               value={dateEvent}
               onChange={(date) => {
@@ -164,6 +162,7 @@ const NewEvent = () => {
                 borderBottom: "1px solid rgb(179, 175, 177)",
               }}
               InputProps={{ disableUnderline: false }}
+              InputLabelProps={{ className: "text-label" }}
             />
           </LocalizationProvider>
           <TextField
@@ -176,13 +175,8 @@ const NewEvent = () => {
             }}
             InputProps={{
               disableUnderline: true,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <AccessAlarmsIcon />
-                </InputAdornment>
-              ),
             }}
-            InputLabelProps={{ className: "text-label-time" }}
+            InputLabelProps={{ className: "text-label" }}
             onChange={(e) => {
               setTimeEvent(e.target.value);
             }}

@@ -50,16 +50,20 @@
       border: none;
     }
 
-    .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
-      color: styleFile.$color-gray !important;
+    .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
       font-size: 13px;
-      border-radius: 0%;
-      border-color: styleFile.$color-gray !important;
-      padding-right: 7px;
+      top: 4px;
+      left: -12px;
     }
 
-    .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
-      padding: 15px 12px 10px 0;
+    .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+      color: styleFile.$color-gray !important;
+    }
+
+    .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+      color: styleFile.$color-gray !important;
+      border-color: styleFile.$color-gray !important;
+      padding: 15px 12px 5px 0;
     }
 
     .css-1x51dt5-MuiInputBase-input-MuiInput-input {
