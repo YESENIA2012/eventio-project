@@ -46,6 +46,30 @@
       color: styleFile.$color-gray !important;
     }
 
+    .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+      border: none;
+    }
+
+    .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+      font-size: 13px;
+      top: 4px;
+      left: -12px;
+    }
+
+    .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+      color: styleFile.$color-gray !important;
+    }
+
+    .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+      color: styleFile.$color-gray !important;
+      border-color: styleFile.$color-gray !important;
+      padding: 15px 12px 5px 0;
+    }
+
+    .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+      color: styleFile.$color-gray;
+    }
+
     .new-event-button {
       margin-top: 30px;
       background-color: styleFile.$background-color-button;

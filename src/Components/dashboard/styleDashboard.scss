@@ -76,6 +76,11 @@
     flex-flow: wrap;
     width: 95%;
     margin: auto;
+
+    .message-not-event {
+      @include styleFile.align-element-with-flex(center);
+      height: 400px;
+    }
   }
 
   .box-event-view-column {

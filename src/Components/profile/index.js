@@ -39,16 +39,12 @@ const Profile = () => {
   const pageCount = eventsFromLocalStorage.pageCountProfile;
   let currentEvents = eventsFromLocalStorage.currentEvents;
 
-  const drawUserInformation = () => {
-    const userInformation = getFromLocalStorage();
-    let name = userInformation.name;
-    let lastName = userInformation.lastName;
-    let email = userInformation.email;
-
-    setNameUser(name);
-    setLastNameUser(lastName);
-    setEmailUser(email);
-  };
+  useEffect(() => {
+    const informationUser = getFromLocalStorage();
+    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
+      setSignOut(true);
+    }
+  }, [signOut]);
 
   useEffect(() => {
     async function getAvatar() {
@@ -65,12 +61,21 @@ const Profile = () => {
     drawUserInformation();
   }, []);
 
-  useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if (informationUser && !informationUser.isLoggedIn) {
-      setSignOut(true);
+  const drawUserInformation = () => {
+    const userInformation = getFromLocalStorage();
+
+    if (!userInformation) {
+      return;
     }
-  }, [signOut]);
+
+    let name = userInformation.name;
+    let lastName = userInformation.lastName;
+    let email = userInformation.email;
+
+    setNameUser(name);
+    setLastNameUser(lastName);
+    setEmailUser(email);
+  };
 
   if (!eventsList) {
     currentEvents = 0;
@@ -131,7 +136,7 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {currentEvents ? (
+          {currentEvents && currentEvents.length ? (
             currentEvents.map((event, index) => {
               return (
                 <div
@@ -162,7 +167,7 @@ const Profile = () => {
               );
             })
           ) : (
-            <div>You have no events</div>
+            <div className="message-not-event">You have no events</div>
           )}
         </div>
         <ReactPaginate

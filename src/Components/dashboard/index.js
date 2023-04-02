@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const informationUser = getFromLocalStorage();
-    if (informationUser && !informationUser.isLoggedIn) {
+    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
       setIsLoggedOut(true);
     }
   }, [isLoggedOut]);
@@ -111,8 +111,8 @@ const Dashboard = () => {
                     key={event.id}
                     className={
                       viewEvents
-                        ? `element-${index} element`
-                        : `element-${index} element-column`
+                        ? `element-${event.id} element`
+                        : `element-${event.id} element-column`
                     }
                     onClick={(e) => {
                       showDetailEventClicked(
@@ -135,7 +135,7 @@ const Dashboard = () => {
                 );
               })
             ) : (
-              <div>No events</div>
+              <div className="message-not-event">No events</div>
             )}
           </div>
           ;

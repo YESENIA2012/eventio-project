@@ -25,9 +25,9 @@ const getAvatarAndName = () => {
 const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
   const informationUser = getFromLocalStorage();
   const idUser = informationUser.idUser;
-  let nameClassAtTheElement = e.target.className;
-  let arrayClass = nameClassAtTheElement.split(" ");
-  let eventToEditState = Number(arrayClass[12]);
+  const nameClassAtTheElement = e.target.className;
+  const arrayClass = nameClassAtTheElement.split(" ");
+  const eventToEditState = Number(arrayClass[12]);
 
   if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
     return;
@@ -50,9 +50,9 @@ const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
 };
 
 const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
-  let nameClassAtTheElement = e.target.className;
-  let arrayClass = nameClassAtTheElement.split(" ");
-  let eventToEdit = Number(arrayClass[12]);
+  const nameClassAtTheElement = e.target.className;
+  const arrayClass = nameClassAtTheElement.split(" ");
+  const eventToEdit = Number(arrayClass[12]);
 
   if (eventToEdit === undefined || eventToEdit === null) {
     return;
@@ -71,7 +71,7 @@ const handleButtonEvent = (
   eventsList,
   setEventList
 ) => {
-  let textButtonState = event.stateEvent;
+  const textButtonState = event.stateEvent;
 
   if (textButtonState.toLowerCase() === "edit") {
     goToEditEventFunction(stateEvent, setGoToEditEvent, setEventToEdit);
@@ -83,15 +83,23 @@ const handleButtonEvent = (
 };
 
 const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
-  let elementClassName = e.target.className;
-  let classNamePosition = elementClassName.split(" ");
-  let eventId = classNamePosition[0].split("-");
-  let elementClickedId = Number(eventId[1]);
+  const elementClassName = e.target.className;
+  const classNamePosition = elementClassName.split(" ");
+
+  if (classNamePosition.includes("button-event")) {
+    return;
+  }
+
+  const eventClassArray = classNamePosition[0].split("-");
+  const elementClickedId = eventClassArray
+    .filter((elementClass) => {
+      return elementClass !== "element";
+    })
+    .join("-");
 
   if (
     elementClickedId === undefined ||
-    isNaN(elementClickedId) ||
-    elementClickedId === "" ||
+    elementClickedId === " " ||
     elementClickedId === null
   ) {
     return;
@@ -108,10 +116,18 @@ const getFromLocalStorage = () => {
 
 const getEventsUser = (events, eventsPerPage, pagesVisited) => {
   const userInformation = getFromLocalStorage();
+  let currentEvents = null;
+  let pageCount = null;
+  if (!userInformation) {
+    currentEvents = 0;
+    pageCount = 0;
+    return { eventsUser: currentEvents, pageCountProfile: pageCount };
+  }
+
   const userId = userInformation.idUser;
 
-  let currentEvents =
-    events && events.length
+  currentEvents =
+    events && events.length && userInformation
       ? events
           .map((event) => {
             if (event.users.includes(userId)) {
@@ -124,7 +140,7 @@ const getEventsUser = (events, eventsPerPage, pagesVisited) => {
           .slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
 
-  const pageCount =
+  pageCount =
     events && events.length
       ? Math.ceil(currentEvents.length / eventsPerPage)
       : 0;
@@ -141,7 +157,6 @@ const getEventsFromLocalStorage = (pageNumber = null) => {
 
   const eventsPerPage = 6;
   const pagesVisited = pageNumber * eventsPerPage;
-
   const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited);
 
   return {
