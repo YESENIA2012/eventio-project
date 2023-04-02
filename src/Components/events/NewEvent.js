@@ -18,6 +18,7 @@ import "./newEventStyle.scss";
 
 const NewEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [titleEvent, setTitleEvent] = useState("");
   const [descriptionEvent, setDescriptionEvent] = useState("");
   const [dateEvent, setDateEvent] = useState(dayjs());
@@ -35,10 +36,16 @@ const NewEvent = () => {
     time: "h:mm A",
     customDate: "ddd MMM DD YYYY",
   };
+  const { classes } = styles();
 
   dayjs.locale("en");
 
-  const { classes } = styles();
+  useEffect(() => {
+    const informationUser = getFromLocalStorage();
+    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
+      setIsLoggedOut(true);
+    }
+  }, [isLoggedOut]);
 
   useEffect(() => {
     if (errorInfoMessage) {
@@ -91,12 +98,14 @@ const NewEvent = () => {
       setTitleEvent("");
       setDescriptionEvent("");
       setDateEvent(dayjs());
-      setTimeEvent("");
+      setTimeEvent(dayjs().format("h:mm A"));
       setCapacityPeopleEvent("");
     }
   };
 
-  if (goToDashboard) {
+  if (isLoggedOut) {
+    return <Navigate to="/" />;
+  } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
   } else {
     return (

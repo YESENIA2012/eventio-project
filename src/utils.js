@@ -116,10 +116,18 @@ const getFromLocalStorage = () => {
 
 const getEventsUser = (events, eventsPerPage, pagesVisited) => {
   const userInformation = getFromLocalStorage();
+  let currentEvents = null;
+  let pageCount = null;
+  if (!userInformation) {
+    currentEvents = 0;
+    pageCount = 0;
+    return { eventsUser: currentEvents, pageCountProfile: pageCount };
+  }
+
   const userId = userInformation.idUser;
 
-  const currentEvents =
-    events && events.length
+  currentEvents =
+    events && events.length && userInformation
       ? events
           .map((event) => {
             if (event.users.includes(userId)) {
@@ -132,7 +140,7 @@ const getEventsUser = (events, eventsPerPage, pagesVisited) => {
           .slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
 
-  const pageCount =
+  pageCount =
     events && events.length
       ? Math.ceil(currentEvents.length / eventsPerPage)
       : 0;
@@ -149,7 +157,6 @@ const getEventsFromLocalStorage = (pageNumber = null) => {
 
   const eventsPerPage = 6;
   const pagesVisited = pageNumber * eventsPerPage;
-
   const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited);
 
   return {

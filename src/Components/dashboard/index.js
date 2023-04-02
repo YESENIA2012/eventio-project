@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     const informationUser = getFromLocalStorage();
-    if (informationUser && !informationUser.isLoggedIn) {
+    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
       setIsLoggedOut(true);
     }
   }, [isLoggedOut]);
@@ -135,7 +135,7 @@ const Dashboard = () => {
                 );
               })
             ) : (
-              <div>No events</div>
+              <div className="message-not-event">No events</div>
             )}
           </div>
           ;

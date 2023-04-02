@@ -48,12 +48,13 @@ const SignUp = () => {
 
   const enterDashboardFunction = () => {
     const userInformation = getFromLocalStorage();
+
     if (userInformation && userInformation.email === emailUser) {
       setMessageSignUp(userExistsMessageStyle);
       setErrorInformationEntered(true);
     } else if (passwordUser && passwordUser === repeatPasswordUser) {
       saveUserInformation();
-      createFakeEvents();
+      /* createFakeEvents(); */
       setIsLoggedIn(true);
     } else {
       setMessageSignUp(messagePassWordNotMatchStyles);
@@ -63,6 +64,7 @@ const SignUp = () => {
 
   const saveUserInformation = () => {
     let userInformation = null;
+    const eventList = [];
 
     userInformation = {
       name: nameUser,
@@ -73,6 +75,7 @@ const SignUp = () => {
       idUser: uuidv4(),
     };
 
+    localStorage.setItem("Events", JSON.stringify(eventList));
     localStorage.setItem("userInformation", JSON.stringify(userInformation));
   };
 
