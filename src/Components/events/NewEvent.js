@@ -30,7 +30,7 @@ const NewEvent = () => {
     messageColor: { color: "rgb(150, 157, 166)" },
   });
   const eventsInLocalStorage = getEventsFromLocalStorage();
-  const eventsList = eventsInLocalStorage.events;
+  const eventsList = eventsInLocalStorage.events || [];
 
   const dateFormats = {
     time: "h:mm A",
