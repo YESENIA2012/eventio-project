@@ -1,5 +1,179 @@
 import { makeStyles } from "tss-react/mui";
 
+const styles = makeStyles()(() => {
+  return {
+    textFieldStyle: {
+      marginBottom: 14,
+      width: "80%",
+    },
+  };
+});
+
+const getAvatarAndName = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const informationUser = getFromLocalStorage();
+      const firsLetterName = informationUser.name[0];
+      const firstLetterLastName = informationUser.lastName[0];
+      const letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
+      const userName = `${informationUser.name} ${informationUser.lastName}`;
+      resolve({ letterAvatar, userName });
+    }, 500);
+  });
+};
+
+const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
+  const informationUser = getFromLocalStorage();
+  const idUser = informationUser.idUser;
+  const nameClassAtTheElement = e.target.className;
+  const arrayClass = nameClassAtTheElement.split(" ");
+  const eventToEditState = Number(arrayClass[12]);
+
+  if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
+    return;
+  } else {
+    eventsList[eventToEditState].stateEvent = text;
+    if (text === "JOIN") {
+      const indexUserIdToDelete = eventsList[eventToEditState].users.findIndex(
+        (user) => user === idUser
+      );
+      eventsList[eventToEditState].users
+        .splice(indexUserIdToDelete, 1)
+        .filter((user) => user !== undefined);
+    } else if (text === "LEAVE") {
+      eventsList[eventToEditState].users.push(idUser);
+    }
+  }
+
+  localStorage.setItem("Events", JSON.stringify(eventsList));
+  setEventList(JSON.parse(localStorage.getItem("Events")));
+};
+
+const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
+  const nameClassAtTheElement = e.target.className;
+  const arrayClass = nameClassAtTheElement.split(" ");
+  const eventToEdit = arrayClass[12];
+
+  if (eventToEdit === undefined || eventToEdit === null) {
+    return;
+  } else {
+    setGoToEditEvent(true);
+  }
+  setEventToEdit(eventToEdit);
+};
+
+const handleButtonEvent = (
+  stateEvent,
+  event,
+  setGoToEditEvent,
+  setEventToEdit,
+  eventToEdit,
+  eventsList,
+  setEventList
+) => {
+  const textButtonState = event.stateEvent;
+
+  if (textButtonState.toLowerCase() === "edit") {
+    goToEditEventFunction(stateEvent, setGoToEditEvent, setEventToEdit);
+  } else if (textButtonState.toLowerCase() === "join") {
+    saveStateEvent(stateEvent, "LEAVE", eventToEdit, eventsList, setEventList);
+  } else {
+    saveStateEvent(stateEvent, "JOIN", eventToEdit, eventsList, setEventList);
+  }
+};
+
+const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
+  const elementClassName = e.target.className;
+  const classNamePosition = elementClassName.split(" ");
+
+  if (classNamePosition.includes("button-event")) {
+    return;
+  }
+
+  const eventClassArray = classNamePosition[0].split("-");
+  const elementClickedId = eventClassArray
+    .filter((elementClass) => {
+      return elementClass !== "element";
+    })
+    .join("-");
+
+  if (
+    elementClickedId === undefined ||
+    elementClickedId === " " ||
+    elementClickedId === null
+  ) {
+    return;
+  } else {
+    setGoToDetailEvent(true);
+    setEventClicked(elementClickedId);
+  }
+};
+
+const getFromLocalStorage = () => {
+  const dataUser = JSON.parse(localStorage.getItem("userInformation"));
+  return dataUser;
+};
+
+const getEventsUser = (events, eventsPerPage, pagesVisited) => {
+  const userInformation = getFromLocalStorage();
+  let currentEvents = null;
+  let pageCount = null;
+  if (!userInformation) {
+    currentEvents = 0;
+    pageCount = 0;
+    return { eventsUser: currentEvents, pageCountProfile: pageCount };
+  }
+
+  const userId = userInformation.idUser;
+
+  currentEvents =
+    events && events.length && userInformation
+      ? events
+          .map((event) => {
+            if (event.users.includes(userId)) {
+              return event;
+            } else {
+              return null;
+            }
+          })
+          .filter((event) => event !== null)
+          .slice(pagesVisited, pagesVisited + eventsPerPage)
+      : 0;
+
+  pageCount =
+    events && events.length
+      ? Math.ceil(currentEvents.length / eventsPerPage)
+      : 0;
+
+  return { eventsUser: currentEvents, pageCountProfile: pageCount };
+};
+
+const getEventsFromLocalStorage = (pageNumber = null) => {
+  const events = JSON.parse(localStorage.getItem("Events"));
+
+  if (pageNumber === null) {
+    return { events: events };
+  }
+
+  const eventsPerPage = 6;
+  const pagesVisited = pageNumber * eventsPerPage;
+  const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited);
+
+  return {
+    events: events,
+    currentEvents: eventsUser.eventsUser,
+    pageCountProfile: eventsUser.pageCountProfile,
+  };
+};
+
+const signOutFunction = (setSignOut) => {
+  const userInformation = getFromLocalStorage();
+
+  userInformation.isLoggedIn = false;
+  setSignOut(true);
+  localStorage.setItem("userInformation", JSON.stringify(userInformation));
+};
+
 const mockedEvents = [
   {
     id: 0,
@@ -11,6 +185,7 @@ const mockedEvents = [
     attendees: 9,
     capacity: 31,
     stateEvent: "EDIT",
+    users: ["a0e73e98-8e49-4285-8f8a-404e33e53dca"],
   },
   {
     id: 1,
@@ -22,6 +197,7 @@ const mockedEvents = [
     attendees: 5,
     capacity: 50,
     stateEvent: "JOIN",
+    users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
     id: 2,
@@ -34,6 +210,7 @@ const mockedEvents = [
     attendees: 5,
     capacity: 50,
     stateEvent: "JOIN",
+    users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
     id: 3,
@@ -45,6 +222,7 @@ const mockedEvents = [
     attendees: 3,
     capacity: 1000,
     stateEvent: "JOIN",
+    users: [],
   },
   {
     id: 4,
@@ -55,7 +233,8 @@ const mockedEvents = [
     descriptionEvent: "You can bring your +1!",
     attendees: 657,
     capacity: 1000,
-    stateEvent: "LEAVE",
+    stateEvent: "JOIN",
+    users: [],
   },
   {
     id: 5,
@@ -67,101 +246,28 @@ const mockedEvents = [
     attendees: 12,
     capacity: 80,
     stateEvent: "JOIN",
+    users: [],
   },
 ];
 
-let mockedEventsCopy = [...mockedEvents];
-
-const styles = makeStyles()((theme) => {
-  return {
-    textFieldStyle: {
-      marginBottom: 14,
-      width: "80%",
-    },
-  };
-});
-
-const paintAvatarAndName = (setTextAvatar, setUserName) => {
-  const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-  let firsLetterName = informationUser.name[0];
-  let firstLetterLastName = informationUser.lastName[0];
-  let letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-  let userName = `${informationUser.name} ${informationUser.lastName}`;
-
-  setTextAvatar(letterAvatar);
-  setUserName(userName);
+const createFakeEvents = () => {
+  localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
-const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
-  let nameClassAtTheElement = e.target.className;
-  let arrayClass = nameClassAtTheElement.split(" ");
-  let eventToEditState = Number(arrayClass[12]);
-
-  if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
-    return;
-  } else {
-    eventsList[eventToEditState].stateEvent = text;
-  }
-
-  localStorage.setItem("Events", JSON.stringify(eventsList));
-  setEventList(JSON.parse(localStorage.getItem("Events")));
+const signOffFunction = () => {
+  const informationUser = getFromLocalStorage();
+  informationUser.isLoggedIn = false;
+  localStorage.setItem("userInformation", JSON.stringify(informationUser));
 };
 
-const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
-  let nameClassAtTheElement = e.target.className;
-  let arrayClass = nameClassAtTheElement.split(" ");
-  let eventToEdit = Number(arrayClass[12]);
-
-  if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
-    return;
-  } else {
-    setGoToEditEvent(true);
-  }
-
-  setEventToEdit(eventToEdit);
+export {
+  signOffFunction,
+  createFakeEvents,
+  styles,
+  getFromLocalStorage,
+  getAvatarAndName,
+  handleButtonEvent,
+  showDetailEventClicked,
+  signOutFunction,
+  getEventsFromLocalStorage,
 };
-
-const handleButtonEvent = (
-  e,
-  setGoToEditEvent,
-  setEventToEdit,
-  eventToEdit,
-  eventsList,
-  setEventList
-) => {
-  let textButton = e.target.innerText;
-
-  if (textButton === "EDIT") {
-    goToEditEventFunction(e, setGoToEditEvent, setEventToEdit);
-  } else if (textButton === "JOIN") {
-    saveStateEvent(e, "LEAVE", eventToEdit, eventsList, setEventList);
-  } else {
-    saveStateEvent(e, "JOIN", eventToEdit, eventsList, setEventList);
-  }
-};
-
-const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
-  let elementClassName = e.target.className;
-  let classNamePosition = elementClassName.split(" ");
-  let eventId = classNamePosition[0].split("-");
-  let elementClickedId = Number(eventId[1]);
-
-  if (
-    elementClickedId === undefined ||
-    isNaN(elementClickedId) ||
-    elementClickedId === "" ||
-    elementClickedId === null
-  ) {
-    return;
-  } else {
-    setGoToDetailEvent(true);
-    setEventClicked(elementClickedId);
-  }
-};
-
-export { styles };
-export { mockedEventsCopy };
-export { paintAvatarAndName };
-export { handleButtonEvent };
-export { showDetailEventClicked };

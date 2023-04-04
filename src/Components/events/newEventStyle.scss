@@ -1,0 +1,90 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+
+.container-new-event {
+  @include styleFile.align-element-with-flex(space-around);
+  flex-direction: column;
+  height: 700px;
+
+  .dashboard-redirect-container {
+    @include styleFile.align-element-with-flex(flex-end);
+    width: 100%;
+    margin-right: 80px;
+
+    span {
+      margin-left: 8px;
+    }
+
+    .close-icon,
+    span {
+      cursor: pointer;
+    }
+  }
+
+  .create-new-event {
+    @include styleFile.align-element-with-flex(center);
+    @include styleFile.border-background-events-element;
+    flex-direction: column;
+    width: 30%;
+    height: 600px;
+
+    h3 {
+      font-size: 25px;
+      text-align: center;
+      font-weight: bolder;
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    .message {
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .text-label {
+      font-size: 13px !important;
+      color: styleFile.$color-gray !important;
+    }
+
+    .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+      border: none;
+    }
+
+    .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+      font-size: 13px;
+      top: 4px;
+      left: -12px;
+    }
+
+    .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+      color: styleFile.$color-gray !important;
+    }
+
+    .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+      color: styleFile.$color-gray !important;
+      border-color: styleFile.$color-gray !important;
+      padding: 15px 12px 5px 0;
+    }
+
+    .css-1x51dt5-MuiInputBase-input-MuiInput-input {
+      color: styleFile.$color-gray;
+    }
+
+    .new-event-button {
+      margin-top: 30px;
+      background-color: styleFile.$background-color-button;
+    }
+
+    .new-event-button:hover {
+      background-color: styleFile.$background-color-button;
+    }
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .container-new-event {
+    .create-new-event {
+      width: 90%;
+    }
+  }
+}

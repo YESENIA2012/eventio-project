@@ -5,55 +5,96 @@ import { TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+
 import AvatarUser from "../avatarUser/AvatarUser";
-import { styles } from "../../utils";
+import { styles, getEventsFromLocalStorage } from "../../utils";
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
   const location = useLocation();
   const eventToEdit = location.state.eventToEdit;
-  const events = JSON.parse(localStorage.getItem("Events"));
-  const [dateEvent, setDateEvent] = useState(events[eventToEdit].date);
-  const [timeEvent, setTimeEvent] = useState(events[eventToEdit].time);
-  const [titleEvent, setTitleEvent] = useState(events[eventToEdit].nameEvent);
+  const eventsInLocalStorage = getEventsFromLocalStorage();
+  const events = eventsInLocalStorage.events || [];
+  const indexEventToEdit = events.findIndex(
+    (event) => event.id === eventToEdit
+  );
+  const event = events[indexEventToEdit];
+  const [dateEvent, setDateEvent] = useState(dayjs(event.date));
+  const [timeEvent, setTimeEvent] = useState(event.time);
+  const [titleEvent, setTitleEvent] = useState(
+    events[indexEventToEdit].nameEvent
+  );
   const [descriptionEvent, setDescriptionEvent] = useState(
-    events[eventToEdit].descriptionEvent
+    event.descriptionEvent
   );
   const [capacityPeopleEvent, setCapacityPeopleEvent] = useState(
-    events[eventToEdit].capacity
+    event.capacity
   );
   const [itemToDraw, setItemToDraw] = useState("");
   const [backToDashboard, setBackToDashboard] = useState(false);
-
+  const dateFormats = {
+    time: "h:mm A",
+    customDate: "ddd MMM DD YYYY",
+  };
   const { classes } = styles();
+  dayjs.locale("en");
 
   useEffect(() => {
     setItemToDraw(drawEventToEdit);
   }, [itemToDraw]);
 
+  const saveInformationEventEdit = () => {
+    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
+    let host = `${informationUser.name} ${informationUser.lastName}`;
+    let dateToSave = dateEvent;
+    dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
+
+    event.date = dateToSave;
+    event.time = timeEvent;
+    event.nameEvent = titleEvent;
+    event.host = host;
+    event.descriptionEvent = descriptionEvent;
+    event.capacity = capacityPeopleEvent;
+
+    localStorage.setItem("Events", JSON.stringify(events));
+
+    setBackToDashboard(true);
+  };
+
   const drawEventToEdit = () => {
-    if (eventToEdit === undefined || isNaN(eventToEdit) || eventToEdit === "") {
+    if (
+      indexEventToEdit === undefined ||
+      isNaN(indexEventToEdit) ||
+      indexEventToEdit === ""
+    ) {
       return;
     } else {
       return (
         <div className="container-event">
           <div className="information-event">
-            <TextField
-              label="Date"
-              type="text"
-              variant="standard"
-              className={classes.textFieldStyle}
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: "1px solid rgb(179, 175, 177)",
-              }}
-              InputProps={{ disableUnderline: true }}
-              InputLabelProps={{ className: "text-label" }}
-              onChange={(e) => {
-                setDateEvent(e.target.value);
-              }}
-              value={dateEvent}
-            ></TextField>
+            <LocalizationProvider
+              dateAdapter={AdapterDayjs}
+              dateFormats={dateFormats}
+            >
+              <MobileDatePicker
+                label="Date"
+                className={classes.textFieldStyle}
+                value={dateEvent}
+                onChange={(date) => {
+                  setDateEvent(dayjs(date));
+                }}
+                format={dateFormats.customDate}
+                sx={{
+                  borderBottom: "1px solid rgb(179, 175, 177)",
+                }}
+                InputProps={{ disableUnderline: false }}
+                InputLabelProps={{ className: "text-label" }}
+              />
+            </LocalizationProvider>
             <TextField
               label="Time"
               type="text"
@@ -124,29 +165,8 @@ const EditEvent = () => {
     }
   };
 
-  const saveInformationEventEdit = () => {
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-    let host = `${informationUser.name} ${informationUser.lastName}`;
-
-    events[eventToEdit].date = dateEvent;
-    events[eventToEdit].time = timeEvent;
-    events[eventToEdit].nameEvent = titleEvent;
-    events[eventToEdit].host = host;
-    events[eventToEdit].descriptionEvent = descriptionEvent;
-    events[eventToEdit].capacity = capacityPeopleEvent;
-
-    localStorage.setItem("Events", JSON.stringify(events));
-
-    setBackToDashboard(true);
-  };
-
   const removeEventFromLocalStorage = () => {
-    events.splice(eventToEdit, 1);
-    events.map((element, index) => {
-      element.id = index;
-    });
-
-    console.log(events);
+    events.splice(indexEventToEdit, 1);
     localStorage.setItem("Events", JSON.stringify(events));
     setBackToDashboard(true);
   };

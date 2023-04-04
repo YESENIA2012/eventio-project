@@ -1,7 +1,7 @@
 @use "../../styles/mixinAndVariables.scss" as styleFile;
 
 .user-name-container {
-  @include styleFile.align-element-with-flex(end);
+  @include styleFile.align-element-with-flex(flex-end);
   width: 10%;
   height: 80px;
 
@@ -32,5 +32,13 @@
     margin-top: -200px;
     position: absolute;
     opacity: 0;
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .user-name-container {
+    .avatar-name-container {
+      margin-right: inherit;
+    }
   }
 }
