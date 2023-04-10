@@ -11,23 +11,25 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 
 import AvatarUser from "../avatarUser/AvatarUser";
-import { styles, getEventsFromLocalStorage } from "../../utils";
+import {
+  styles,
+  getEventsFromLocalStorage,
+  saveEventsInLocalStorage,
+} from "../../utils";
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
   const location = useLocation();
   const eventToEdit = location.state.eventToEdit;
   const eventsInLocalStorage = getEventsFromLocalStorage();
-  const events = eventsInLocalStorage.events || [];
+  let events = eventsInLocalStorage.events || [];
   const indexEventToEdit = events.findIndex(
     (event) => event.id === eventToEdit
   );
-  const event = events[indexEventToEdit];
+  const event = events[indexEventToEdit] || events[0];
   const [dateEvent, setDateEvent] = useState(dayjs(event.date));
   const [timeEvent, setTimeEvent] = useState(event.time);
-  const [titleEvent, setTitleEvent] = useState(
-    events[indexEventToEdit].nameEvent
-  );
+  const [titleEvent, setTitleEvent] = useState(event.nameEvent);
   const [descriptionEvent, setDescriptionEvent] = useState(
     event.descriptionEvent
   );
@@ -45,7 +47,7 @@ const EditEvent = () => {
 
   useEffect(() => {
     setItemToDraw(drawEventToEdit);
-  }, [itemToDraw]);
+  }, [dateEvent, timeEvent, titleEvent, descriptionEvent, capacityPeopleEvent]);
 
   const saveInformationEventEdit = () => {
     const informationUser = JSON.parse(localStorage.getItem("userInformation"));
@@ -60,8 +62,13 @@ const EditEvent = () => {
     event.descriptionEvent = descriptionEvent;
     event.capacity = capacityPeopleEvent;
 
-    localStorage.setItem("Events", JSON.stringify(events));
+    saveEventsInLocalStorage(events);
+    setBackToDashboard(true);
+  };
 
+  const removeEventFromLocalStorage = () => {
+    events = events.filter((event) => event.id !== eventToEdit);
+    saveEventsInLocalStorage(events);
     setBackToDashboard(true);
   };
 
@@ -163,12 +170,6 @@ const EditEvent = () => {
         </div>
       );
     }
-  };
-
-  const removeEventFromLocalStorage = () => {
-    events.splice(indexEventToEdit, 1);
-    localStorage.setItem("Events", JSON.stringify(events));
-    setBackToDashboard(true);
   };
 
   if (backToDashboard) {

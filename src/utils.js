@@ -260,6 +260,10 @@ const signOffFunction = () => {
   localStorage.setItem("userInformation", JSON.stringify(informationUser));
 };
 
+const saveEventsInLocalStorage = (events) => {
+  localStorage.setItem("Events", JSON.stringify(events));
+};
+
 export {
   signOffFunction,
   createFakeEvents,
@@ -270,4 +274,5 @@ export {
   showDetailEventClicked,
   signOutFunction,
   getEventsFromLocalStorage,
+  saveEventsInLocalStorage,
 };

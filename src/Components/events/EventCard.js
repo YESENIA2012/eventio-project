@@ -19,9 +19,9 @@ const EventCard = (props) => {
   return (
     <Fragment>
       <div className="date-time-container">
-        <spam className="date">{eventDetail.date}</spam>
+        <span className="date">{eventDetail.date}</span>
         <span className="dash">-</span>
-        <spam className="time">{eventDetail.time}</spam>
+        <span className="time">{eventDetail.time}</span>
       </div>
       <h4 className="title-event">{eventDetail.nameEvent}</h4>
       <p className="p-host">{eventDetail.host}</p>
