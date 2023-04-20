@@ -9,6 +9,15 @@ const styles = makeStyles()(() => {
   };
 });
 
+const styleTextFieldEditEvent = makeStyles()(() => {
+  return {
+    textFieldStyle: {
+      marginBottom: 14,
+      width: "92%",
+    },
+  };
+});
+
 const getAvatarAndName = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -54,7 +63,7 @@ const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
   const arrayClass = nameClassAtTheElement.split(" ");
   const eventToEdit = arrayClass[12];
 
-  if (eventToEdit === undefined || eventToEdit === null) {
+  if (!eventToEdit) {
     return;
   } else {
     setGoToEditEvent(true);
@@ -174,6 +183,16 @@ const signOutFunction = (setSignOut) => {
   localStorage.setItem("userInformation", JSON.stringify(userInformation));
 };
 
+const signOffFunction = () => {
+  const informationUser = getFromLocalStorage();
+  informationUser.isLoggedIn = false;
+  localStorage.setItem("userInformation", JSON.stringify(informationUser));
+};
+
+const saveEventsInLocalStorage = (events) => {
+  localStorage.setItem("Events", JSON.stringify(events));
+};
+
 const mockedEvents = [
   {
     id: 0,
@@ -254,16 +273,6 @@ const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
-const signOffFunction = () => {
-  const informationUser = getFromLocalStorage();
-  informationUser.isLoggedIn = false;
-  localStorage.setItem("userInformation", JSON.stringify(informationUser));
-};
-
-const saveEventsInLocalStorage = (events) => {
-  localStorage.setItem("Events", JSON.stringify(events));
-};
-
 export {
   signOffFunction,
   createFakeEvents,
@@ -275,4 +284,5 @@ export {
   signOutFunction,
   getEventsFromLocalStorage,
   saveEventsInLocalStorage,
+  styleTextFieldEditEvent,
 };

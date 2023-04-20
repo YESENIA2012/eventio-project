@@ -137,14 +137,14 @@ const Profile = () => {
           }
         >
           {currentEvents && currentEvents.length ? (
-            currentEvents.map((event, index) => {
+            currentEvents.map((event) => {
               return (
                 <div
                   key={event.id}
                   className={
                     viewEvents
-                      ? `element-${index} element`
-                      : `element-${index} element-column`
+                      ? `element-${event.id} element`
+                      : `element-${event.id} element-column`
                   }
                   onClick={(e) => {
                     showDetailEventClicked(

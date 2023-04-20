@@ -20,7 +20,7 @@ $font-color: rgb(150, 157, 166);
   .title-container {
     @include styleFile.align-element-with-flex(space-between);
     @include styleFile.style-font(13px);
-    width: 88%;
+    width: 82%;
     margin: 10px auto 30px auto;
     font-size: 13px;
 
@@ -57,7 +57,7 @@ $font-color: rgb(150, 157, 166);
   .box-event {
     display: flex;
     justify-content: space-evenly;
-    width: 90%;
+    width: 85%;
     height: auto;
     margin: auto;
 
@@ -70,7 +70,7 @@ $font-color: rgb(150, 157, 166);
         @include styleFile.border-background-events-element;
         flex-direction: column;
         width: 100%;
-        padding: 20px 0 30px 0;
+        padding: 35px 0 30px 0;
 
         .text-label {
           @include styleFile.style-font(13px);
@@ -87,7 +87,6 @@ $font-color: rgb(150, 157, 166);
         }
 
         .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
-          /* color: styleFile.$color-gray !important; */
           border-color: styleFile.$color-gray !important;
           padding: 15px 12px 5px 0;
         }

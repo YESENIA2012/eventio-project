@@ -105,7 +105,7 @@ const Dashboard = () => {
             }
           >
             {eventToDraw ? (
-              eventToDraw.map((event, index) => {
+              eventToDraw.map((event) => {
                 return (
                   <div
                     key={event.id}

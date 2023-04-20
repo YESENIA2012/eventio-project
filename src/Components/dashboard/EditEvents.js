@@ -1,18 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation, Navigate } from "react-router-dom";
 
-import { TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
 
 import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 
+import DrawEventToEdit from "../events/EditEventCard";
 import AvatarUser from "../avatarUser/AvatarUser";
 import {
-  styles,
   getEventsFromLocalStorage,
   saveEventsInLocalStorage,
 } from "../../utils";
@@ -42,11 +38,24 @@ const EditEvent = () => {
     time: "h:mm A",
     customDate: "ddd MMM DD YYYY",
   };
-  const { classes } = styles();
   dayjs.locale("en");
 
   useEffect(() => {
-    setItemToDraw(drawEventToEdit);
+    setItemToDraw(
+      <DrawEventToEdit
+        dateFormats={dateFormats}
+        dateEvent={dateEvent}
+        setDateEvent={setDateEvent}
+        setTimeEvent={setTimeEvent}
+        timeEvent={timeEvent}
+        setTitleEvent={setTitleEvent}
+        descriptionEvent={descriptionEvent}
+        setDescriptionEvent={setDescriptionEvent}
+        titleEvent={titleEvent}
+        capacityPeopleEvent={capacityPeopleEvent}
+        setCapacityPeopleEvent={setCapacityPeopleEvent}
+      />
+    );
   }, [dateEvent, timeEvent, titleEvent, descriptionEvent, capacityPeopleEvent]);
 
   const saveInformationEventEdit = () => {
@@ -70,106 +79,6 @@ const EditEvent = () => {
     events = events.filter((event) => event.id !== eventToEdit);
     saveEventsInLocalStorage(events);
     setBackToDashboard(true);
-  };
-
-  const drawEventToEdit = () => {
-    if (
-      indexEventToEdit === undefined ||
-      isNaN(indexEventToEdit) ||
-      indexEventToEdit === ""
-    ) {
-      return;
-    } else {
-      return (
-        <div className="container-event">
-          <div className="information-event">
-            <LocalizationProvider
-              dateAdapter={AdapterDayjs}
-              dateFormats={dateFormats}
-            >
-              <MobileDatePicker
-                label="Date"
-                className={classes.textFieldStyle}
-                value={dateEvent}
-                onChange={(date) => {
-                  setDateEvent(dayjs(date));
-                }}
-                format={dateFormats.customDate}
-                sx={{
-                  borderBottom: "1px solid rgb(179, 175, 177)",
-                }}
-                InputProps={{ disableUnderline: false }}
-                InputLabelProps={{ className: "text-label" }}
-              />
-            </LocalizationProvider>
-            <TextField
-              label="Time"
-              type="text"
-              variant="standard"
-              className={classes.textFieldStyle}
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: "1px solid rgb(179, 175, 177)",
-              }}
-              InputProps={{ disableUnderline: true }}
-              InputLabelProps={{ className: "text-label" }}
-              onChange={(e) => {
-                setTimeEvent(e.target.value);
-              }}
-              value={timeEvent}
-            ></TextField>
-            <TextField
-              label="Title"
-              type="text"
-              variant="standard"
-              className={classes.textFieldStyle}
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: "1px solid rgb(179, 175, 177)",
-              }}
-              InputProps={{ disableUnderline: true }}
-              InputLabelProps={{ className: "text-label" }}
-              onChange={(e) => {
-                setTitleEvent(e.target.value);
-              }}
-              value={titleEvent}
-            ></TextField>
-            <TextField
-              label="Description"
-              type="text"
-              variant="standard"
-              className={classes.textFieldStyle}
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: "1px solid rgb(179, 175, 177)",
-              }}
-              InputProps={{ disableUnderline: true }}
-              InputLabelProps={{ className: "text-label" }}
-              onChange={(e) => {
-                setDescriptionEvent(e.target.value);
-              }}
-              value={descriptionEvent}
-            ></TextField>
-            <TextField
-              label="Capacity"
-              type="text"
-              variant="standard"
-              className={classes.textFieldStyle}
-              sx={{
-                "& .MuiInputLabel-root": {},
-                borderBottom: "1px solid rgb(179, 175, 177)",
-              }}
-              InputProps={{ disableUnderline: true }}
-              InputLabelProps={{ className: "text-label" }}
-              onChange={(e) => {
-                setCapacityPeopleEvent(e.target.value);
-              }}
-              value={capacityPeopleEvent}
-            ></TextField>
-          </div>
-        </div>
-      );
-    }
   };
 
   if (backToDashboard) {
