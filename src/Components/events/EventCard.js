@@ -9,7 +9,6 @@ const EventCard = (props) => {
   const {
     viewEvents,
     setGoToEditEvent,
-    eventToEdit,
     setEventToEdit,
     eventsList,
     setEventList,
@@ -36,13 +35,12 @@ const EventCard = (props) => {
         <Button
           variant="contained"
           className={`button-event ${eventDetail.id}`}
-          onClick={(stateEvent) => {
+          onClick={(e) => {
             handleButtonEvent(
-              stateEvent,
+              e,
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
-              eventToEdit,
               eventsList,
               setEventList
             );

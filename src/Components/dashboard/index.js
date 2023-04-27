@@ -12,6 +12,7 @@ import {
   showDetailEventClicked,
   getEventsFromLocalStorage,
   getFromLocalStorage,
+  /* getEventData, */
 } from "../../utils";
 import "./styleDashboard.scss";
 
@@ -40,6 +41,22 @@ const Dashboard = () => {
       ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
 
+  /*   useEffect(() => {
+    console.log("yesenia");
+    async function getEvent() {
+      try {
+        const eventData = await getEventData();
+        setEventToEdit(eventData.idEventEdit);
+        setGoToEditEvent(eventData.goToEditEvents);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getEvent();
+  }, [eventToEdit]);
+
+  console.log(getEventData()); */
+
   useEffect(() => {
     const informationUser = getFromLocalStorage();
     if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
@@ -52,7 +69,7 @@ const Dashboard = () => {
   } else if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+    return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
     return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else {
@@ -125,7 +142,6 @@ const Dashboard = () => {
                     <EventCard
                       viewEvents={viewEvents}
                       setGoToEditEvent={setGoToEditEvent}
-                      eventToEdit={eventToEdit}
                       setEventToEdit={setEventToEdit}
                       eventsList={eventsList}
                       setEventList={setEventList}

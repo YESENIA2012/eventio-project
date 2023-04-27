@@ -74,7 +74,7 @@
   .box-event-view-row {
     @include styleFile.align-element-with-flex(flex-start);
     flex-flow: wrap;
-    width: 94%;
+    width: 82.5%;
     margin: auto auto auto 130px;
 
     .message-not-event {

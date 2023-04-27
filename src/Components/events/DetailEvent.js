@@ -15,6 +15,7 @@ import "./detailEventStyle.scss";
 const DetailEvent = () => {
   const location = useLocation();
   const eventClicked = location.state.eventClicked;
+  console.log("evento clickeado", eventClicked);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
@@ -58,7 +59,6 @@ const DetailEvent = () => {
                     event,
                     setGoToEditEvent,
                     setEventToEdit,
-                    eventToEdit,
                     eventsList,
                     setEventList
                   );
@@ -79,7 +79,7 @@ const DetailEvent = () => {
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+    return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else {
     return (
       <div className="container-event-section">

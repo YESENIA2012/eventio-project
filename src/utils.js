@@ -31,26 +31,33 @@ const getAvatarAndName = () => {
   });
 };
 
-const saveStateEvent = (e, text, eventToEdit, eventsList, setEventList) => {
+const saveStateEvent = (e, text, eventsList, setEventList) => {
   const informationUser = getFromLocalStorage();
   const idUser = informationUser.idUser;
   const nameClassAtTheElement = e.target.className;
   const arrayClass = nameClassAtTheElement.split(" ");
-  const eventToEditState = Number(arrayClass[12]);
+  const eventIdClassName = arrayClass[12];
 
-  if (eventToEdit === undefined || eventToEdit === null || isNaN(eventToEdit)) {
+  if (eventIdClassName === undefined || eventIdClassName === null) {
     return;
   } else {
-    eventsList[eventToEditState].stateEvent = text;
+    const indexEventToChangeState = eventsList.findIndex(
+      (event) => event.id === eventIdClassName
+    );
+
+    const eventToEditState = eventsList[indexEventToChangeState];
+    eventToEditState.stateEvent = text;
+
     if (text === "JOIN") {
-      const indexUserIdToDelete = eventsList[eventToEditState].users.findIndex(
+      const indexUserIdToDelete = eventToEditState.users.findIndex(
         (user) => user === idUser
       );
-      eventsList[eventToEditState].users
+
+      eventToEditState.users
         .splice(indexUserIdToDelete, 1)
         .filter((user) => user !== undefined);
     } else if (text === "LEAVE") {
-      eventsList[eventToEditState].users.push(idUser);
+      eventToEditState.users.push(idUser);
     }
   }
 
@@ -72,22 +79,21 @@ const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
 };
 
 const handleButtonEvent = (
-  stateEvent,
+  e,
   event,
   setGoToEditEvent,
   setEventToEdit,
-  eventToEdit,
   eventsList,
   setEventList
 ) => {
   const textButtonState = event.stateEvent;
 
   if (textButtonState.toLowerCase() === "edit") {
-    goToEditEventFunction(stateEvent, setGoToEditEvent, setEventToEdit);
+    goToEditEventFunction(e, setGoToEditEvent, setEventToEdit);
   } else if (textButtonState.toLowerCase() === "join") {
-    saveStateEvent(stateEvent, "LEAVE", eventToEdit, eventsList, setEventList);
+    saveStateEvent(e, "LEAVE", eventsList, setEventList);
   } else {
-    saveStateEvent(stateEvent, "JOIN", eventToEdit, eventsList, setEventList);
+    saveStateEvent(e, "JOIN", eventsList, setEventList);
   }
 };
 
@@ -195,7 +201,7 @@ const saveEventsInLocalStorage = (events) => {
 
 const mockedEvents = [
   {
-    id: 0,
+    id: "yes1",
     date: "April 4, 2017",
     time: "2:17 PM",
     nameEvent: "How to get angry",
@@ -207,7 +213,7 @@ const mockedEvents = [
     users: ["a0e73e98-8e49-4285-8f8a-404e33e53dca"],
   },
   {
-    id: 1,
+    id: "yes2",
     date: "April 4, 2017",
     time: "2:17 PM",
     nameEvent: "Mexican party vol.2",
@@ -219,7 +225,7 @@ const mockedEvents = [
     users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
-    id: 2,
+    id: "yes3",
     date: "April 4, 2017",
     time: "2:17 PM",
     nameEvent: "How to become Dark Soldier",
@@ -232,7 +238,7 @@ const mockedEvents = [
     users: ["f3b782de-3a57-4878-991f-92d314fddba6"],
   },
   {
-    id: 3,
+    id: "yes1jdj",
     date: "April 4, 2017",
     time: "2:17 PM",
     nameEvent: "Parkour lesson",
@@ -244,7 +250,7 @@ const mockedEvents = [
     users: [],
   },
   {
-    id: 4,
+    id: "yes1dj",
     date: "April 4, 2017",
     time: "2:17 PM",
     nameEvent: "Party in Asgard",
@@ -256,7 +262,7 @@ const mockedEvents = [
     users: [],
   },
   {
-    id: 5,
+    id: "cyes1mk",
     date: "April 4, 2017",
     time: "2:17 PM",
     nameEvent: "Russian lesson",

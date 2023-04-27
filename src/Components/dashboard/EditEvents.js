@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
@@ -15,8 +15,7 @@ import {
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
-  const location = useLocation();
-  const eventToEdit = location.state.eventToEdit;
+  const eventToEdit = useParams();
   const eventsInLocalStorage = getEventsFromLocalStorage();
   let events = eventsInLocalStorage.events || [];
   const indexEventToEdit = events.findIndex(

@@ -86,7 +86,7 @@ const Profile = () => {
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+    return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
     return <Navigate to="/detailEvent" state={{ eventClicked }} />;
   } else {
@@ -157,7 +157,6 @@ const Profile = () => {
                   <EventCard
                     viewEvents={viewEvents}
                     setGoToEditEvent={setGoToEditEvent}
-                    eventToEdit={eventToEdit}
                     setEventToEdit={setEventToEdit}
                     eventsList={eventsList}
                     setEventList={setEventList}
