@@ -11,6 +11,7 @@ import AvatarUser from "../avatarUser/AvatarUser";
 import {
   getEventsFromLocalStorage,
   saveEventsInLocalStorage,
+  getEventData,
 } from "../../utils";
 import "./styleEditEvents.scss";
 
@@ -18,10 +19,7 @@ const EditEvent = () => {
   const eventToEdit = useParams().eventToEdit;
   const eventsInLocalStorage = getEventsFromLocalStorage();
   let events = eventsInLocalStorage.events || [];
-  const indexEventToEdit = events.findIndex(
-    (event) => event.id === eventToEdit
-  );
-  const event = events[indexEventToEdit] || events[0];
+  const [event, setEvent] = useState(null);
   const [dateEvent, setDateEvent] = useState(dayjs(event.date));
   const [timeEvent, setTimeEvent] = useState(event.time);
   const [titleEvent, setTitleEvent] = useState(event.nameEvent);
@@ -31,13 +29,26 @@ const EditEvent = () => {
   const [capacityPeopleEvent, setCapacityPeopleEvent] = useState(
     event.capacity
   );
-  const [itemToDraw, setItemToDraw] = useState("");
+  const [itemToDraw, setItemToDraw] = useState(null);
   const [backToDashboard, setBackToDashboard] = useState(false);
   const dateFormats = {
     time: "h:mm A",
     customDate: "ddd MMM DD YYYY",
   };
   dayjs.locale("en");
+
+  useEffect(() => {
+    async function getEvent() {
+      try {
+        const eventData = await getEventData(events, eventToEdit);
+        setEvent(eventData.event);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    console.log("data", getEvent());
+    getEvent();
+  }, []);
 
   useEffect(() => {
     setItemToDraw(

@@ -31,6 +31,15 @@ const getAvatarAndName = () => {
   });
 };
 
+const getEventData = (events, eventToEdit) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const event = events.find((event) => event.id === eventToEdit);
+      resolve({ event });
+    }, 500);
+  });
+};
+
 const saveStateEvent = (e, text, eventsList, setEventList) => {
   const informationUser = getFromLocalStorage();
   const idUser = informationUser.idUser;
@@ -305,4 +314,5 @@ export {
   getEventsFromLocalStorage,
   saveEventsInLocalStorage,
   styleTextFieldEditEvent,
+  getEventData,
 };
