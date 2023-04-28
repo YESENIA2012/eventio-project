@@ -41,23 +41,22 @@ const saveStateEvent = (e, text, eventsList, setEventList) => {
   if (eventIdClassName === undefined || eventIdClassName === null) {
     return;
   } else {
-    const indexEventToChangeState = eventsList.findIndex(
+    const eventToChangeState = eventsList.find(
       (event) => event.id === eventIdClassName
     );
 
-    const eventToEditState = eventsList[indexEventToChangeState];
-    eventToEditState.stateEvent = text;
+    eventToChangeState.stateEvent = text;
 
     if (text === "JOIN") {
-      const indexUserIdToDelete = eventToEditState.users.findIndex(
+      const indexUserIdToDelete = eventToChangeState.users.findIndex(
         (user) => user === idUser
       );
 
-      eventToEditState.users
+      eventToChangeState.users
         .splice(indexUserIdToDelete, 1)
         .filter((user) => user !== undefined);
     } else if (text === "LEAVE") {
-      eventToEditState.users.push(idUser);
+      eventToChangeState.users.push(idUser);
     }
   }
 
@@ -65,17 +64,27 @@ const saveStateEvent = (e, text, eventsList, setEventList) => {
   setEventList(JSON.parse(localStorage.getItem("Events")));
 };
 
-const goToEditEventFunction = (e, setGoToEditEvent, setEventToEdit) => {
+const goToEditEventFunction = (
+  e,
+  eventsList,
+  setGoToEditEvent,
+  setEventToEdit
+) => {
   const nameClassAtTheElement = e.target.className;
   const arrayClass = nameClassAtTheElement.split(" ");
   const eventToEdit = arrayClass[12];
 
-  if (!eventToEdit) {
+  const event = eventsList.find((event) => event.id.toString() === eventToEdit);
+
+  const eventId = event.id;
+
+  if (!eventId) {
     return;
   } else {
     setGoToEditEvent(true);
+    setEventToEdit(eventId);
   }
-  setEventToEdit(eventToEdit);
+  return eventId;
 };
 
 const handleButtonEvent = (
@@ -89,7 +98,7 @@ const handleButtonEvent = (
   const textButtonState = event.stateEvent;
 
   if (textButtonState.toLowerCase() === "edit") {
-    goToEditEventFunction(e, setGoToEditEvent, setEventToEdit);
+    goToEditEventFunction(e, eventsList, setGoToEditEvent, setEventToEdit);
   } else if (textButtonState.toLowerCase() === "join") {
     saveStateEvent(e, "LEAVE", eventsList, setEventList);
   } else {
@@ -97,7 +106,12 @@ const handleButtonEvent = (
   }
 };
 
-const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
+const showDetailEventClicked = (
+  e,
+  eventsList,
+  setGoToDetailEvent,
+  setEventClicked
+) => {
   const elementClassName = e.target.className;
   const classNamePosition = elementClassName.split(" ");
 
@@ -112,15 +126,15 @@ const showDetailEventClicked = (e, setGoToDetailEvent, setEventClicked) => {
     })
     .join("-");
 
-  if (
-    elementClickedId === undefined ||
-    elementClickedId === " " ||
-    elementClickedId === null
-  ) {
-    return;
-  } else {
+  const eventId = eventsList.find(
+    (event) => event.id.toString() === elementClickedId
+  );
+
+  if (eventId) {
     setGoToDetailEvent(true);
-    setEventClicked(elementClickedId);
+    setEventClicked(eventId.id);
+  } else {
+    return;
   }
 };
 

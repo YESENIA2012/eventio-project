@@ -71,7 +71,7 @@ const Dashboard = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
+    return <Navigate to={`/detailEvent/${eventClicked}`} />;
   } else {
     return (
       <div className="event-container">
@@ -134,6 +134,7 @@ const Dashboard = () => {
                     onClick={(e) => {
                       showDetailEventClicked(
                         e,
+                        eventsList,
                         setGoToDetailEvent,
                         setEventClicked
                       );

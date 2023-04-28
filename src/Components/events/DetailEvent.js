@@ -1,21 +1,18 @@
 import { useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { handleButtonEvent } from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
-
 import AvatarUser from "../avatarUser/AvatarUser";
 
 import { getEventsFromLocalStorage } from "../../utils";
 import "./detailEventStyle.scss";
 
 const DetailEvent = () => {
-  const location = useLocation();
-  const eventClicked = location.state.eventClicked;
-  console.log("evento clickeado", eventClicked);
+  const eventClicked = useParams().eventClicked;
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
@@ -27,10 +24,9 @@ const DetailEvent = () => {
     if (!eventClicked) {
       return;
     } else {
-      const eventId = eventsList.findIndex(
+      const event = eventsList.find(
         (event) => event.id.toString() === eventClicked
       );
-      const event = eventsList[eventId];
 
       return (
         <div className="container-event">

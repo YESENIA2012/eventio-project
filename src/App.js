@@ -17,7 +17,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editEvent/:eventToEdit" element={<EditEvent />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/detailEvent" element={<DetailEvent />} />
+        <Route path="/detailEvent/:eventClicked" element={<DetailEvent />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/createEvent" element={<NewEvent />} />
       </Routes>

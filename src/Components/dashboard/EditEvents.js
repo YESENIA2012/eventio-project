@@ -15,7 +15,7 @@ import {
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
-  const eventToEdit = useParams();
+  const eventToEdit = useParams().eventToEdit;
   const eventsInLocalStorage = getEventsFromLocalStorage();
   let events = eventsInLocalStorage.events || [];
   const indexEventToEdit = events.findIndex(
