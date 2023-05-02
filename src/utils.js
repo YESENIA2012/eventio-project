@@ -31,11 +31,18 @@ const getAvatarAndName = () => {
   });
 };
 
-const getEventData = (events, eventToEdit) => {
-  return new Promise((resolve) => {
+const getEventData = (eventId) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const event = events.find((event) => event.id === eventToEdit);
-      resolve({ event });
+      const events = JSON.parse(localStorage.getItem("Events"));
+      const event = events.find((event) => event.id === eventId);
+
+      if (!event) {
+        console.log("No event found");
+        reject(null);
+      } else {
+        resolve({ event });
+      }
     }, 500);
   });
 };
@@ -119,7 +126,7 @@ const showDetailEventClicked = (
   e,
   eventsList,
   setGoToDetailEvent,
-  setEventClicked
+  setEventId
 ) => {
   const elementClassName = e.target.className;
   const classNamePosition = elementClassName.split(" ");
@@ -141,7 +148,7 @@ const showDetailEventClicked = (
 
   if (eventId) {
     setGoToDetailEvent(true);
-    setEventClicked(eventId.id);
+    setEventId(eventId.id);
   } else {
     return;
   }
@@ -218,7 +225,12 @@ const signOffFunction = () => {
   localStorage.setItem("userInformation", JSON.stringify(informationUser));
 };
 
-const saveEventsInLocalStorage = (events) => {
+const updateEvent = (event) => {
+  const eventsInLocalStorage = getEventsFromLocalStorage();
+  let events = eventsInLocalStorage.events;
+
+  const eventUpdate = events.findIndex((element) => element.id === event.id);
+  events[eventUpdate] = event;
   localStorage.setItem("Events", JSON.stringify(events));
 };
 
@@ -312,7 +324,7 @@ export {
   showDetailEventClicked,
   signOutFunction,
   getEventsFromLocalStorage,
-  saveEventsInLocalStorage,
+  updateEvent,
   styleTextFieldEditEvent,
   getEventData,
 };

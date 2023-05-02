@@ -29,7 +29,7 @@ const Profile = () => {
   const [emailUser, setEmailUser] = useState("");
   const [seeModal, setSeeModal] = useState(false);
   const [signOut, setSignOut] = useState(false);
-  const [eventClicked, setEventClicked] = useState("");
+  const [id, setId] = useState("");
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
@@ -88,7 +88,7 @@ const Profile = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${eventClicked}`} />;
+    return <Navigate to={`/detailEvent/${id}`} />;
   } else {
     return (
       <div className="profile-container">
@@ -151,7 +151,7 @@ const Profile = () => {
                       e,
                       eventsList,
                       setGoToDetailEvent,
-                      setEventClicked
+                      setId
                     );
                   }}
                 >

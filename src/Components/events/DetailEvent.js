@@ -12,7 +12,7 @@ import { getEventsFromLocalStorage } from "../../utils";
 import "./detailEventStyle.scss";
 
 const DetailEvent = () => {
-  const eventClicked = useParams().eventClicked;
+  const eventClicked = useParams().id;
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);

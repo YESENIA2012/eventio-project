@@ -12,7 +12,7 @@ import {
   styles,
   getFromLocalStorage,
   getEventsFromLocalStorage,
-  saveEventsInLocalStorage,
+  updateEvent,
 } from "../../utils";
 
 import "./newEventStyle.scss";
@@ -94,7 +94,7 @@ const NewEvent = () => {
         users: [idUser],
       });
 
-      saveEventsInLocalStorage(eventsList);
+      updateEvent(eventsList);
 
       setTitleEvent("");
       setDescriptionEvent("");

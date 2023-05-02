@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [pageNumber, setPageNumber] = useState(0);
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [viewEvents, setViewEvents] = useState(true);
-  const [eventClicked, setEventClicked] = useState("");
+  const [eventId, setEventId] = useState("");
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToFutureEvents, setGoToFutureEvents] = useState(false);
@@ -41,22 +41,6 @@ const Dashboard = () => {
       ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
 
-  /*   useEffect(() => {
-    console.log("yesenia");
-    async function getEvent() {
-      try {
-        const eventData = await getEventData();
-        setEventToEdit(eventData.idEventEdit);
-        setGoToEditEvent(eventData.goToEditEvents);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    getEvent();
-  }, [eventToEdit]);
-
-  console.log(getEventData()); */
-
   useEffect(() => {
     const informationUser = getFromLocalStorage();
     if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
@@ -71,7 +55,7 @@ const Dashboard = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${eventClicked}`} />;
+    return <Navigate to={`/detailEvent/${eventId}`} />;
   } else {
     return (
       <div className="event-container">
@@ -136,7 +120,7 @@ const Dashboard = () => {
                         e,
                         eventsList,
                         setGoToDetailEvent,
-                        setEventClicked
+                        setEventId
                       );
                     }}
                   >
