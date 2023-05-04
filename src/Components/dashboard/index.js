@@ -10,9 +10,8 @@ import AvatarUser from "../avatarUser/AvatarUser";
 import EventCard from "../events/EventCard";
 import {
   showDetailEventClicked,
-  getEventsFromLocalStorage,
+  getEventsFromServer,
   getFromLocalStorage,
-  /* getEventData, */
 } from "../../utils";
 import "./styleDashboard.scss";
 
@@ -27,8 +26,7 @@ const Dashboard = () => {
   const [goToPastEvents, setGoToPastEvents] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
+  const [eventsList, setEventList] = useState([]);
   const eventsPerPage = 6;
   const pageCount =
     eventsList && eventsList.length
@@ -40,6 +38,19 @@ const Dashboard = () => {
     eventsList && eventsList.length
       ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
+
+  useEffect(() => {
+    async function getEvents() {
+      try {
+        const currentEvents = await getEventsFromServer();
+        setEventList(currentEvents.events);
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
+    getEvents();
+  }, []);
 
   useEffect(() => {
     const informationUser = getFromLocalStorage();
@@ -136,7 +147,7 @@ const Dashboard = () => {
                 );
               })
             ) : (
-              <div className="message-not-event">No events</div>
+              <div className="message-not-event">No events found</div>
             )}
           </div>
           ;
@@ -149,8 +160,14 @@ const Dashboard = () => {
             }}
             containerClassName={"pagination-bttns"}
             previousLinkClassName={"previous-bttn"}
-            nextLinkClassName={"next-bttn"}
-            disabledClassName={"pagination-disable"}
+            nextLinkClassName={
+              eventToDraw.length ? "next-bttn" : "hide-pagination-btn-dashboard"
+            }
+            disabledClassName={
+              eventToDraw.length
+                ? "pagination-disable"
+                : "hide-pagination-btn-dashboard"
+            }
             activeClassName={"pagination-active"}
           />
           <div className="add-new-event-container">

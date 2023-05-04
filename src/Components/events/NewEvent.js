@@ -8,12 +8,7 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import {
-  styles,
-  getFromLocalStorage,
-  getEventsFromLocalStorage,
-  updateEvent,
-} from "../../utils";
+import { styles, getFromLocalStorage, saveEvent } from "../../utils";
 
 import "./newEventStyle.scss";
 
@@ -30,8 +25,6 @@ const NewEvent = () => {
     text: "Enter details below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
-  const eventsInLocalStorage = getEventsFromLocalStorage();
-  const eventsList = eventsInLocalStorage.events || [];
 
   const dateFormats = {
     time: "h:mm A",
@@ -58,7 +51,7 @@ const NewEvent = () => {
     }
   }, [titleEvent, descriptionEvent, dateEvent, timeEvent, capacityPeopleEvent]);
 
-  const saveNewEventInLocalStorage = () => {
+  const saveNewEventInLocalStorage = async () => {
     const stateEvent = "EDIT";
     let dateToSave = dateEvent;
     dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
@@ -77,24 +70,25 @@ const NewEvent = () => {
       });
       return;
     } else {
-      const informationUser = getFromLocalStorage();
-      const idUser = informationUser.idUser;
-      let host = `${informationUser.name} ${informationUser.lastName}`;
-
-      eventsList.push({
-        id: uuidv4(),
-        date: dateToSave,
-        time: timeEvent,
-        nameEvent: titleEvent,
-        host: host,
-        descriptionEvent: descriptionEvent,
-        attendees: 1,
-        capacity: capacityPeopleEvent,
-        stateEvent: stateEvent,
-        users: [idUser],
-      });
-
-      updateEvent(eventsList);
+      const userInformation = getFromLocalStorage();
+      const idUser = userInformation.idUser;
+      let host = `${userInformation.name} ${userInformation.lastName}`;
+      try {
+        await saveEvent({
+          id: uuidv4(),
+          date: dateToSave,
+          time: timeEvent,
+          nameEvent: titleEvent,
+          host: host,
+          descriptionEvent: descriptionEvent,
+          attendees: 1,
+          capacity: capacityPeopleEvent,
+          stateEvent: stateEvent,
+          users: [idUser],
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
 
       setTitleEvent("");
       setDescriptionEvent("");

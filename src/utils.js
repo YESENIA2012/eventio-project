@@ -196,6 +196,10 @@ const getEventsUser = (events, eventsPerPage, pagesVisited) => {
 const getEventsFromLocalStorage = (pageNumber = null) => {
   const events = JSON.parse(localStorage.getItem("Events"));
 
+  if (!events) {
+    return { events: [] };
+  }
+
   if (pageNumber === null) {
     return { events: events };
   }
@@ -209,6 +213,13 @@ const getEventsFromLocalStorage = (pageNumber = null) => {
     currentEvents: eventsUser.eventsUser,
     pageCountProfile: eventsUser.pageCountProfile,
   };
+};
+
+const getEventsFromServer = (pageNumber = null) => {
+  return new Promise((resolve) => {
+    const result = getEventsFromLocalStorage(pageNumber);
+    resolve(result);
+  });
 };
 
 const signOutFunction = (setSignOut) => {
@@ -225,13 +236,32 @@ const signOffFunction = () => {
   localStorage.setItem("userInformation", JSON.stringify(informationUser));
 };
 
-const updateEvent = (event) => {
-  const eventsInLocalStorage = getEventsFromLocalStorage();
-  let events = eventsInLocalStorage.events;
+const updateEvent = async (updateEvent) => {
+  let currentEvents = await getEventsFromServer();
 
-  const eventUpdate = events.findIndex((element) => element.id === event.id);
-  events[eventUpdate] = event;
-  localStorage.setItem("Events", JSON.stringify(events));
+  return new Promise((resolve) => {
+    let events = currentEvents.events;
+
+    const arrayIndex = events.findIndex(
+      (element) => element.id === updateEvent.id
+    );
+    events[arrayIndex] = updateEvent;
+    localStorage.setItem("Events", JSON.stringify(events));
+    resolve(updateEvent);
+  });
+};
+
+const saveEvent = async (newEvent) => {
+  let currentEvents = await getEventsFromServer();
+  return new Promise((resolve) => {
+    if (!currentEvents.events.length) {
+      localStorage.setItem("Events", JSON.stringify([newEvent]));
+    } else {
+      const newEvents = [...currentEvents.events, newEvent];
+      localStorage.setItem("Events", JSON.stringify(newEvents));
+    }
+    resolve({ status: 200, data: [newEvent] });
+  });
 };
 
 const mockedEvents = [
@@ -315,16 +345,18 @@ const createFakeEvents = () => {
 };
 
 export {
-  signOffFunction,
-  createFakeEvents,
   styles,
-  getFromLocalStorage,
+  styleTextFieldEditEvent,
   getAvatarAndName,
+  getEventData,
   handleButtonEvent,
   showDetailEventClicked,
+  getFromLocalStorage,
   signOutFunction,
+  signOffFunction,
+  createFakeEvents,
+  getEventsFromServer,
   getEventsFromLocalStorage,
   updateEvent,
-  styleTextFieldEditEvent,
-  getEventData,
+  saveEvent,
 };

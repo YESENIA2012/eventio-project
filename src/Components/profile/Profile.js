@@ -167,7 +167,7 @@ const Profile = () => {
               );
             })
           ) : (
-            <div className="message-not-event">You have no events</div>
+            <div className="message-not-event">No events found</div>
           )}
         </div>
         <ReactPaginate
@@ -179,8 +179,12 @@ const Profile = () => {
           }}
           containerClassName={"pagination-bttns"}
           previousLinkClassName={"previous-bttn"}
-          nextLinkClassName={"next-bttn"}
-          disabledClassName={"pagination-disable"}
+          nextLinkClassName={
+            currentEvents.length ? "next-bttn" : "hide-pagination-btn"
+          }
+          disabledClassName={
+            currentEvents.length ? "pagination-disable" : "hide-pagination-btn"
+          }
           activeClassName={"pagination-active"}
         />
         <div

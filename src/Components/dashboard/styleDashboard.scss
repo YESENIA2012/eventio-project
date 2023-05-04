@@ -80,6 +80,7 @@
     .message-not-event {
       @include styleFile.align-element-with-flex(center);
       height: 400px;
+      width: 100%;
     }
   }
 
@@ -127,6 +128,10 @@
     .pagination-active a {
       color: white;
       background-color: rgb(100, 207, 140);
+    }
+
+    .hide-pagination-btn-dashboard {
+      opacity: 0;
     }
   }
 }
