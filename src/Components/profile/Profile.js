@@ -13,7 +13,7 @@ import {
   getFromLocalStorage,
   signOutFunction,
   showDetailEventClicked,
-  getEventsFromLocalStorage,
+  getEventsFromServer,
   signOffFunction,
 } from "../../utils";
 import "./profileStyle.scss";
@@ -34,11 +34,10 @@ const Profile = () => {
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
   const informationUser = getFromLocalStorage();
   const userId = informationUser.idUser;
-  const pageCount = eventsFromLocalStorage.pageCountProfile;
-  const [currentEvents, setCurrentEvents] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [eventsListUser, setEventListUser] = useState([]);
 
   useEffect(() => {
     if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
@@ -62,8 +61,18 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    setCurrentEvents(eventsFromLocalStorage.currentEvents);
-  }, [currentEvents]);
+    async function getEventsUser() {
+      try {
+        const currentEvents = await getEventsFromServer(pageNumber);
+        setEventListUser(currentEvents.currentEvents);
+        setPageCount(currentEvents.pageCountProfile);
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
+    getEventsUser();
+  }, []);
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
@@ -136,8 +145,8 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {currentEvents && currentEvents.length ? (
-            currentEvents.map((event) => {
+          {eventsListUser && eventsListUser.length ? (
+            eventsListUser.map((event) => {
               return (
                 <div
                   key={event.id}
@@ -149,7 +158,7 @@ const Profile = () => {
                   onClick={(e) => {
                     showDetailEventClicked(
                       e,
-                      currentEvents,
+                      eventsListUser,
                       setGoToDetailEvent,
                       setId
                     );
@@ -179,10 +188,10 @@ const Profile = () => {
           containerClassName={"pagination-bttns"}
           previousLinkClassName={"previous-bttn"}
           nextLinkClassName={
-            currentEvents.length ? "next-bttn" : "hide-pagination-btn"
+            eventsListUser.length ? "next-bttn" : "hide-pagination-btn"
           }
           disabledClassName={
-            currentEvents.length ? "pagination-disable" : "hide-pagination-btn"
+            eventsListUser.length ? "pagination-disable" : "hide-pagination-btn"
           }
           activeClassName={"pagination-active"}
         />

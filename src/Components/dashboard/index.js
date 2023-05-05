@@ -28,7 +28,6 @@ const Dashboard = () => {
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
   const [userId, setUserId] = useState(null);
-
   const eventsPerPage = 6;
   const pageCount =
     eventsList && eventsList.length
