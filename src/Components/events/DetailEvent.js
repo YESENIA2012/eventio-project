@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Navigate, useParams, useLocation } from "react-router-dom";
 import { handleButtonEvent } from "../../utils";
 
@@ -12,7 +12,7 @@ import { getEventsFromLocalStorage, getTextButton } from "../../utils";
 import "./detailEventStyle.scss";
 
 const DetailEvent = () => {
-  const eventClicked = useParams().id;
+  const eventId = useParams().id;
   const location = useLocation();
   const userId = location.state.userId;
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
@@ -20,18 +20,14 @@ const DetailEvent = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage();
-  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
-  const [textButton, setTextButton] = useState("");
-
-  useEffect(() => {});
+  const eventsList = eventsFromLocalStorage.events;
+  const [textButton, setTextButton] = useState(getTextButton(userId, eventId));
 
   const drawEvent = () => {
-    if (!eventClicked) {
+    if (!eventId) {
       return;
     } else {
-      const event = eventsList.find(
-        (event) => event.id.toString() === eventClicked
-      );
+      const event = eventsList.find((event) => event.id.toString() === eventId);
 
       return (
         <div className="container-event">
@@ -47,7 +43,7 @@ const DetailEvent = () => {
             <div className="attendees-capacity-button-container">
               <div className="attendees-capacity-container">
                 <PersonIcon className="person-icon" />
-                <span className="attendees">{event.attendees}</span>
+                <span className="attendees">{event.attendees.length}</span>
                 <span className="of-text-d">of</span>
                 <span>{event.capacity}</span>
               </div>
@@ -57,6 +53,7 @@ const DetailEvent = () => {
                 onClick={(e) => {
                   handleButtonEvent(
                     e,
+                    textButton,
                     userId,
                     event,
                     setGoToEditEvent,

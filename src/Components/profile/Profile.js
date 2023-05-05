@@ -35,11 +35,10 @@ const Profile = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const eventsList = eventsFromLocalStorage.events;
   const informationUser = getFromLocalStorage();
   const userId = informationUser.idUser;
   const pageCount = eventsFromLocalStorage.pageCountProfile;
-  const [currentEvents, setCurrentEvenst] = useState([]);
+  const [currentEvents, setCurrentEvents] = useState([]);
 
   useEffect(() => {
     if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
@@ -62,11 +61,9 @@ const Profile = () => {
     drawUserInformation();
   }, []);
 
-  useEffect(() => {});
-
   useEffect(() => {
-    setCurrentEvenst(eventsFromLocalStorage.currentEvents);
-  }, []);
+    setCurrentEvents(eventsFromLocalStorage.currentEvents);
+  }, [currentEvents]);
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
@@ -152,7 +149,7 @@ const Profile = () => {
                   onClick={(e) => {
                     showDetailEventClicked(
                       e,
-                      eventsList,
+                      currentEvents,
                       setGoToDetailEvent,
                       setId
                     );

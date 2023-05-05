@@ -3,17 +3,15 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 
 const EventCard = (props) => {
   const { userId, viewEvents, setGoToEditEvent, setEventToEdit, eventDetail } =
     props;
 
-  const [textButton, setTextButton] = useState("");
-
-  useEffect(() => {
-    setTextButton(getTextButton(userId, eventDetail));
-  }, []);
+  const [textButton, setTextButton] = useState(
+    getTextButton(userId, eventDetail)
+  );
 
   return (
     <Fragment>
@@ -38,6 +36,7 @@ const EventCard = (props) => {
           onClick={(e) => {
             handleButtonEvent(
               e,
+              textButton,
               userId,
               eventDetail,
               setGoToEditEvent,

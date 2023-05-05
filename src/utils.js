@@ -88,6 +88,11 @@ const joinOrLeaveToEvent = async (textEventButton, userId, eventDetail) => {
 };
 
 const getTextButton = (userId, eventDetail) => {
+  if (typeof eventDetail === "string") {
+    const events = getEventsFromLocalStorage().events;
+    eventDetail = events.find((event) => event.id === eventDetail);
+  }
+
   let textButton = "";
 
   if (userId === eventDetail.eventOwner) {
@@ -103,13 +108,14 @@ const getTextButton = (userId, eventDetail) => {
 
 const handleButtonEvent = (
   e,
+  textButton,
   userId,
   eventDetail,
   setGoToEditEvent,
   setEventToEdit,
   setTextButton
 ) => {
-  const textEventButton = getTextButton(userId, eventDetail);
+  const textEventButton = textButton;
 
   if (textEventButton === "edit") {
     goToEditEventFunction(e, eventDetail, setGoToEditEvent, setEventToEdit);
