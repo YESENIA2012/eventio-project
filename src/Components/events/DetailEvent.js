@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useParams, useLocation } from "react-router-dom";
 import { handleButtonEvent } from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -8,17 +8,22 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 import AvatarUser from "../avatarUser/AvatarUser";
 
-import { getEventsFromLocalStorage } from "../../utils";
+import { getEventsFromLocalStorage, getTextButton } from "../../utils";
 import "./detailEventStyle.scss";
 
 const DetailEvent = () => {
   const eventClicked = useParams().id;
+  const location = useLocation();
+  const userId = location.state.userId;
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage();
   const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
+  const [textButton, setTextButton] = useState("");
+
+  useEffect(() => {});
 
   const drawEvent = () => {
     if (!eventClicked) {
@@ -52,15 +57,15 @@ const DetailEvent = () => {
                 onClick={(e) => {
                   handleButtonEvent(
                     e,
+                    userId,
                     event,
                     setGoToEditEvent,
                     setEventToEdit,
-                    eventsList,
-                    setEventList
+                    setTextButton
                   );
                 }}
               >
-                {event.stateEvent}
+                {textButton}
               </Button>
             </div>
           </div>

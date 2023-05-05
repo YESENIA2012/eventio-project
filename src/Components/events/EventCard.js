@@ -1,19 +1,19 @@
 import { Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 
-import { handleButtonEvent } from "../../utils";
+import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 const EventCard = (props) => {
-  const {
-    viewEvents,
-    setGoToEditEvent,
-    setEventToEdit,
-    eventsList,
-    setEventList,
-    eventDetail,
-  } = props;
+  const { userId, viewEvents, setGoToEditEvent, setEventToEdit, eventDetail } =
+    props;
+
+  const [textButton, setTextButton] = useState("");
+
+  useEffect(() => {
+    setTextButton(getTextButton(userId, eventDetail));
+  }, []);
 
   return (
     <Fragment>
@@ -28,7 +28,7 @@ const EventCard = (props) => {
       <div className="button-attendees-capacity-container ">
         <span className="attendees">
           <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
-          <span>{eventDetail.attendees}</span>
+          <span>{eventDetail.attendees.length}</span>
           <span className="of-text">of</span>
           <span>{eventDetail.capacity}</span>
         </span>
@@ -38,15 +38,15 @@ const EventCard = (props) => {
           onClick={(e) => {
             handleButtonEvent(
               e,
+              userId,
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
-              eventsList,
-              setEventList
+              setTextButton
             );
           }}
         >
-          {eventDetail.stateEvent}
+          {textButton}
         </Button>
       </div>
     </Fragment>

@@ -27,17 +27,25 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
+  const [userId, setUserId] = useState(null);
+
   const eventsPerPage = 6;
   const pageCount =
     eventsList && eventsList.length
       ? Math.ceil(eventsList.length / eventsPerPage)
       : 0;
+
   const pagesVisited = pageNumber * eventsPerPage;
 
   const eventToDraw =
     eventsList && eventsList.length
       ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
       : 0;
+
+  useEffect(() => {
+    const informationUser = getFromLocalStorage();
+    setUserId(informationUser.idUser);
+  }, []);
 
   useEffect(() => {
     async function getEvents() {
@@ -66,7 +74,7 @@ const Dashboard = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${eventId}`} />;
+    return <Navigate to={`/detailEvent/${eventId}`} state={{ userId }} />;
   } else {
     return (
       <div className="event-container">
@@ -136,11 +144,10 @@ const Dashboard = () => {
                     }}
                   >
                     <EventCard
+                      userId={userId}
                       viewEvents={viewEvents}
                       setGoToEditEvent={setGoToEditEvent}
                       setEventToEdit={setEventToEdit}
-                      eventsList={eventsList}
-                      setEventList={setEventList}
                       eventDetail={event}
                     />
                   </div>

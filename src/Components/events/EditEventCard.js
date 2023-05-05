@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { styleTextFieldEditEvent } from "../../utils";
 
 const EditEventCard = (props) => {
-  const { event, onChangeDataEvent } = props;
+  const { event, setEvent } = props;
   const [dateEvent, setDateEvent] = useState("");
   const [timeEvent, setTimeEvent] = useState("");
   const [titleEvent, setTitleEvent] = useState("");
@@ -48,7 +48,7 @@ const EditEventCard = (props) => {
     eventEdit.descriptionEvent = descriptionEvent;
     eventEdit.capacity = capacityPeopleEvent;
 
-    onChangeDataEvent(eventEdit);
+    setEvent(eventEdit);
   };
 
   return (

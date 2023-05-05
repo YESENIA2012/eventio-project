@@ -37,14 +37,8 @@ const EditEvent = () => {
     if (!event) {
       return;
     }
-    setItemToDraw(
-      <EditEventCard event={event} onChangeDataEvent={onChangeDataEvent} />
-    );
+    setItemToDraw(<EditEventCard event={event} setEvent={setEvent} />);
   }, [event]);
-
-  const onChangeDataEvent = (eventEdit) => {
-    setEvent(eventEdit);
-  };
 
   const saveInformationEventEdit = async () => {
     await updateEvent(event);

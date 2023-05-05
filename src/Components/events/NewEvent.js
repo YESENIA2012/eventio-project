@@ -76,15 +76,14 @@ const NewEvent = () => {
       try {
         await saveEvent({
           id: uuidv4(),
+          eventOwner: idUser,
           date: dateToSave,
           time: timeEvent,
           nameEvent: titleEvent,
           host: host,
           descriptionEvent: descriptionEvent,
-          attendees: 1,
+          attendees: [idUser],
           capacity: capacityPeopleEvent,
-          stateEvent: stateEvent,
-          users: [idUser],
         });
       } catch (error) {
         console.log("error", error);

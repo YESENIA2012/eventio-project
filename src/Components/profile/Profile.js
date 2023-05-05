@@ -35,12 +35,13 @@ const Profile = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
+  const eventsList = eventsFromLocalStorage.events;
+  const informationUser = getFromLocalStorage();
+  const userId = informationUser.idUser;
   const pageCount = eventsFromLocalStorage.pageCountProfile;
-  let currentEvents = eventsFromLocalStorage.currentEvents;
+  const [currentEvents, setCurrentEvenst] = useState([]);
 
   useEffect(() => {
-    const informationUser = getFromLocalStorage();
     if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
       setSignOut(true);
     }
@@ -61,6 +62,12 @@ const Profile = () => {
     drawUserInformation();
   }, []);
 
+  useEffect(() => {});
+
+  useEffect(() => {
+    setCurrentEvenst(eventsFromLocalStorage.currentEvents);
+  }, []);
+
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();
 
@@ -77,10 +84,6 @@ const Profile = () => {
     setEmailUser(email);
   };
 
-  if (!eventsList) {
-    currentEvents = 0;
-  }
-
   if (signOut) {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
@@ -88,7 +91,7 @@ const Profile = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${id}`} />;
+    return <Navigate to={`/detailEvent/${id}`} state={{ userId }} />;
   } else {
     return (
       <div className="profile-container">
@@ -156,11 +159,10 @@ const Profile = () => {
                   }}
                 >
                   <EventCard
+                    userId={userId}
                     viewEvents={viewEvents}
                     setGoToEditEvent={setGoToEditEvent}
                     setEventToEdit={setEventToEdit}
-                    eventsList={eventsList}
-                    setEventList={setEventList}
                     eventDetail={event}
                   />
                 </div>
