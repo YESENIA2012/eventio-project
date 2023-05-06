@@ -8,10 +8,8 @@ import { Fragment, useState } from "react";
 const EventCard = (props) => {
   const { userId, viewEvents, setGoToEditEvent, setEventToEdit, eventDetail } =
     props;
-
-  const [textButton, setTextButton] = useState(
-    getTextButton(userId, eventDetail)
-  );
+  const defaultText = getTextButton(userId, eventDetail);
+  const [textButton, setTextButton] = useState(defaultText);
 
   return (
     <Fragment>

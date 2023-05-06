@@ -18,8 +18,7 @@ import "./styleDashboard.scss";
 const Dashboard = () => {
   const EVENTS_PER_PAGE = 6;
   const { user } = useContext(UserContext);
-  const userId = user ? user.id : null;
-  console.log("user from context ? ", user);
+  const userId = user ? user.idUser : null;
   const [pageNumber, setPageNumber] = useState(0);
   const [viewEvents, setViewEvents] = useState(true);
   const [eventId, setEventId] = useState("");

@@ -40,7 +40,6 @@ const Profile = () => {
     async function getEventsUser() {
       try {
         const currentEvents = await getEventsFromServer(pageNumber);
-        console.log("currentEvents ", currentEvents);
         setEventListUser(currentEvents.currentEvents);
         setPageCount(currentEvents.pageCountProfile);
       } catch (error) {
