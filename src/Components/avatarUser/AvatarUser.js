@@ -11,10 +11,12 @@ const AvatarUser = ({ user }) => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const firsLetterName = user && user.name ? user.name[0] : "";
-    const firstLetterLastName = user && user.lastName ? user.lastName[0] : "";
+    const name = user && user.name ? user.name : "";
+    const lastName = user && user.lastName ? user.lastName : "";
+    const firsLetterName = name[0];
+    const firstLetterLastName = lastName[0];
     const letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-    const userName = `${user.name} ${user.lastName}`;
+    const userName = `${name} ${lastName}`;
     setTextAvatar(letterAvatar);
     setUserName(userName);
   }, []);

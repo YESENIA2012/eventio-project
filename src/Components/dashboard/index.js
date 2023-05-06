@@ -10,7 +10,6 @@ import EventCard from "../events/EventCard";
 import {
   showDetailEventClicked,
   getEventsFromServer,
-  getFromLocalStorage,
   isLoggedOut,
 } from "../../utils";
 import "./styleDashboard.scss";

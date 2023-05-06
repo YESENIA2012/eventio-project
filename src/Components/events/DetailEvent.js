@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams, useLocation } from "react-router-dom";
-import { handleButtonEvent } from "../../utils";
+import {
+  getEventsFromServer,
+  handleButtonEvent,
+  getTextButton,
+} from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -8,10 +12,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Button } from "@mui/material";
 import AvatarUser from "../avatarUser/AvatarUser";
 
-import { getEventsFromLocalStorage, getTextButton } from "../../utils";
 import "./detailEventStyle.scss";
+import { UserContext } from "../globalState";
 
 const DetailEvent = () => {
+  const { user } = useContext(UserContext);
   const eventId = useParams().id;
   const location = useLocation();
   const userId = location.state.userId;
@@ -19,16 +24,22 @@ const DetailEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const eventsFromLocalStorage = getEventsFromLocalStorage();
-  const eventsList = eventsFromLocalStorage.events;
-  const [textButton, setTextButton] = useState(getTextButton(userId, eventId));
+  const [eventsList, setEventsList] = [];
+
+  useEffect(() => {
+    async function getEvents() {
+      const eventsFound = await getEventsFromServer();
+      setEventsList(eventsFound.events);
+    }
+    getEvents();
+  });
 
   const drawEvent = () => {
-    if (!eventId) {
+    if (!eventId || !eventsList) {
       return;
     } else {
       const event = eventsList.find((event) => event.id.toString() === eventId);
-
+      const textButton = getTextButton(userId, eventId);
       return (
         <div className="container-event">
           <div className="information-event">
@@ -58,7 +69,7 @@ const DetailEvent = () => {
                     event,
                     setGoToEditEvent,
                     setEventToEdit,
-                    setTextButton
+                    () => {}
                   );
                 }}
               >
@@ -91,7 +102,7 @@ const DetailEvent = () => {
             <ArrowBackIcon />
             <span>Back to events</span>
           </div>
-          <AvatarUser className="avatar-name" />
+          <AvatarUser user={user} className="avatar-name" />
         </header>
         <p className="p-title">DETAIL EVENT</p>
         <section className="section-event-information">{drawEvent()}</section>
