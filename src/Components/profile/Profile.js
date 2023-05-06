@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
 
@@ -9,17 +9,16 @@ import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
 import {
-  getAvatarAndName,
-  getFromLocalStorage,
-  signOutFunction,
   showDetailEventClicked,
   getEventsFromServer,
-  signOffFunction,
+  isLoggedOut,
 } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
+import { UserContext } from "../globalState";
 
 const Profile = () => {
+  const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
   const [textAvatar, setTextAvatar] = useState("");
   const [userName, setUserName] = useState("");
@@ -28,42 +27,20 @@ const Profile = () => {
   const [lastNameUser, setLastNameUser] = useState("");
   const [emailUser, setEmailUser] = useState("");
   const [seeModal, setSeeModal] = useState(false);
-  const [signOut, setSignOut] = useState(false);
   const [id, setId] = useState("");
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const informationUser = getFromLocalStorage();
-  const userId = informationUser.idUser;
+  const userId = user && user.idUser ? user.idUser : null;
   const [pageCount, setPageCount] = useState(0);
   const [eventsListUser, setEventListUser] = useState([]);
-
-  useEffect(() => {
-    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
-      setSignOut(true);
-    }
-  }, [signOut]);
-
-  useEffect(() => {
-    async function getAvatar() {
-      try {
-        const userData = await getAvatarAndName();
-        setTextAvatar(userData.letterAvatar);
-        setUserName(userData.userName);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getAvatar();
-    drawUserInformation();
-  }, []);
 
   useEffect(() => {
     async function getEventsUser() {
       try {
         const currentEvents = await getEventsFromServer(pageNumber);
+        console.log("currentEvents ", currentEvents);
         setEventListUser(currentEvents.currentEvents);
         setPageCount(currentEvents.pageCountProfile);
       } catch (error) {
@@ -74,23 +51,7 @@ const Profile = () => {
     getEventsUser();
   }, []);
 
-  const drawUserInformation = () => {
-    const userInformation = getFromLocalStorage();
-
-    if (!userInformation) {
-      return;
-    }
-
-    let name = userInformation.name;
-    let lastName = userInformation.lastName;
-    let email = userInformation.email;
-
-    setNameUser(name);
-    setLastNameUser(lastName);
-    setEmailUser(email);
-  };
-
-  if (signOut) {
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
@@ -212,13 +173,7 @@ const Profile = () => {
             >
               Dashboard
             </span>
-            <span
-              className="sign-out-button-p"
-              onClick={() => {
-                signOutFunction(setSignOut);
-                signOffFunction();
-              }}
-            >
+            <span className="sign-out-button-p" onClick={logout}>
               Sign Out
             </span>
           </nav>

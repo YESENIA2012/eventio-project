@@ -8,19 +8,22 @@ import DetailEvent from "./components/events/DetailEvent";
 import SignUp from "./components/signUp/SignUp";
 import NewEvent from "./components/events/NewEvent";
 import "./styles/app.scss";
+import { UserProvider } from "./components/globalState";
 
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/editEvent/:id" element={<EditEvent />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/detailEvent/:id" element={<DetailEvent />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/createEvent" element={<NewEvent />} />
-      </Routes>
+      <UserProvider>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/editEvent/:id" element={<EditEvent />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/detailEvent/:id" element={<DetailEvent />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/createEvent" element={<NewEvent />} />
+        </Routes>
+      </UserProvider>
     </div>
   );
 }

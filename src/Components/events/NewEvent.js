@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -8,13 +8,19 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { styles, getFromLocalStorage, saveEvent } from "../../utils";
+import {
+  styles,
+  getFromLocalStorage,
+  saveEvent,
+  isLoggedOut,
+} from "../../utils";
 
 import "./newEventStyle.scss";
+import { UserContext } from "../globalState";
 
 const NewEvent = () => {
+  const { user } = useContext(UserContext);
   const [goToDashboard, setGoToDashboard] = useState(false);
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [titleEvent, setTitleEvent] = useState("");
   const [descriptionEvent, setDescriptionEvent] = useState("");
   const [dateEvent, setDateEvent] = useState(dayjs());
@@ -35,13 +41,6 @@ const NewEvent = () => {
   dayjs.locale("en");
 
   useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
-      setIsLoggedOut(true);
-    }
-  }, [isLoggedOut]);
-
-  useEffect(() => {
     if (errorInfoMessage) {
       setMessage({
         text: "Enter details below.",
@@ -52,7 +51,6 @@ const NewEvent = () => {
   }, [titleEvent, descriptionEvent, dateEvent, timeEvent, capacityPeopleEvent]);
 
   const saveNewEventInLocalStorage = async () => {
-    const stateEvent = "EDIT";
     let dateToSave = dateEvent;
     dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
 
@@ -70,9 +68,8 @@ const NewEvent = () => {
       });
       return;
     } else {
-      const userInformation = getFromLocalStorage();
-      const idUser = userInformation.idUser;
-      let host = `${userInformation.name} ${userInformation.lastName}`;
+      const idUser = user.idUser;
+      let host = `${user.name} ${user.lastName}`;
       try {
         await saveEvent({
           id: uuidv4(),
@@ -97,7 +94,7 @@ const NewEvent = () => {
     }
   };
 
-  if (isLoggedOut) {
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;

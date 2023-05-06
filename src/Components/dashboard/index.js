@@ -1,23 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-
+import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
 import EventCard from "../events/EventCard";
 import {
   showDetailEventClicked,
   getEventsFromServer,
   getFromLocalStorage,
+  isLoggedOut,
 } from "../../utils";
 import "./styleDashboard.scss";
 
 const Dashboard = () => {
+  const EVENTS_PER_PAGE = 6;
+  const { user } = useContext(UserContext);
+  const userId = user ? user.id : null;
+  console.log("user from context ? ", user);
   const [pageNumber, setPageNumber] = useState(0);
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [viewEvents, setViewEvents] = useState(true);
   const [eventId, setEventId] = useState("");
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
@@ -27,24 +30,18 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const eventsPerPage = 6;
+
   const pageCount =
     eventsList && eventsList.length
-      ? Math.ceil(eventsList.length / eventsPerPage)
+      ? Math.ceil(eventsList.length / EVENTS_PER_PAGE)
       : 0;
 
-  const pagesVisited = pageNumber * eventsPerPage;
+  const pagesVisited = pageNumber * EVENTS_PER_PAGE;
 
   const eventToDraw =
     eventsList && eventsList.length
-      ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
+      ? eventsList.slice(pagesVisited, pagesVisited + EVENTS_PER_PAGE)
       : 0;
-
-  useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    setUserId(informationUser.idUser);
-  }, []);
 
   useEffect(() => {
     async function getEvents() {
@@ -59,26 +56,21 @@ const Dashboard = () => {
     getEvents();
   }, []);
 
-  useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
-      setIsLoggedOut(true);
-    }
-  }, [isLoggedOut]);
-
-  if (isLoggedOut) {
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${eventId}`} state={{ userId }} />;
+    return (
+      <Navigate to={`/detailEvent/${eventId}`} state={{ userId: userId }} />
+    );
   } else {
     return (
       <div className="event-container">
         <div className="user-name-container-d">
-          <AvatarUser className="avatar-and-name" />
+          <AvatarUser user={user} className="avatar-and-name" />
         </div>
         <div className="container-dashboard">
           <div className="nav-icon-container">

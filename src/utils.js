@@ -18,19 +18,6 @@ const styleTextFieldEditEvent = makeStyles()(() => {
   };
 });
 
-const getAvatarAndName = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const informationUser = getFromLocalStorage();
-      const firsLetterName = informationUser.name[0];
-      const firstLetterLastName = informationUser.lastName[0];
-      const letterAvatar = `${firsLetterName} ${firstLetterLastName}`;
-      const userName = `${informationUser.name} ${informationUser.lastName}`;
-      resolve({ letterAvatar, userName });
-    }, 500);
-  });
-};
-
 const getEventData = (eventId) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -160,6 +147,13 @@ const showDetailEventClicked = async (
   }
 };
 
+const getUserDataFromServer = () => {
+  return new Promise((resolve) => {
+    const dataUser = JSON.parse(localStorage.getItem("userInformation"));
+    resolve(dataUser);
+  });
+};
+
 const getFromLocalStorage = () => {
   const dataUser = JSON.parse(localStorage.getItem("userInformation"));
   return dataUser;
@@ -226,23 +220,21 @@ const getEventsFromLocalStorage = (pageNumber = null) => {
 
 const getEventsFromServer = (pageNumber = null) => {
   return new Promise((resolve) => {
-    const result = getEventsFromLocalStorage(pageNumber);
-    resolve(result);
+    const events = JSON.parse(localStorage.getItem("Events"));
+    if (!events) {
+      resolve({ events: [] });
+    }
+
+    if (pageNumber === null) {
+      resolve({ events: events });
+    }
+
+    resolve({
+      events: events,
+      currentEvents: [],
+      pageCountProfile: [],
+    });
   });
-};
-
-const signOutFunction = (setSignOut) => {
-  const userInformation = getFromLocalStorage();
-
-  userInformation.isLoggedIn = false;
-  setSignOut(true);
-  localStorage.setItem("userInformation", JSON.stringify(userInformation));
-};
-
-const signOffFunction = () => {
-  const informationUser = getFromLocalStorage();
-  informationUser.isLoggedIn = false;
-  localStorage.setItem("userInformation", JSON.stringify(informationUser));
 };
 
 const updateEvent = async (updateEvent) => {
@@ -325,22 +317,21 @@ const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
-/* createFakeEvents(); */
+const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
 export {
+  isLoggedOut,
   styles,
   styleTextFieldEditEvent,
-  getAvatarAndName,
   getEventData,
   getTextButton,
   handleButtonEvent,
   showDetailEventClicked,
   getFromLocalStorage,
-  signOutFunction,
-  signOffFunction,
   createFakeEvents,
   getEventsFromServer,
   getEventsFromLocalStorage,
   updateEvent,
   saveEvent,
+  getUserDataFromServer,
 };
