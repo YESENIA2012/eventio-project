@@ -37,7 +37,6 @@ const Login = () => {
     const informationUser = currentUsers.find(
       (user) => user.email === emailText
     );
-    debugger;
     if (!informationUser) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
       setErrorInfoMessage(true);

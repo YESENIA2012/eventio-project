@@ -78,7 +78,6 @@ const getTextButton = (userId, eventDetail) => {
   let textButton = "";
 
   if (userId === eventDetail.eventOwner) {
-    debugger;
     textButton = "edit";
   } else if (eventDetail.attendees.includes(userId)) {
     textButton = "leave";
