@@ -1,6 +1,6 @@
 import { Avatar } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 
 import Modal from "../modal/Modal";
 import "./avatarStyles.scss";
