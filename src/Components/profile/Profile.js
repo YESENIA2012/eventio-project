@@ -17,6 +17,7 @@ import {
   signOffFunction,
 } from "../../utils";
 import "./profileStyle.scss";
+
 import EventCard from "../events/EventCard";
 
 const Profile = () => {
@@ -72,7 +73,7 @@ const Profile = () => {
     }
 
     getEventsUser();
-  }, []);
+  }, [pageNumber]);
 
   const drawUserInformation = () => {
     const userInformation = getFromLocalStorage();

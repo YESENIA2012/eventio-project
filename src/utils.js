@@ -169,37 +169,38 @@ const getEventsUser = (events, eventsPerPage, pagesVisited) => {
   const userInformation = getFromLocalStorage();
   let currentEvents = null;
   let pageCount = null;
+
   if (!userInformation) {
-    currentEvents = 0;
+    currentEvents = [];
     pageCount = 0;
     return { eventsUser: currentEvents, pageCountProfile: pageCount };
   }
 
   const userId = userInformation.idUser;
 
-  currentEvents =
-    events && events.length && userInformation
-      ? events
-          .map((event) => {
-            if (
-              event.attendees.includes(userId) ||
-              event.eventOwner === userId
-            ) {
-              return event;
-            } else {
-              return null;
-            }
-          })
-          .filter((event) => event !== null)
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
-      : 0;
+  currentEvents = events
+    .map((event) => {
+      if (event.attendees.includes(userId) || event.eventOwner === userId) {
+        return event;
+      } else {
+        return null;
+      }
+    })
+    .filter((event) => event !== null);
 
   pageCount =
-    events && events.length
+    currentEvents && currentEvents.length
       ? Math.ceil(currentEvents.length / eventsPerPage)
       : 0;
 
-  return { eventsUser: currentEvents, pageCountProfile: pageCount };
+  let eventsUserToDraw =
+    currentEvents && currentEvents.length
+      ? currentEvents.slice(pagesVisited, pagesVisited + eventsPerPage)
+      : 0;
+
+  console.log(eventsUserToDraw);
+
+  return { eventsUser: eventsUserToDraw, pageCountProfile: pageCount };
 };
 
 const getEventsFromLocalStorage = (pageNumber = null) => {
