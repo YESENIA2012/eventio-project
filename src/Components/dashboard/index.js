@@ -62,7 +62,10 @@ const Dashboard = () => {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
     return (
-      <Navigate to={`/detailEvent/${eventId}`} state={{ userId: userId }} />
+      <Navigate
+        to={`/detailEvent/${eventId}`}
+        state={{ userId: userId, eventsList: eventsList }}
+      />
     );
   } else {
     return (

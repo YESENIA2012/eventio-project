@@ -1,10 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Navigate, useParams, useLocation } from "react-router-dom";
-import {
-  getEventsFromServer,
-  handleButtonEvent,
-  getTextButton,
-} from "../../utils";
+import { handleButtonEvent, getTextButton } from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -20,26 +16,20 @@ const DetailEvent = () => {
   const eventId = useParams().id;
   const location = useLocation();
   const userId = location.state.userId;
+  const eventsList = location.state.eventsList;
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const [eventsList, setEventsList] = [];
-
-  useEffect(() => {
-    async function getEvents() {
-      const eventsFound = await getEventsFromServer();
-      setEventsList(eventsFound.events);
-    }
-    getEvents();
-  });
+  const textButtonEvent = getTextButton(userId, eventId);
+  const [textButton, setTextButton] = useState(textButtonEvent);
 
   const drawEvent = () => {
-    if (!eventId || !eventsList) {
+    if (!eventId || !eventsList || eventsList === []) {
       return;
     } else {
       const event = eventsList.find((event) => event.id.toString() === eventId);
-      const textButton = getTextButton(userId, eventId);
+
       return (
         <div className="container-event">
           <div className="information-event">
@@ -69,6 +59,7 @@ const DetailEvent = () => {
                     event,
                     setGoToEditEvent,
                     setEventToEdit,
+                    setTextButton,
                     () => {}
                   );
                 }}

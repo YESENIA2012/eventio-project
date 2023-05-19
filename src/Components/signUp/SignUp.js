@@ -46,7 +46,7 @@ const SignUp = () => {
   const validateInformation = async () => {
     let userAlreadyExists = false;
     // password does not match
-    if (passwordUser != repeatPasswordUser) {
+    if (passwordUser !== repeatPasswordUser) {
       setMessageSignUp(messagePassWordNotMatchStyles);
       setErrorInformationEntered(true);
       return false;
@@ -87,6 +87,7 @@ const SignUp = () => {
       const currentUsers = [...userInformation, newUser];
       localStorage.setItem("userInformation", JSON.stringify(currentUsers));
     }
+
     setLoginData({
       name: nameUser,
       lastName: lastNameUser,

@@ -75,6 +75,11 @@ const joinOrLeaveToEvent = async (textEventButton, userId, eventDetail) => {
 };
 
 const getTextButton = (userId, eventDetail) => {
+  if (typeof eventDetail === "string") {
+    const events = getEventsFromLocalStorage().events;
+    eventDetail = events.find((event) => event.id === eventDetail);
+  }
+
   let textButton = "";
 
   if (userId === eventDetail.eventOwner) {
@@ -154,57 +159,66 @@ const getFromLocalStorage = () => {
   return dataUser;
 };
 
-const getEventsUser = (events, eventsPerPage, pagesVisited) => {
-  const userInformation = getFromLocalStorage();
+const getEventsUser = (events, pageNumber, userId) => {
+  const eventsPerPage = 6;
+  const pagesVisited = pageNumber * eventsPerPage;
+
   let currentEvents = null;
   let pageCount = null;
-  if (!userInformation) {
-    currentEvents = 0;
+
+  if (!userId) {
+    currentEvents = [];
     pageCount = 0;
     return { eventsUser: currentEvents, pageCountProfile: pageCount };
   }
 
-  const userId = userInformation.idUser;
-
-  currentEvents =
-    events && events.length && userInformation
-      ? events
-          .map((event) => {
-            if (
-              event.attendees.includes(userId) ||
-              event.eventOwner === userId
-            ) {
-              return event;
-            } else {
-              return null;
-            }
-          })
-          .filter((event) => event !== null)
-          .slice(pagesVisited, pagesVisited + eventsPerPage)
-      : 0;
+  currentEvents = events
+    .map((event) => {
+      if (event.eventOwner === userId && !event.attendees.includes(userId)) {
+        return event;
+      } else if (
+        event.attendees.includes(userId) &&
+        event.eventOwner !== userId
+      ) {
+        return event;
+      } else if (
+        event.attendees.includes(userId) &&
+        event.eventOwner === userId
+      ) {
+        return event;
+      } else {
+        return null;
+      }
+    })
+    .filter((event) => event !== null);
 
   pageCount =
-    events && events.length
+    currentEvents && currentEvents.length
       ? Math.ceil(currentEvents.length / eventsPerPage)
       : 0;
 
-  return { eventsUser: currentEvents, pageCountProfile: pageCount };
+  let eventsUserToDraw =
+    currentEvents && currentEvents.length
+      ? currentEvents.slice(pagesVisited, pagesVisited + eventsPerPage)
+      : 0;
+
+  return { eventsUser: eventsUserToDraw, pageCountProfile: pageCount };
 };
 
-const getEventsFromLocalStorage = (pageNumber = null) => {
+const getEventsFromLocalStorage = (pageNumber = null, userId = null) => {
   const events = JSON.parse(localStorage.getItem("Events"));
 
   if (!events) {
     return { events: [] };
   }
 
-  if (pageNumber === null) {
+  if (pageNumber === null && userId == null) {
     return { events: events };
   }
 
   const eventsPerPage = 6;
   const pagesVisited = pageNumber * eventsPerPage;
-  const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited);
+  const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited, userId);
 
   return {
     events: events,
@@ -213,21 +227,24 @@ const getEventsFromLocalStorage = (pageNumber = null) => {
   };
 };
 
-const getEventsFromServer = (pageNumber = null) => {
+const getEventsFromServer = (pageNumber = null, userId = null) => {
   return new Promise((resolve) => {
     const events = JSON.parse(localStorage.getItem("Events"));
+
     if (!events) {
       resolve({ events: [] });
     }
 
-    if (pageNumber === null) {
+    if (pageNumber === null && userId == null) {
       resolve({ events: events });
     }
 
+    const eventUser = getEventsUser(events, pageNumber, userId);
+
     resolve({
       events: events,
-      currentEvents: [],
-      pageCountProfile: [],
+      currentEvents: eventUser.eventsUser,
+      pageCountProfile: eventUser.pageCountProfile,
     });
   });
 };
@@ -311,6 +328,8 @@ const mockedEvents = [
 const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
+
+/* createFakeEvents(); */
 
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 

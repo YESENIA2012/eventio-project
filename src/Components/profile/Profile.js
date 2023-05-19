@@ -37,9 +37,17 @@ const Profile = () => {
   const [eventsListUser, setEventListUser] = useState([]);
 
   useEffect(() => {
+    setTextAvatar(`${user.name[0]} ${user.lastName[0]}`);
+    setUserName(`${user.name} ${user.lastName}`);
+    setNameUser(user.name);
+    setLastNameUser(user.lastName);
+    setEmailUser(user.email);
+  }, []);
+
+  useEffect(() => {
     async function getEventsUser() {
       try {
-        const currentEvents = await getEventsFromServer(pageNumber);
+        const currentEvents = await getEventsFromServer(pageNumber, userId);
         setEventListUser(currentEvents.currentEvents);
         setPageCount(currentEvents.pageCountProfile);
       } catch (error) {
@@ -48,7 +56,7 @@ const Profile = () => {
     }
 
     getEventsUser();
-  }, []);
+  }, [pageNumber]);
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -57,7 +65,12 @@ const Profile = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${id}`} state={{ userId }} />;
+    return (
+      <Navigate
+        to={`/detailEvent/${id}`}
+        state={{ userId: userId, eventsList: eventsListUser }}
+      />
+    );
   } else {
     return (
       <div className="profile-container">
