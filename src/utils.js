@@ -250,10 +250,7 @@ const getEventFromServer = async (eventId) => {
 
   return new Promise((resolve) => {
     const event = events.find((event) => event.id.toString() === eventId);
-
-    resolve({
-      eventClicked: event,
-    });
+    resolve(event);
   });
 };
 

@@ -21,14 +21,17 @@ const DetailEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
+  const [event, setEvent] = useState(null);
   const [textButton, setTextButton] = useState("");
-  const [event, setEvent] = useState("");
 
   useEffect(() => {
+    //aca
     async function getEvent() {
       try {
         const eventFound = await getEventFromServer(eventId);
-        setEvent(eventFound.eventClicked);
+        const textButtonEvent = getTextButton(userId, eventFound);
+        setEvent(eventFound);
+        setTextButton(textButtonEvent);
       } catch (error) {
         console.log("error", error);
       }
@@ -37,57 +40,55 @@ const DetailEvent = () => {
     getEvent();
   }, []);
 
-  useEffect(() => {
-    const textButtonEvent = getTextButton(userId, event);
-    setTextButton(textButtonEvent);
-  }, []);
-
   const drawEvent = () => {
     if (!eventId || !event) {
       return;
-    } else {
-      return (
-        <div className="container-event">
-          <div className="information-event">
-            <div className="time-date-container">
-              <span className="date-d">{event.date}</span>
-              <span className="dash-d">-</span>
-              <span className="time-d">{event.time}</span>
-            </div>
-            <h1 className="title">{event.nameEvent}</h1>
-            <p className="host-e">{event.host}</p>
-            <p className="description-event-e">{event.descriptionEvent}</p>
-            <div className="attendees-capacity-button-container">
-              <div className="attendees-capacity-container">
-                <PersonIcon className="person-icon" />
-                <span className="attendees">{event.attendees.length}</span>
-                <span className="of-text-d">of</span>
-                <span>{event.capacity}</span>
-              </div>
-              <Button
-                variant="contained"
-                className={`button-event-detail ${event.id}`}
-                onClick={(e) => {
-                  handleButtonEvent(
-                    e,
-                    textButton,
-                    userId,
-                    event,
-                    setGoToEditEvent,
-                    setEventToEdit,
-                    setTextButton,
-                    () => {}
-                  );
-                }}
-              >
-                {textButton}
-              </Button>
-            </div>
-          </div>
-          <div className="name-attendees">Attendees</div>
-        </div>
-      );
     }
+    const buttonClass =
+      textButton === "join" || textButton === "edit"
+        ? "button-event-detail"
+        : "pink-class";
+
+    return (
+      <div className="container-event">
+        <div className="information-event">
+          <div className="time-date-container">
+            <span className="date-d">{event.date}</span>
+            <span className="dash-d">-</span>
+            <span className="time-d">{event.time}</span>
+          </div>
+          <h1 className="title">{event.nameEvent}</h1>
+          <p className="host-e">{event.host}</p>
+          <p className="description-event-e">{event.descriptionEvent}</p>
+          <div className="attendees-capacity-button-container">
+            <div className="attendees-capacity-container">
+              <PersonIcon className="person-icon" />
+              <span className="attendees">{event.attendees.length}</span>
+              <span className="of-text-d">of</span>
+              <span>{event.capacity}</span>
+            </div>
+            <Button
+              variant="contained"
+              className={`${buttonClass} ${event.id}`}
+              onClick={(e) => {
+                handleButtonEvent(
+                  e,
+                  textButton,
+                  userId,
+                  event,
+                  setGoToEditEvent,
+                  setEventToEdit,
+                  setTextButton
+                );
+              }}
+            >
+              {textButton}
+            </Button>
+          </div>
+        </div>
+        <div className="name-attendees">Attendees</div>
+      </div>
+    );
   };
 
   if (goToCreateNewEvent) {
