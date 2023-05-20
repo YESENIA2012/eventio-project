@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams, useLocation } from "react-router-dom";
 import { handleButtonEvent, getTextButton } from "../../utils";
 
@@ -10,25 +10,41 @@ import AvatarUser from "../avatarUser/AvatarUser";
 
 import "./detailEventStyle.scss";
 import { UserContext } from "../globalState";
+import { getEventFromServer } from "../../utils";
 
 const DetailEvent = () => {
   const { user } = useContext(UserContext);
   const eventId = useParams().id;
   const location = useLocation();
   const userId = location.state.userId;
-  const eventsList = location.state.eventsList;
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const textButtonEvent = getTextButton(userId, eventId);
-  const [textButton, setTextButton] = useState(textButtonEvent);
+  const [textButton, setTextButton] = useState("");
+  const [event, setEvent] = useState("");
+
+  useEffect(() => {
+    async function getEvent() {
+      try {
+        const eventClicked = await getEventFromServer(eventId);
+        setEvent(eventClicked.event);
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+
+    getEvent();
+  }, []);
+
+  console.log(event);
 
   const drawEvent = () => {
-    if (!eventId || !eventsList || eventsList === []) {
+    if (!eventId || !event) {
       return;
     } else {
-      const event = eventsList.find((event) => event.id.toString() === eventId);
+      const textButtonEvent = getTextButton(userId, event);
+      setTextButton(textButtonEvent);
 
       return (
         <div className="container-event">

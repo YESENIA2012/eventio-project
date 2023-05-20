@@ -75,11 +75,7 @@ const joinOrLeaveToEvent = async (textEventButton, userId, eventDetail) => {
 };
 
 const getTextButton = (userId, eventDetail) => {
-  if (typeof eventDetail === "string") {
-    const events = getEventsFromLocalStorage().events;
-    eventDetail = events.find((event) => event.id === eventDetail);
-  }
-
+  console.log(eventDetail);
   let textButton = "";
 
   if (userId === eventDetail.eventOwner) {
@@ -249,6 +245,22 @@ const getEventsFromServer = (pageNumber = null, userId = null) => {
   });
 };
 
+const getEventFromServer = async (eventId) => {
+  const eventsFronServer = await getEventsFromServer();
+  const events = eventsFronServer.events;
+  console.log(events);
+
+  return new Promise((resolve) => {
+    const event = events.find((event) => event.id.toString() === eventId);
+
+    resolve({
+      event: event,
+    });
+  });
+};
+
+console.log(getEventFromServer());
+
 const updateEvent = async (updateEvent) => {
   let currentEvents = await getEventsFromServer();
 
@@ -329,8 +341,6 @@ const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
 };
 
-/* createFakeEvents(); */
-
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
 export {
@@ -348,4 +358,5 @@ export {
   updateEvent,
   saveEvent,
   getUserDataFromServer,
+  getEventFromServer,
 };

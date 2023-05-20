@@ -20,12 +20,12 @@ import { UserContext } from "../globalState";
 const Profile = () => {
   const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
+  const textAvatar = `${user.name[0]} ${user.lastName[0]}`;
+  const userName = `${user.name} ${user.lastName}`;
   const [viewEvents, setViewEvents] = useState(true);
-  const [nameUser, setNameUser] = useState("");
-  const [lastNameUser, setLastNameUser] = useState("");
-  const [emailUser, setEmailUser] = useState("");
+  const nameUser = user.name;
+  const lastNameUser = user.lastName;
+  const emailUser = user.email;
   const [seeModal, setSeeModal] = useState(false);
   const [id, setId] = useState("");
   const [goToDashboard, setGoToDashboard] = useState(false);
@@ -35,14 +35,6 @@ const Profile = () => {
   const userId = user && user.idUser ? user.idUser : null;
   const [pageCount, setPageCount] = useState(0);
   const [eventsListUser, setEventListUser] = useState([]);
-
-  useEffect(() => {
-    setTextAvatar(`${user.name[0]} ${user.lastName[0]}`);
-    setUserName(`${user.name} ${user.lastName}`);
-    setNameUser(user.name);
-    setLastNameUser(user.lastName);
-    setEmailUser(user.email);
-  }, []);
 
   useEffect(() => {
     async function getEventsUser() {
@@ -65,12 +57,7 @@ const Profile = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return (
-      <Navigate
-        to={`/detailEvent/${id}`}
-        state={{ userId: userId, eventsList: eventsListUser }}
-      />
-    );
+    return <Navigate to={`/detailEvent/${id}`} state={{ userId: userId }} />;
   } else {
     return (
       <div className="profile-container">
