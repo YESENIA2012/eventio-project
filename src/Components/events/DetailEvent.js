@@ -27,8 +27,8 @@ const DetailEvent = () => {
   useEffect(() => {
     async function getEvent() {
       try {
-        const eventClicked = await getEventFromServer(eventId);
-        setEvent(eventClicked.event);
+        const eventFound = await getEventFromServer(eventId);
+        setEvent(eventFound.eventClicked);
       } catch (error) {
         console.log("error", error);
       }
@@ -37,15 +37,15 @@ const DetailEvent = () => {
     getEvent();
   }, []);
 
-  console.log(event);
+  useEffect(() => {
+    const textButtonEvent = getTextButton(userId, event);
+    setTextButton(textButtonEvent);
+  }, []);
 
   const drawEvent = () => {
     if (!eventId || !event) {
       return;
     } else {
-      const textButtonEvent = getTextButton(userId, event);
-      setTextButton(textButtonEvent);
-
       return (
         <div className="container-event">
           <div className="information-event">
