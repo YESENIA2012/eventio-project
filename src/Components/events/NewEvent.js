@@ -10,7 +10,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import {
   styles,
-  getFromLocalStorage,
   saveEvent,
   isLoggedOut,
 } from "../../utils";

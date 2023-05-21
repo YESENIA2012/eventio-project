@@ -108,9 +108,10 @@ const Dashboard = () => {
             }
           >
             {eventToDraw ? (
-              eventToDraw.map((event) => {
+              eventToDraw.map((event,index) => {
                 return (
                   <EventCard
+                    key={String(index)}
                     setGoToDetailEvent={setGoToDetailEvent}
                     setEventId={setEventId}
                     userId={userId}

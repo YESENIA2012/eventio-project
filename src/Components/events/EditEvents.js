@@ -1,11 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Navigate, useParams } from "react-router-dom";
-
 import DeleteIcon from "@mui/icons-material/Delete";
 import DoneIcon from "@mui/icons-material/Done";
-
 import EditEventCard from "./EditEventCard";
 import AvatarUser from "../avatarUser/AvatarUser";
+import { UserContext } from "../globalState";
 import {
   getEventsFromLocalStorage,
   updateEvent,
@@ -14,6 +13,7 @@ import {
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
+  const { user } = useContext(UserContext);
   const eventId = useParams().id;
   const [event, setEvent] = useState(null);
   const [itemToDraw, setItemToDraw] = useState(null);
@@ -59,7 +59,7 @@ const EditEvent = () => {
     return (
       <div className="event-container">
         <div className="user-name-container-d">
-          <AvatarUser className="avatar-and-name" />
+          <AvatarUser className="avatar-and-name" user={user}/>
         </div>
         <div className="title-container">
           <div className="title">DETAIL EVENT</div>

@@ -4,7 +4,7 @@ import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
 import { useState } from "react";
 
-const EventCard = (props) => {
+const EventCard  = (props) => {
   const {
     userId,
     setGoToDetailEvent,
@@ -14,13 +14,11 @@ const EventCard = (props) => {
     setEventToEdit,
     eventDetail,
   } = props;
+
   const defaultText = getTextButton(userId, eventDetail);
   const [textButton, setTextButton] = useState(defaultText);
-  const buttonClass =
-    textButton === "join" || textButton === "edit"
-      ? "button-event"
-      : "pink-class-button";
-  console.log("eventDetail.id ", eventDetail.id);
+  const buttonClass = textButton === "join" || textButton === "edit" ? "button-event" : 'pink-class-button'
+
   return (
     <div
       key={String(eventDetail.id)}
@@ -29,10 +27,13 @@ const EventCard = (props) => {
           ? `element-${eventDetail.id} element modified`
           : `element-${eventDetail.id} element-column`
       }
-      // hay un error en el key
       onClick={(e) => {
-        setGoToDetailEvent(true);
-        setEventId(eventDetail.id);
+        const elementClassName = e.target.className;
+        // if button is clicked, dont go to event detail page
+        if( !(elementClassName.includes('button-event') || elementClassName.includes('pink-class-button') ) ){
+          setGoToDetailEvent(true);
+          setEventId(eventDetail.id);
+        }
       }}
     >
       <div className="date-time-container">
