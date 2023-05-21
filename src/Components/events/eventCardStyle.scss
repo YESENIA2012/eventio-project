@@ -53,6 +53,10 @@
   .button-event:hover {
     background-color: styleFile.$background-color-button;
   }
+
+  .pink-class-button:hover {
+    background-color: rgb(235, 81, 129);
+  }
 }
 
 .element:hover {
@@ -110,6 +114,10 @@
     .button-event:hover {
       background-color: styleFile.$background-color-button;
     }
+
+    .pink-class-button:hover {
+      background-color: rgb(235, 81, 129);
+    }
   }
 }
 
@@ -122,6 +130,14 @@
   width: 100px;
   height: 30px;
   background-color: styleFile.$background-color-button;
+  font-weight: bold;
+}
+
+.element .pink-class-button,
+.element-column .pink-class-button {
+  width: 100px;
+  height: 30px;
+  background-color: rgb(235, 81, 129);
   font-weight: bold;
 }
 

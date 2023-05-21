@@ -11,6 +11,11 @@ const EventCard = (props) => {
   const defaultText = getTextButton(userId, eventDetail);
   const [textButton, setTextButton] = useState(defaultText);
 
+  const buttonClass =
+    textButton === "join" || textButton === "edit"
+      ? "button-event"
+      : "pink-class-button";
+
   return (
     <Fragment>
       <div className="date-time-container">
@@ -30,7 +35,7 @@ const EventCard = (props) => {
         </span>
         <Button
           variant="contained"
-          className={`button-event ${eventDetail.id}`}
+          className={`${buttonClass} ${eventDetail.id}`}
           onClick={(e) => {
             handleButtonEvent(
               e,
