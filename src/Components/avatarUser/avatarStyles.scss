@@ -24,8 +24,9 @@
   }
 
   .modal-container {
-    margin-top: 210px;
+    margin: 210px 30px 0 0;
     position: absolute;
+    z-index: 1;
   }
 
   .hide-modal-container {
@@ -39,6 +40,10 @@
   .user-name-container {
     .avatar-name-container {
       margin-right: inherit;
+    }
+
+    .modal-container {
+      margin: 180px 10px 0 0;
     }
   }
 }
