@@ -7,11 +7,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
 import EventCard from "../events/EventCard";
-import {
-  showDetailEventClicked,
-  getEventsFromServer,
-  isLoggedOut,
-} from "../../utils";
+import { getEventsFromServer, isLoggedOut } from "../../utils";
 import "./styleDashboard.scss";
 
 const Dashboard = () => {
@@ -23,8 +19,6 @@ const Dashboard = () => {
   const [eventId, setEventId] = useState("");
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
-  const [goToFutureEvents, setGoToFutureEvents] = useState(false);
-  const [goToPastEvents, setGoToPastEvents] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
@@ -79,7 +73,7 @@ const Dashboard = () => {
               <span
                 className="link-2"
                 onClick={() => {
-                  setGoToFutureEvents(true);
+                  // @TODO implement this when backend is ready!
                 }}
               >
                 Future Events
@@ -87,7 +81,7 @@ const Dashboard = () => {
               <span
                 className="link-3"
                 onClick={() => {
-                  setGoToPastEvents(true);
+                  // @TODO: implement this when backend is ready!
                 }}
               >
                 Past Events
@@ -116,30 +110,15 @@ const Dashboard = () => {
             {eventToDraw ? (
               eventToDraw.map((event) => {
                 return (
-                  <div
-                    key={event.id}
-                    className={
-                      viewEvents
-                        ? `element-${event.id} element`
-                        : `element-${event.id} element-column`
-                    }
-                    onClick={(e) => {
-                      showDetailEventClicked(
-                        e,
-                        eventsList,
-                        setGoToDetailEvent,
-                        setEventId
-                      );
-                    }}
-                  >
-                    <EventCard
-                      userId={userId}
-                      viewEvents={viewEvents}
-                      setGoToEditEvent={setGoToEditEvent}
-                      setEventToEdit={setEventToEdit}
-                      eventDetail={event}
-                    />
-                  </div>
+                  <EventCard
+                    setGoToDetailEvent={setGoToDetailEvent}
+                    setEventId={setEventId}
+                    userId={userId}
+                    viewEvents={viewEvents}
+                    setGoToEditEvent={setGoToEditEvent}
+                    setEventToEdit={setEventToEdit}
+                    eventDetail={event}
+                  />
                 );
               })
             ) : (

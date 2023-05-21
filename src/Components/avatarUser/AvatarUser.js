@@ -11,8 +11,8 @@ const AvatarUser = ({ user }) => {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const name = user && user.name ? user.name : "";
-    const lastName = user && user.lastName ? user.lastName : "";
+    const name = user.name;
+    const lastName = user.lastName;
     const firsLetterName = name[0];
     const firstLetterLastName = lastName[0];
     const letterAvatar = `${firsLetterName} ${firstLetterLastName}`;

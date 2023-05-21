@@ -110,38 +110,6 @@ const handleButtonEvent = (
   }
 };
 
-const showDetailEventClicked = async (
-  e,
-  eventsList,
-  setGoToDetailEvent,
-  setEventId
-) => {
-  const elementClassName = e.target.className;
-  const classNamePosition = elementClassName.split(" ");
-
-  if (classNamePosition.includes("button-event")) {
-    return;
-  }
-
-  const eventClassArray = classNamePosition[0].split("-");
-  const elementClickedId = eventClassArray
-    .filter((elementClass) => {
-      return elementClass !== "element";
-    })
-    .join("-");
-
-  const eventId = eventsList.find(
-    (event) => event.id.toString() === elementClickedId
-  );
-
-  if (eventId) {
-    setGoToDetailEvent(true);
-    setEventId(eventId.id);
-  } else {
-    return;
-  }
-};
-
 const getUserDataFromServer = () => {
   return new Promise((resolve) => {
     const dataUser = JSON.parse(localStorage.getItem("userInformation"));
@@ -343,7 +311,6 @@ export {
   getEventData,
   getTextButton,
   handleButtonEvent,
-  showDetailEventClicked,
   getFromLocalStorage,
   createFakeEvents,
   getEventsFromServer,

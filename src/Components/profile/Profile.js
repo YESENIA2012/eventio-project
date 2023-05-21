@@ -8,26 +8,22 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
-import {
-  showDetailEventClicked,
-  getEventsFromServer,
-  isLoggedOut,
-} from "../../utils";
+import { getEventsFromServer, isLoggedOut } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
 import { UserContext } from "../globalState";
 
 const Profile = () => {
+  const [eventId, setEventId] = useState("");
   const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
-  const textAvatar = `${user.name[0]} ${user.lastName[0]}`;
-  const userName = `${user.name} ${user.lastName}`;
-  const [viewEvents, setViewEvents] = useState(true);
   const nameUser = user.name;
   const lastNameUser = user.lastName;
+  const textAvatar = `${user.name[0] ?? " "} ${user.lastName[0] ?? " "}`;
+  const userName = `${nameUser} ${lastNameUser}`;
+  const [viewEvents, setViewEvents] = useState(true);
   const emailUser = user.email;
   const [seeModal, setSeeModal] = useState(false);
-  const [id, setId] = useState("");
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
@@ -57,7 +53,9 @@ const Profile = () => {
   } else if (goToEditEvent) {
     return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to={`/detailEvent/${id}`} state={{ userId: userId }} />;
+    return (
+      <Navigate to={`/detailEvent/${eventId}`} state={{ userId: userId }} />
+    );
   } else {
     return (
       <div className="profile-container">
@@ -108,30 +106,15 @@ const Profile = () => {
           {eventsListUser && eventsListUser.length ? (
             eventsListUser.map((event) => {
               return (
-                <div
-                  key={event.id}
-                  className={
-                    viewEvents
-                      ? `element-${event.id} element`
-                      : `element-${event.id} element-column`
-                  }
-                  onClick={(e) => {
-                    showDetailEventClicked(
-                      e,
-                      eventsListUser,
-                      setGoToDetailEvent,
-                      setId
-                    );
-                  }}
-                >
-                  <EventCard
-                    userId={userId}
-                    viewEvents={viewEvents}
-                    setGoToEditEvent={setGoToEditEvent}
-                    setEventToEdit={setEventToEdit}
-                    eventDetail={event}
-                  />
-                </div>
+                <EventCard
+                  setGoToDetailEvent={setGoToDetailEvent}
+                  setEventId={setEventId}
+                  userId={userId}
+                  viewEvents={viewEvents}
+                  setGoToEditEvent={setGoToEditEvent}
+                  setEventToEdit={setEventToEdit}
+                  eventDetail={event}
+                />
               );
             })
           ) : (

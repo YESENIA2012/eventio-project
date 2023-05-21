@@ -2,20 +2,18 @@ import { createContext, useState } from "react";
 
 const UserContext = createContext();
 const initialUserState = {
-  name: null,
-  lastName: null,
-  email: null,
+  name: "",
+  lastName: "",
+  email: "",
   idUser: null,
   isLoggedIn: false,
 };
 
 function UserProvider(props) {
   const [user, setUser] = useState(initialUserState);
-
   const setLoginData = (userData) => {
     setUser(userData);
   };
-
   const logout = () => {
     setUser(initialUserState);
   };

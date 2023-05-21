@@ -1,23 +1,40 @@
 import { Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-
 import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
 const EventCard = (props) => {
-  const { userId, viewEvents, setGoToEditEvent, setEventToEdit, eventDetail } =
-    props;
+  const {
+    userId,
+    setGoToDetailEvent,
+    setEventId,
+    viewEvents,
+    setGoToEditEvent,
+    setEventToEdit,
+    eventDetail,
+  } = props;
   const defaultText = getTextButton(userId, eventDetail);
   const [textButton, setTextButton] = useState(defaultText);
-
   const buttonClass =
     textButton === "join" || textButton === "edit"
       ? "button-event"
       : "pink-class-button";
-
+  console.log("eventDetail.id ", eventDetail.id);
   return (
-    <Fragment>
+    <div
+      key={String(eventDetail.id)}
+      className={
+        viewEvents
+          ? `element-${eventDetail.id} element modified`
+          : `element-${eventDetail.id} element-column`
+      }
+      // hay un error en el key
+      onClick={(e) => {
+        setGoToDetailEvent(true);
+        setEventId(eventDetail.id);
+      }}
+    >
       <div className="date-time-container">
         <span className="date">{eventDetail.date}</span>
         <span className="dash">-</span>
@@ -51,7 +68,7 @@ const EventCard = (props) => {
           {textButton}
         </Button>
       </div>
-    </Fragment>
+    </div>
   );
 };
 
