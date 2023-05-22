@@ -2,7 +2,6 @@ import { Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
-import { useState } from "react";
 
 const EventCard  = (props) => {
   const {
@@ -13,10 +12,9 @@ const EventCard  = (props) => {
     setGoToEditEvent,
     setEventToEdit,
     eventDetail,
+    setRefreshEvents,
   } = props;
-
-  const defaultText = getTextButton(userId, eventDetail);
-  const [textButton, setTextButton] = useState(defaultText);
+  const textButton = getTextButton(userId, eventDetail);
   const buttonClass = textButton === "join" || textButton === "edit" ? "button-event" : 'pink-class-button'
 
   return (
@@ -54,16 +52,16 @@ const EventCard  = (props) => {
         <Button
           variant="contained"
           className={`${buttonClass} ${eventDetail.id}`}
-          onClick={(e) => {
-            handleButtonEvent(
+          onClick={async(e) => {
+            await handleButtonEvent({
               e,
               textButton,
               userId,
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
-              setTextButton
-            );
+              setRefreshEvents
+            });
           }}
         >
           {textButton}

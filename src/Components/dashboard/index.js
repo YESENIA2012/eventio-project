@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
+  const [refreshEvents,setRefreshEvents] = useState(false)
 
   const pageCount =
     eventsList && eventsList.length
@@ -35,18 +36,27 @@ const Dashboard = () => {
       ? eventsList.slice(pagesVisited, pagesVisited + EVENTS_PER_PAGE)
       : 0;
 
-  useEffect(() => {
-    async function getEvents() {
-      try {
-        const currentEvents = await getEventsFromServer();
-        setEventList(currentEvents.events);
-      } catch (error) {
-        console.log("error", error);
-      }
+  async function getEvents() {
+    try {
+      const currentEvents = await getEventsFromServer();
+      setEventList(currentEvents.events);
+      setRefreshEvents(false)
+    } catch (error) {
+      console.log("error", error);
     }
+  }
 
+  useEffect(() => {
     getEvents();
   }, []);
+
+  // when we need to refresh
+  useEffect(()=>{
+    if(refreshEvents){
+      console.log("refreshing events...")
+      getEvents()
+    }
+  },[refreshEvents])
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -119,6 +129,7 @@ const Dashboard = () => {
                     setGoToEditEvent={setGoToEditEvent}
                     setEventToEdit={setEventToEdit}
                     eventDetail={event}
+                    setRefreshEvents={setRefreshEvents}
                   />
                 );
               })

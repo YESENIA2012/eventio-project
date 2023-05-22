@@ -8,7 +8,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
-import { getEventsFromServer, isLoggedOut } from "../../utils";
+import { getEventsFromServer, isLoggedOut} from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
 import { UserContext } from "../globalState";
@@ -31,20 +31,33 @@ const Profile = () => {
   const userId = user && user.idUser ? user.idUser : null;
   const [pageCount, setPageCount] = useState(0);
   const [eventsListUser, setEventListUser] = useState([]);
+  const [refreshEvents,setRefreshEvents] = useState(false)
 
-  useEffect(() => {
-    async function getEventsUser() {
-      try {
-        const currentEvents = await getEventsFromServer(pageNumber, userId);
-        setEventListUser(currentEvents.currentEvents);
-        setPageCount(currentEvents.pageCountProfile);
-      } catch (error) {
-        console.log("error", error);
-      }
+  async function getEventsUser() {
+    try {
+      const currentEvents = await getEventsFromServer(pageNumber, userId);
+      setEventListUser(currentEvents.currentEvents);
+      setPageCount(currentEvents.pageCountProfile);
+      setRefreshEvents(false)
+    } catch (error) {
+      console.log("error", error);
     }
+  }
 
+  // on component mounts
+  useEffect(() => {
     getEventsUser();
-  }, [pageNumber]);
+  }, []);
+  
+console.log("refreshEvents ",refreshEvents)
+  // when we need to refresh
+  useEffect(()=>{
+    console.log("trying to refresh??")
+    if(refreshEvents){
+      console.log("refreshing events")
+      getEventsUser()
+    }
+  },[refreshEvents])
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -104,9 +117,10 @@ const Profile = () => {
           }
         >
           {eventsListUser && eventsListUser.length ? (
-            eventsListUser.map((event) => {
+            eventsListUser.map((event,index) => {
               return (
                 <EventCard
+                  key={index}
                   setGoToDetailEvent={setGoToDetailEvent}
                   setEventId={setEventId}
                   userId={userId}
@@ -114,6 +128,7 @@ const Profile = () => {
                   setGoToEditEvent={setGoToEditEvent}
                   setEventToEdit={setEventToEdit}
                   eventDetail={event}
+                  setRefreshEvents={setRefreshEvents}
                 />
               );
             })
