@@ -1,29 +1,18 @@
 import { Avatar } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import Modal from "../modal/Modal";
-import { getAvatarAndName } from "../../utils";
 import "./avatarStyles.scss";
 
-const AvatarUser = () => {
+const AvatarUser = ({ user }) => {
   const [seeModal, setSeeModal] = useState(false);
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
-
-  useEffect(() => {
-    async function getAvatar() {
-      try {
-        const userData = await getAvatarAndName();
-        setTextAvatar(userData.letterAvatar);
-        setUserName(userData.userName);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    getAvatar();
-  }, []);
+  const name = user?.name ??'';
+  const lastName = user?.lastName ??'';
+  const firsLetterName = name[0];
+  const firstLetterLastName = lastName[0];
+  const textAvatar = `${firsLetterName} ${firstLetterLastName}`;
+  const userName = `${name} ${lastName}`;
 
   return (
     <section className="user-name-container">

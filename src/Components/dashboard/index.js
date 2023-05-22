@@ -1,65 +1,68 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
-
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-
+import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
 import EventCard from "../events/EventCard";
-import {
-  showDetailEventClicked,
-  getEventsFromLocalStorage,
-  getFromLocalStorage,
-} from "../../utils";
+import { getEventsFromServer, isLoggedOut } from "../../utils";
 import "./styleDashboard.scss";
 
 const Dashboard = () => {
+  const EVENTS_PER_PAGE = 6;
+  const { user } = useContext(UserContext);
+  const userId = user ? user.idUser : null;
   const [pageNumber, setPageNumber] = useState(0);
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [viewEvents, setViewEvents] = useState(true);
-  const [eventClicked, setEventClicked] = useState("");
+  const [eventId, setEventId] = useState("");
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToCreateNewEvent, setGoToCreateNewEvent] = useState(false);
-  const [goToFutureEvents, setGoToFutureEvents] = useState(false);
-  const [goToPastEvents, setGoToPastEvents] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
-  const eventsPerPage = 6;
+  const [eventsList, setEventList] = useState([]);
+
   const pageCount =
     eventsList && eventsList.length
-      ? Math.ceil(eventsList.length / eventsPerPage)
+      ? Math.ceil(eventsList.length / EVENTS_PER_PAGE)
       : 0;
-  const pagesVisited = pageNumber * eventsPerPage;
+
+  const pagesVisited = pageNumber * EVENTS_PER_PAGE;
 
   const eventToDraw =
     eventsList && eventsList.length
-      ? eventsList.slice(pagesVisited, pagesVisited + eventsPerPage)
+      ? eventsList.slice(pagesVisited, pagesVisited + EVENTS_PER_PAGE)
       : 0;
 
   useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
-      setIsLoggedOut(true);
+    async function getEvents() {
+      try {
+        const currentEvents = await getEventsFromServer();
+        setEventList(currentEvents.events);
+      } catch (error) {
+        console.log("error", error);
+      }
     }
-  }, [isLoggedOut]);
 
-  if (isLoggedOut) {
+    getEvents();
+  }, []);
+
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToCreateNewEvent) {
     return <Navigate to="/createEvent" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+    return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
+    return (
+      <Navigate to={`/detailEvent/${eventId}`} state={{ userId: userId }} />
+    );
   } else {
     return (
       <div className="event-container">
         <div className="user-name-container-d">
-          <AvatarUser className="avatar-and-name" />
+          <AvatarUser user={user} className="avatar-and-name" />
         </div>
         <div className="container-dashboard">
           <div className="nav-icon-container">
@@ -70,7 +73,7 @@ const Dashboard = () => {
               <span
                 className="link-2"
                 onClick={() => {
-                  setGoToFutureEvents(true);
+                  // @TODO implement this when backend is ready!
                 }}
               >
                 Future Events
@@ -78,7 +81,7 @@ const Dashboard = () => {
               <span
                 className="link-3"
                 onClick={() => {
-                  setGoToPastEvents(true);
+                  // @TODO: implement this when backend is ready!
                 }}
               >
                 Past Events
@@ -105,37 +108,22 @@ const Dashboard = () => {
             }
           >
             {eventToDraw ? (
-              eventToDraw.map((event, index) => {
+              eventToDraw.map((event,index) => {
                 return (
-                  <div
-                    key={event.id}
-                    className={
-                      viewEvents
-                        ? `element-${event.id} element`
-                        : `element-${event.id} element-column`
-                    }
-                    onClick={(e) => {
-                      showDetailEventClicked(
-                        e,
-                        setGoToDetailEvent,
-                        setEventClicked
-                      );
-                    }}
-                  >
-                    <EventCard
-                      viewEvents={viewEvents}
-                      setGoToEditEvent={setGoToEditEvent}
-                      eventToEdit={eventToEdit}
-                      setEventToEdit={setEventToEdit}
-                      eventsList={eventsList}
-                      setEventList={setEventList}
-                      eventDetail={event}
-                    />
-                  </div>
+                  <EventCard
+                    key={String(index)}
+                    setGoToDetailEvent={setGoToDetailEvent}
+                    setEventId={setEventId}
+                    userId={userId}
+                    viewEvents={viewEvents}
+                    setGoToEditEvent={setGoToEditEvent}
+                    setEventToEdit={setEventToEdit}
+                    eventDetail={event}
+                  />
                 );
               })
             ) : (
-              <div className="message-not-event">No events</div>
+              <div className="message-not-event">No events found</div>
             )}
           </div>
           ;
@@ -148,8 +136,14 @@ const Dashboard = () => {
             }}
             containerClassName={"pagination-bttns"}
             previousLinkClassName={"previous-bttn"}
-            nextLinkClassName={"next-bttn"}
-            disabledClassName={"pagination-disable"}
+            nextLinkClassName={
+              eventToDraw.length ? "next-bttn" : "hide-pagination-btn-dashboard"
+            }
+            disabledClassName={
+              eventToDraw.length
+                ? "pagination-disable"
+                : "hide-pagination-btn-dashboard"
+            }
             activeClassName={"pagination-active"}
           />
           <div className="add-new-event-container">

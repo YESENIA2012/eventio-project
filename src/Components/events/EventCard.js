@@ -1,27 +1,45 @@
 import { Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-
-import { handleButtonEvent } from "../../utils";
+import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
-import { Fragment } from "react";
+import { useState } from "react";
 
-const EventCard = (props) => {
+const EventCard  = (props) => {
   const {
+    userId,
+    setGoToDetailEvent,
+    setEventId,
     viewEvents,
     setGoToEditEvent,
-    eventToEdit,
     setEventToEdit,
-    eventsList,
-    setEventList,
     eventDetail,
   } = props;
 
+  const defaultText = getTextButton(userId, eventDetail);
+  const [textButton, setTextButton] = useState(defaultText);
+  const buttonClass = textButton === "join" || textButton === "edit" ? "button-event" : 'pink-class-button'
+
   return (
-    <Fragment>
+    <div
+      key={String(eventDetail.id)}
+      className={
+        viewEvents
+          ? `element-${eventDetail.id} element modified`
+          : `element-${eventDetail.id} element-column`
+      }
+      onClick={(e) => {
+        const elementClassName = e.target.className;
+        // if button is clicked, dont go to event detail page
+        if( !(elementClassName.includes('button-event') || elementClassName.includes('pink-class-button') ) ){
+          setGoToDetailEvent(true);
+          setEventId(eventDetail.id);
+        }
+      }}
+    >
       <div className="date-time-container">
-        <spam className="date">{eventDetail.date}</spam>
+        <span className="date">{eventDetail.date}</span>
         <span className="dash">-</span>
-        <spam className="time">{eventDetail.time}</spam>
+        <span className="time">{eventDetail.time}</span>
       </div>
       <h4 className="title-event">{eventDetail.nameEvent}</h4>
       <p className="p-host">{eventDetail.host}</p>
@@ -29,29 +47,29 @@ const EventCard = (props) => {
       <div className="button-attendees-capacity-container ">
         <span className="attendees">
           <PersonIcon className={viewEvents ? "" : "icon-hide-person"} />
-          <span>{eventDetail.attendees}</span>
+          <span>{eventDetail.attendees.length}</span>
           <span className="of-text">of</span>
           <span>{eventDetail.capacity}</span>
         </span>
         <Button
           variant="contained"
-          className={`button-event ${eventDetail.id}`}
-          onClick={(stateEvent) => {
+          className={`${buttonClass} ${eventDetail.id}`}
+          onClick={(e) => {
             handleButtonEvent(
-              stateEvent,
+              e,
+              textButton,
+              userId,
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
-              eventToEdit,
-              eventsList,
-              setEventList
+              setTextButton
             );
           }}
         >
-          {eventDetail.stateEvent}
+          {textButton}
         </Button>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

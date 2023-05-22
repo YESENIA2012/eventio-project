@@ -4,7 +4,7 @@
   @include styleFile.display-type(column);
   justify-content: space-evenly;
   margin: 6px;
-  width: 25%;
+  width: 28.6%;
   height: 200px;
   padding: 20px;
   @include styleFile.border-background-events-element;
@@ -52,6 +52,10 @@
 
   .button-event:hover {
     background-color: styleFile.$background-color-button;
+  }
+
+  .pink-class-button:hover {
+    background-color: rgb(235, 81, 129);
   }
 }
 
@@ -110,6 +114,10 @@
     .button-event:hover {
       background-color: styleFile.$background-color-button;
     }
+
+    .pink-class-button:hover {
+      background-color: rgb(235, 81, 129);
+    }
   }
 }
 
@@ -122,6 +130,14 @@
   width: 100px;
   height: 30px;
   background-color: styleFile.$background-color-button;
+  font-weight: bold;
+}
+
+.element .pink-class-button,
+.element-column .pink-class-button {
+  width: 100px;
+  height: 30px;
+  background-color: rgb(235, 81, 129);
   font-weight: bold;
 }
 

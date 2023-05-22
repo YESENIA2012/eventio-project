@@ -1,14 +1,12 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
-
 import { v4 as uuidv4 } from "uuid";
-
 import { Button, TextField, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
-
+import { UserContext } from "../globalState";
 import Image from "../image/ImageContainer";
-import { styles, getFromLocalStorage, createFakeEvents } from "../../utils";
+import { styles, getUserDataFromServer } from "../../utils";
 import {
   textFieldBorderStyle,
   userExistsMessageStyle,
@@ -18,7 +16,7 @@ import {
 import "./styleSignUp.scss";
 
 const SignUp = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { setLoginData, user } = useContext(UserContext);
   const [redirectToLogin, setRedirectToLogin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
@@ -29,15 +27,7 @@ const SignUp = () => {
   const [repeatPasswordUser, setRepeatPasswordUser] = useState("");
   const [messageSignUp, setMessageSignUp] = useState(messageSignupStyles);
   const [errorInformationEntered, setErrorInformationEntered] = useState(false);
-
   const { classes } = styles();
-
-  useEffect(() => {
-    const userInformation = getFromLocalStorage();
-    if (userInformation && userInformation.isLoggedIn) {
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (errorInformationEntered) {
@@ -46,40 +36,68 @@ const SignUp = () => {
     }
   }, [emailUser, passwordUser, repeatPasswordUser]);
 
-  const enterDashboardFunction = () => {
-    const userInformation = getFromLocalStorage();
-
-    if (userInformation && userInformation.email === emailUser) {
-      setMessageSignUp(userExistsMessageStyle);
-      setErrorInformationEntered(true);
-    } else if (passwordUser && passwordUser === repeatPasswordUser) {
-      saveUserInformation();
-      /* createFakeEvents(); */
-      setIsLoggedIn(true);
-    } else {
-      setMessageSignUp(messagePassWordNotMatchStyles);
-      setErrorInformationEntered(true);
+  const signUpUser = async () => {
+    const isinfoValid = await validateInformation();
+    if (isinfoValid) {
+      await registerUser();
     }
   };
 
-  const saveUserInformation = () => {
-    let userInformation = null;
-    const eventList = [];
+  const validateInformation = async () => {
+    let userAlreadyExists = false;
+    // password does not match
+    if (passwordUser !== repeatPasswordUser) {
+      setMessageSignUp(messagePassWordNotMatchStyles);
+      setErrorInformationEntered(true);
+      return false;
+    }
 
-    userInformation = {
+    const currentUsers = await getUserDataFromServer();
+    // check if the user already exists in db
+    if (currentUsers) {
+      currentUsers.forEach((user) => {
+        if (user.email === emailUser) {
+          userAlreadyExists = true;
+        }
+      });
+    }
+
+    if (userAlreadyExists) {
+      setMessageSignUp(userExistsMessageStyle);
+      setErrorInformationEntered(true);
+      return false;
+    }
+
+    return true;
+  };
+
+  const registerUser = async () => {
+    const userInformation = await getUserDataFromServer();
+    let newUser = {
       name: nameUser,
       lastName: lastNameUser,
       email: emailUser,
       password: passwordUser,
-      isLoggedIn: true,
       idUser: uuidv4(),
     };
 
-    localStorage.setItem("Events", JSON.stringify(eventList));
-    localStorage.setItem("userInformation", JSON.stringify(userInformation));
+    if (!userInformation) {
+      localStorage.setItem("userInformation", JSON.stringify([newUser]));
+    } else {
+      const currentUsers = [...userInformation, newUser];
+      localStorage.setItem("userInformation", JSON.stringify(currentUsers));
+    }
+
+    setLoginData({
+      name: nameUser,
+      lastName: lastNameUser,
+      email: emailUser,
+      idUser: newUser.idUser,
+      isLoggedIn: true,
+    });
   };
 
-  if (isLoggedIn) {
+  if (user.isLoggedIn) {
     return <Navigate to="/dashboard" />;
   } else if (redirectToLogin) {
     return <Navigate to="/" />;
@@ -221,10 +239,7 @@ const SignUp = () => {
                 }}
                 value={repeatPasswordUser}
               ></TextField>
-              <Button
-                className="botton-sign-up"
-                onClick={enterDashboardFunction}
-              >
+              <Button className="botton-sign-up" onClick={signUpUser}>
                 SIGN UP
               </Button>
             </form>

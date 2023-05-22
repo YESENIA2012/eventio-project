@@ -1,0 +1,134 @@
+@use "../../styles/mixinAndVariables.scss" as styleFile;
+$font-color: rgb(150, 157, 166);
+.event-container {
+  @include styleFile.display-type(column);
+
+  .name-avatar-container {
+    @include styleFile.align-element-with-flex(flex-end);
+    width: 100%;
+    height: 80px;
+
+    .name-and-avatar {
+      @include styleFile.align-element-with-flex(center);
+    }
+
+    .avatar-and-name:hover {
+      cursor: pointer;
+    }
+  }
+
+  .title-container {
+    @include styleFile.align-element-with-flex(space-between);
+    @include styleFile.style-font(13px);
+    width: 82%;
+    margin: 10px auto 30px auto;
+    font-size: 13px;
+
+    .delete-event {
+      color: rgb(237, 85, 151);
+      width: 120px;
+      @include styleFile.align-element-with-flex(space-around);
+    }
+
+    .delete-event:hover {
+      cursor: pointer;
+    }
+  }
+
+  .check-icon-container {
+    @include styleFile.align-element-with-flex(flex-end);
+    margin-right: 30px;
+
+    .check-icon {
+      background-color: styleFile.$background-color-button;
+      border-radius: 50%;
+      font-size: 13px;
+      height: 50px;
+      width: 50px;
+      color: white;
+      margin-top: 130px;
+    }
+
+    .check-icon:hover {
+      cursor: pointer;
+    }
+  }
+
+  .box-event {
+    display: flex;
+    justify-content: space-evenly;
+    width: 85%;
+    height: auto;
+    margin: auto;
+
+    .container-event {
+      @include styleFile.align-element-with-flex(center);
+      width: 60%;
+
+      .information-event {
+        @include styleFile.align-element-with-flex(center);
+        @include styleFile.border-background-events-element;
+        flex-direction: column;
+        width: 100%;
+        padding: 35px 0 30px 0;
+
+        .text-label {
+          @include styleFile.style-font(13px);
+        }
+
+        .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+          border: none;
+        }
+
+        .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+          font-size: 13px;
+          top: 4px;
+          left: -12px;
+        }
+
+        .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
+          border-color: styleFile.$color-gray !important;
+          padding: 15px 12px 5px 0;
+        }
+
+        .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+          color: styleFile.$color-gray !important;
+        }
+      }
+    }
+  }
+
+  .attendees-container {
+    @include styleFile.border-background-events-element;
+    width: 30%;
+    height: 250px;
+    padding: 25px;
+  }
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
+  .event-container {
+    .box-event {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+
+      .container-event {
+        width: 100%;
+      }
+
+      .attendees-container {
+        opacity: 0;
+        height: 0px;
+      }
+    }
+
+    .check-icon-container {
+      margin-right: 20px;
+
+      .check-icon {
+        margin-top: 70px;
+      }
+    }
+  }
+}

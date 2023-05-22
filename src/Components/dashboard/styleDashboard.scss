@@ -8,7 +8,7 @@
   .user-name-container-d {
     display: flex;
     justify-content: flex-end;
-    width: 95%;
+    width: 100%;
 
     .avatar-and-name {
       @include styleFile.align-element-with-flex(flex-end);
@@ -72,14 +72,15 @@
   }
 
   .box-event-view-row {
-    @include styleFile.align-element-with-flex(center);
+    @include styleFile.align-element-with-flex(flex-start);
     flex-flow: wrap;
-    width: 95%;
-    margin: auto;
+    width: 82.5%;
+    margin: auto auto auto 130px;
 
     .message-not-event {
       @include styleFile.align-element-with-flex(center);
       height: 400px;
+      width: 100%;
     }
   }
 
@@ -128,11 +129,18 @@
       color: white;
       background-color: rgb(100, 207, 140);
     }
+
+    .hide-pagination-btn-dashboard {
+      opacity: 0;
+    }
   }
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 740px) and (-webkit-min-device-pixel-ratio: 2) {
   .event-container {
+    .user-name-container-d {
+      width: 95%;
+    }
     .nav-icon-container {
       @include styleFile.align-element-with-flex(center);
       width: 90%;
@@ -145,6 +153,8 @@
     .box-event-view-row {
       @include styleFile.align-element-with-flex(center);
       flex-direction: column;
+      margin: auto;
+      width: 90%;
 
       .element {
         width: 80%;

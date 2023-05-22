@@ -141,14 +141,15 @@
   }
 
   .dashboard-view-row {
-    @include styleFile.align-element-with-flex(center);
+    @include styleFile.align-element-with-flex(flex-start);
     flex-flow: wrap;
-    width: 95%;
+    width: 81%;
     margin: auto;
 
     .message-not-event {
       @include styleFile.align-element-with-flex(center);
       height: 300px;
+      width: 100%;
     }
   }
 
@@ -182,6 +183,10 @@
     .pagination-active a {
       color: white;
       background-color: rgb(100, 207, 140);
+    }
+
+    .hide-pagination-btn {
+      opacity: 0;
     }
   }
 }

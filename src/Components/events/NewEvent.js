@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -10,15 +10,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import {
   styles,
-  getFromLocalStorage,
-  getEventsFromLocalStorage,
+  saveEvent,
+  isLoggedOut,
 } from "../../utils";
 
 import "./newEventStyle.scss";
+import { UserContext } from "../globalState";
 
 const NewEvent = () => {
+  const { user } = useContext(UserContext);
   const [goToDashboard, setGoToDashboard] = useState(false);
-  const [isLoggedOut, setIsLoggedOut] = useState(false);
   const [titleEvent, setTitleEvent] = useState("");
   const [descriptionEvent, setDescriptionEvent] = useState("");
   const [dateEvent, setDateEvent] = useState(dayjs());
@@ -29,8 +30,6 @@ const NewEvent = () => {
     text: "Enter details below.",
     messageColor: { color: "rgb(150, 157, 166)" },
   });
-  const eventsInLocalStorage = getEventsFromLocalStorage();
-  const eventsList = eventsInLocalStorage.events || [];
 
   const dateFormats = {
     time: "h:mm A",
@@ -39,13 +38,6 @@ const NewEvent = () => {
   const { classes } = styles();
 
   dayjs.locale("en");
-
-  useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
-      setIsLoggedOut(true);
-    }
-  }, [isLoggedOut]);
 
   useEffect(() => {
     if (errorInfoMessage) {
@@ -57,8 +49,7 @@ const NewEvent = () => {
     }
   }, [titleEvent, descriptionEvent, dateEvent, timeEvent, capacityPeopleEvent]);
 
-  const saveNewEventInLocalStorage = () => {
-    const stateEvent = "EDIT";
+  const saveNewEventInLocalStorage = async () => {
     let dateToSave = dateEvent;
     dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
 
@@ -76,24 +67,23 @@ const NewEvent = () => {
       });
       return;
     } else {
-      const informationUser = getFromLocalStorage();
-      const idUser = informationUser.idUser;
-      let host = `${informationUser.name} ${informationUser.lastName}`;
-
-      eventsList.push({
-        id: uuidv4(),
-        date: dateToSave,
-        time: timeEvent,
-        nameEvent: titleEvent,
-        host: host,
-        descriptionEvent: descriptionEvent,
-        attendees: 1,
-        capacity: capacityPeopleEvent,
-        stateEvent: stateEvent,
-        users: [idUser],
-      });
-
-      localStorage.setItem("Events", JSON.stringify(eventsList));
+      const idUser = user.idUser;
+      let host = `${user.name} ${user.lastName}`;
+      try {
+        await saveEvent({
+          id: uuidv4(),
+          eventOwner: idUser,
+          date: dateToSave,
+          time: timeEvent,
+          nameEvent: titleEvent,
+          host: host,
+          descriptionEvent: descriptionEvent,
+          attendees: [idUser],
+          capacity: capacityPeopleEvent,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
 
       setTitleEvent("");
       setDescriptionEvent("");
@@ -103,7 +93,7 @@ const NewEvent = () => {
     }
   };
 
-  if (isLoggedOut) {
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;

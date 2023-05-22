@@ -1,38 +1,29 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
-
 import { Button, TextField, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
-
 import Image from "../image/ImageContainer";
-
 import {
   messageSignInStyle,
   failedLoginMessageStyle,
   userDoesNotExistsMessageStyle,
 } from "./materialStyles";
 
-import { styles, getFromLocalStorage } from "../../utils";
+import { styles, getUserDataFromServer } from "../../utils";
 import "./styleLogin.scss";
+import { UserContext } from "../globalState";
 
 const Login = () => {
+  const { setLoginData, user } = useContext(UserContext);
   const [messageSignIn, setMessageSignIn] = useState(messageSignInStyle);
   const [emailText, setEmailText] = useState("");
   const [passwordText, setPasswordText] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [goCreateAccount, setGoCreateAccount] = useState(false);
   const [errorInfoMessage, setErrorInfoMessage] = useState(false);
 
   const { classes } = styles();
-
-  useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if (informationUser && informationUser.isLoggedIn) {
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (errorInfoMessage) {
@@ -41,8 +32,11 @@ const Login = () => {
     }
   }, [emailText, passwordText]);
 
-  const processLogin = () => {
-    const informationUser = getFromLocalStorage();
+  const processLogin = async () => {
+    const currentUsers = await getUserDataFromServer();
+    const informationUser = currentUsers.find(
+      (user) => user.email === emailText
+    );
     if (!informationUser) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
       setErrorInfoMessage(true);
@@ -61,16 +55,20 @@ const Login = () => {
       emailText === informationUser.email &&
       passwordText === informationUser.password
     ) {
-      setIsLoggedIn(true);
-      informationUser.isLoggedIn = true;
-      localStorage.setItem("userInformation", JSON.stringify(informationUser));
+      setLoginData({
+        name: informationUser.name,
+        lastName: informationUser.lastName,
+        email: informationUser.email,
+        idUser: informationUser.idUser,
+        isLoggedIn: true,
+      });
     } else if (informationUser.email !== emailText) {
       setMessageSignIn(userDoesNotExistsMessageStyle);
       setErrorInfoMessage(true);
     }
   };
 
-  if (isLoggedIn) {
+  if (user.isLoggedIn) {
     return <Navigate to="/dashboard" />;
   } else if (goCreateAccount) {
     return <Navigate to="/sign-up" />;

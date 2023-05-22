@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
 
@@ -8,87 +8,54 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
-import {
-  getAvatarAndName,
-  getFromLocalStorage,
-  signOutFunction,
-  showDetailEventClicked,
-  getEventsFromLocalStorage,
-  signOffFunction,
-} from "../../utils";
+import { getEventsFromServer, isLoggedOut } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
+import { UserContext } from "../globalState";
 
 const Profile = () => {
+  const [eventId, setEventId] = useState("");
+  const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
-  const [textAvatar, setTextAvatar] = useState("");
-  const [userName, setUserName] = useState("");
+  const nameUser = user.name;
+  const lastNameUser = user.lastName;
+  const textAvatar = `${user.name[0] ?? " "} ${user.lastName[0] ?? " "}`;
+  const userName = `${nameUser} ${lastNameUser}`;
   const [viewEvents, setViewEvents] = useState(true);
-  const [nameUser, setNameUser] = useState("");
-  const [lastNameUser, setLastNameUser] = useState("");
-  const [emailUser, setEmailUser] = useState("");
+  const emailUser = user.email;
   const [seeModal, setSeeModal] = useState(false);
-  const [signOut, setSignOut] = useState(false);
-  const [eventClicked, setEventClicked] = useState("");
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToDetailEvent, setGoToDetailEvent] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const eventsFromLocalStorage = getEventsFromLocalStorage(pageNumber);
-  const [eventsList, setEventList] = useState(eventsFromLocalStorage.events);
-  const pageCount = eventsFromLocalStorage.pageCountProfile;
-  let currentEvents = eventsFromLocalStorage.currentEvents;
+  const userId = user && user.idUser ? user.idUser : null;
+  const [pageCount, setPageCount] = useState(0);
+  const [eventsListUser, setEventListUser] = useState([]);
 
   useEffect(() => {
-    const informationUser = getFromLocalStorage();
-    if ((informationUser && !informationUser.isLoggedIn) || !informationUser) {
-      setSignOut(true);
-    }
-  }, [signOut]);
-
-  useEffect(() => {
-    async function getAvatar() {
+    async function getEventsUser() {
       try {
-        const userData = await getAvatarAndName();
-        setTextAvatar(userData.letterAvatar);
-        setUserName(userData.userName);
+        const currentEvents = await getEventsFromServer(pageNumber, userId);
+        setEventListUser(currentEvents.currentEvents);
+        setPageCount(currentEvents.pageCountProfile);
       } catch (error) {
-        console.log(error);
+        console.log("error", error);
       }
     }
 
-    getAvatar();
-    drawUserInformation();
-  }, []);
+    getEventsUser();
+  }, [pageNumber]);
 
-  const drawUserInformation = () => {
-    const userInformation = getFromLocalStorage();
-
-    if (!userInformation) {
-      return;
-    }
-
-    let name = userInformation.name;
-    let lastName = userInformation.lastName;
-    let email = userInformation.email;
-
-    setNameUser(name);
-    setLastNameUser(lastName);
-    setEmailUser(email);
-  };
-
-  if (!eventsList) {
-    currentEvents = 0;
-  }
-
-  if (signOut) {
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToDashboard) {
     return <Navigate to="/dashboard" />;
   } else if (goToEditEvent) {
-    return <Navigate to="/editEvent" state={{ eventToEdit }} />;
+    return <Navigate to={`/editEvent/${eventToEdit}`} />;
   } else if (goToDetailEvent) {
-    return <Navigate to="/detailEvent" state={{ eventClicked }} />;
+    return (
+      <Navigate to={`/detailEvent/${eventId}`} state={{ userId: userId }} />
+    );
   } else {
     return (
       <div className="profile-container">
@@ -136,38 +103,22 @@ const Profile = () => {
             viewEvents ? "dashboard-view-row" : "dashboard-view-column"
           }
         >
-          {currentEvents && currentEvents.length ? (
-            currentEvents.map((event, index) => {
+          {eventsListUser && eventsListUser.length ? (
+            eventsListUser.map((event) => {
               return (
-                <div
-                  key={event.id}
-                  className={
-                    viewEvents
-                      ? `element-${index} element`
-                      : `element-${index} element-column`
-                  }
-                  onClick={(e) => {
-                    showDetailEventClicked(
-                      e,
-                      setGoToDetailEvent,
-                      setEventClicked
-                    );
-                  }}
-                >
-                  <EventCard
-                    viewEvents={viewEvents}
-                    setGoToEditEvent={setGoToEditEvent}
-                    eventToEdit={eventToEdit}
-                    setEventToEdit={setEventToEdit}
-                    eventsList={eventsList}
-                    setEventList={setEventList}
-                    eventDetail={event}
-                  />
-                </div>
+                <EventCard
+                  setGoToDetailEvent={setGoToDetailEvent}
+                  setEventId={setEventId}
+                  userId={userId}
+                  viewEvents={viewEvents}
+                  setGoToEditEvent={setGoToEditEvent}
+                  setEventToEdit={setEventToEdit}
+                  eventDetail={event}
+                />
               );
             })
           ) : (
-            <div className="message-not-event">You have no events</div>
+            <div className="message-not-event">No events found</div>
           )}
         </div>
         <ReactPaginate
@@ -179,8 +130,12 @@ const Profile = () => {
           }}
           containerClassName={"pagination-bttns"}
           previousLinkClassName={"previous-bttn"}
-          nextLinkClassName={"next-bttn"}
-          disabledClassName={"pagination-disable"}
+          nextLinkClassName={
+            eventsListUser.length ? "next-bttn" : "hide-pagination-btn"
+          }
+          disabledClassName={
+            eventsListUser.length ? "pagination-disable" : "hide-pagination-btn"
+          }
           activeClassName={"pagination-active"}
         />
         <div
@@ -200,13 +155,7 @@ const Profile = () => {
             >
               Dashboard
             </span>
-            <span
-              className="sign-out-button-p"
-              onClick={() => {
-                signOutFunction(setSignOut);
-                signOffFunction();
-              }}
-            >
+            <span className="sign-out-button-p" onClick={logout}>
               Sign Out
             </span>
           </nav>

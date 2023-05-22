@@ -1,14 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import "./modalStyle.scss";
-import { signOffFunction } from "../../utils";
+import { UserContext } from "../globalState";
+import { isLoggedOut } from "../../utils";
 
 const Modal = () => {
+  const { logout, user } = useContext(UserContext);
   const [goToProfile, setGoToProfile] = useState(false);
-  const [signOut, setSignOut] = useState(false);
 
-  if (signOut) {
+  if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToProfile) {
     return <Navigate to="/profile" />;
@@ -26,8 +27,7 @@ const Modal = () => {
         <span
           className="sign-out-button"
           onClick={() => {
-            setSignOut(true);
-            signOffFunction();
+            logout();
           }}
         >
           Sign Out
