@@ -3,7 +3,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { handleButtonEvent, getTextButton } from "../../utils";
 import "./eventCardStyle.scss";
 
-const EventCard  = (props) => {
+const EventCard = (props) => {
   const {
     userId,
     setGoToDetailEvent,
@@ -15,7 +15,20 @@ const EventCard  = (props) => {
     setRefreshEvents,
   } = props;
   const textButton = getTextButton(userId, eventDetail);
-  const buttonClass = textButton === "join" || textButton === "edit" ? "button-event" : 'pink-class-button'
+
+  const changeClassNameButton = () => {
+    let buttonClass = "";
+
+    if (textButton === "join") {
+      buttonClass = "button-event";
+    } else if (textButton === "leave") {
+      buttonClass = "pink-class-button";
+    } else {
+      buttonClass = "gray-class-button";
+    }
+
+    return buttonClass;
+  };
 
   return (
     <div
@@ -28,7 +41,13 @@ const EventCard  = (props) => {
       onClick={(e) => {
         const elementClassName = e.target.className;
         // if button is clicked, dont go to event detail page
-        if( !(elementClassName.includes('button-event') || elementClassName.includes('pink-class-button') ) ){
+        if (
+          !(
+            elementClassName.includes("button-event") ||
+            elementClassName.includes("pink-class-button") ||
+            elementClassName.includes("gray-class-button")
+          )
+        ) {
           setGoToDetailEvent(true);
           setEventId(eventDetail.id);
         }
@@ -51,8 +70,8 @@ const EventCard  = (props) => {
         </span>
         <Button
           variant="contained"
-          className={`${buttonClass} ${eventDetail.id}`}
-          onClick={async(e) => {
+          className={`${changeClassNameButton()} ${eventDetail.id}`}
+          onClick={async (e) => {
             await handleButtonEvent({
               e,
               textButton,
@@ -60,7 +79,7 @@ const EventCard  = (props) => {
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
-              setRefreshEvents
+              setRefreshEvents,
             });
           }}
         >

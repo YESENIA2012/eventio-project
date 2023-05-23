@@ -25,7 +25,6 @@ const getEventData = (eventId) => {
       const event = events.find((event) => event.id === eventId);
 
       if (!event) {
-        console.log("No event found");
         reject(null);
       } else {
         resolve({ event });
@@ -58,39 +57,23 @@ const goToEditEventFunction = (
   return eventId;
 };
 
-
-const joinEvent = async(eventDetail,userId)=>{
-  let {events:eventsCopy} = await getEventsFromServer();
-  return new Promise( (resolve,reject)=>{
-    const currentIndex = eventsCopy.findIndex( event => event.id=== eventDetail.id )
-    eventsCopy[currentIndex].attendees.push(userId)
+const joinEvent = async (eventDetail, userId) => {
+  let { events: eventsCopy } = await getEventsFromServer();
+  return new Promise((resolve, reject) => {
+    const currentIndex = eventsCopy.findIndex(
+      (event) => event.id === eventDetail.id
+    );
+    eventsCopy[currentIndex].attendees.push(userId);
     // now we add the new attendees
-    console.log("eventsCopy[currentIndex] ",eventsCopy[currentIndex])
     // update the events in local
     localStorage.setItem("Events", JSON.stringify(eventsCopy));
-    resolve()
-  })
-}
-
-const joinOrLeaveToEvent = async (textEventButton, userId, eventDetail) => {
-  if (textEventButton === "leave") {
-    const indexUserToDelete = eventDetail.attendees.findIndex(
-      (user) => user === userId
-    );
-
-    eventDetail.attendees
-      .splice(indexUserToDelete, 1)
-      .filter((user) => user !== undefined);
-  } else {
-    eventDetail.attendees.push(userId);
-  }
-
-  await updateEvent(eventDetail);
+    resolve();
+  });
 };
 
 const getTextButton = (userId, eventDetail) => {
   let textButton = "";
-  console.log("userId ",userId)
+
   if (userId === eventDetail.eventOwner) {
     textButton = "edit";
   } else if (eventDetail.attendees.includes(userId)) {
@@ -102,7 +85,7 @@ const getTextButton = (userId, eventDetail) => {
   return textButton;
 };
 
-const handleButtonEvent = async(parameters) => {
+const handleButtonEvent = async (parameters) => {
   const {
     e,
     textButton,
@@ -110,19 +93,19 @@ const handleButtonEvent = async(parameters) => {
     eventDetail,
     setGoToEditEvent,
     setEventToEdit,
-    setRefreshEvents
-  } = parameters
+    setRefreshEvents,
+  } = parameters;
 
   if (textButton === "edit") {
     goToEditEventFunction(e, eventDetail, setGoToEditEvent, setEventToEdit);
   } else if (textButton === "leave") {
     // first update the record on local storage
-    await updateEventAttendees(eventDetail,userId)
+    await updateEventAttendees(eventDetail, userId);
     // send request to server to refresh events
     setRefreshEvents(true);
   } else {
-    await joinEvent(eventDetail,userId)
-    console.log("here??")
+    await joinEvent(eventDetail, userId);
+
     setRefreshEvents(true);
   }
 };
@@ -216,13 +199,13 @@ const getEventsFromServer = (pageNumber = null, userId = null) => {
     }
 
     if (pageNumber === null && userId == null) {
-      resolve({ events: events.map(event=>event) });
+      resolve({ events: events.map((event) => event) });
     }
 
     const eventUser = getEventsUser(events, pageNumber, userId);
 
     resolve({
-      events: events.map(event=>event), // generate a new array
+      events: events.map((event) => event), // generate a new array
       currentEvents: eventUser.eventsUser,
       pageCountProfile: eventUser.pageCountProfile,
     });
@@ -239,17 +222,19 @@ const getEventFromServer = async (eventId) => {
   });
 };
 
-const updateEventAttendees = async (updatedEvent,userId) => {
+const updateEventAttendees = async (updatedEvent, userId) => {
   let currentEvents = await getEventsFromServer();
 
   return new Promise((resolve) => {
     let events = currentEvents.events;
-    let eventsCopy = events.map(event=>event)
+    let eventsCopy = events.map((event) => event);
     const arrayIndex = eventsCopy.findIndex(
       (element) => element.id === updatedEvent.id
     );
-    const currentAttendees = eventsCopy[arrayIndex].attendees
-    const newAttendees = currentAttendees.filter(attendeeId=> attendeeId!==userId)
+    const currentAttendees = eventsCopy[arrayIndex].attendees;
+    const newAttendees = currentAttendees.filter(
+      (attendeeId) => attendeeId !== userId
+    );
     eventsCopy[arrayIndex].attendees = newAttendees;
     localStorage.setItem("Events", JSON.stringify(eventsCopy));
     resolve();

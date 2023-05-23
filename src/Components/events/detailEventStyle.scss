@@ -92,10 +92,16 @@
             background-color: styleFile.$background-color-button;
           }
 
-          .pink-class {
+          .pink-class-btn {
             width: 100px;
             height: 30px;
             background-color: rgb(235, 81, 129);
+          }
+
+          .gray-class-btn {
+            width: 100px;
+            height: 30px;
+            background-color: rgb(150, 157, 166);
           }
         }
 
@@ -119,6 +125,7 @@
       }
     }
   }
+
   .add-new-event-container {
     display: flex;
     justify-content: flex-end;

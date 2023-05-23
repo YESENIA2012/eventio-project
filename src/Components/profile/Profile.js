@@ -8,7 +8,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
-import { getEventsFromServer, isLoggedOut} from "../../utils";
+import { getEventsFromServer, isLoggedOut } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
 import { UserContext } from "../globalState";
@@ -31,14 +31,14 @@ const Profile = () => {
   const userId = user && user.idUser ? user.idUser : null;
   const [pageCount, setPageCount] = useState(0);
   const [eventsListUser, setEventListUser] = useState([]);
-  const [refreshEvents,setRefreshEvents] = useState(false)
+  const [refreshEvents, setRefreshEvents] = useState(false);
 
   async function getEventsUser() {
     try {
       const currentEvents = await getEventsFromServer(pageNumber, userId);
       setEventListUser(currentEvents.currentEvents);
       setPageCount(currentEvents.pageCountProfile);
-      setRefreshEvents(false)
+      setRefreshEvents(false);
     } catch (error) {
       console.log("error", error);
     }
@@ -48,16 +48,13 @@ const Profile = () => {
   useEffect(() => {
     getEventsUser();
   }, []);
-  
-console.log("refreshEvents ",refreshEvents)
+
   // when we need to refresh
-  useEffect(()=>{
-    console.log("trying to refresh??")
-    if(refreshEvents){
-      console.log("refreshing events")
-      getEventsUser()
+  useEffect(() => {
+    if (refreshEvents) {
+      getEventsUser();
     }
-  },[refreshEvents])
+  }, [refreshEvents]);
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -117,7 +114,7 @@ console.log("refreshEvents ",refreshEvents)
           }
         >
           {eventsListUser && eventsListUser.length ? (
-            eventsListUser.map((event,index) => {
+            eventsListUser.map((event, index) => {
               return (
                 <EventCard
                   key={index}
@@ -161,7 +158,6 @@ console.log("refreshEvents ",refreshEvents)
           }
         >
           <nav className="modal-container-p">
-            <span className="profile-button">View Profile</span>
             <span
               className="dashboard-button"
               onClick={() => {

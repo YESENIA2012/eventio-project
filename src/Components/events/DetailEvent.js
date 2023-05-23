@@ -21,65 +21,82 @@ const DetailEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const [event, setEvent] = useState(null);
+  const [eventDetail, setEventDetail] = useState(null);
   const [textButton, setTextButton] = useState("");
+  const [refreshEvents, setRefreshEvents] = useState(false);
+
+  async function getEvent() {
+    try {
+      const eventFound = await getEventFromServer(eventId);
+      const textButtonEvent = getTextButton(userId, eventFound);
+      setEventDetail(eventFound);
+      setTextButton(textButtonEvent);
+      setRefreshEvents(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   useEffect(() => {
-    //aca
-    async function getEvent() {
-      try {
-        const eventFound = await getEventFromServer(eventId);
-        const textButtonEvent = getTextButton(userId, eventFound);
-        setEvent(eventFound);
-        setTextButton(textButtonEvent);
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
-
     getEvent();
   }, []);
 
+  useEffect(() => {
+    if (refreshEvents) {
+      getEvent();
+    }
+  }, [refreshEvents]);
+
   const drawEvent = () => {
-    if (!eventId || !event) {
+    if (!eventId || !eventDetail) {
       return;
     }
-    const buttonClass =
-      textButton === "join" || textButton === "edit"
-        ? "button-event-detail"
-        : "pink-class";
+
+    const changeClassNameButton = () => {
+      let buttonClass = "";
+
+      if (textButton === "join") {
+        buttonClass = "button-event-detail";
+      } else if (textButton === "leave") {
+        buttonClass = "pink-class-btn";
+      } else {
+        buttonClass = "gray-class-btn";
+      }
+
+      return buttonClass;
+    };
 
     return (
       <div className="container-event">
         <div className="information-event">
           <div className="time-date-container">
-            <span className="date-d">{event.date}</span>
+            <span className="date-d">{eventDetail.date}</span>
             <span className="dash-d">-</span>
-            <span className="time-d">{event.time}</span>
+            <span className="time-d">{eventDetail.time}</span>
           </div>
-          <h1 className="title">{event.nameEvent}</h1>
-          <p className="host-e">{event.host}</p>
-          <p className="description-event-e">{event.descriptionEvent}</p>
+          <h1 className="title">{eventDetail.nameEvent}</h1>
+          <p className="host-e">{eventDetail.host}</p>
+          <p className="description-event-e">{eventDetail.descriptionEvent}</p>
           <div className="attendees-capacity-button-container">
             <div className="attendees-capacity-container">
               <PersonIcon className="person-icon" />
-              <span className="attendees">{event.attendees.length}</span>
+              <span className="attendees">{eventDetail.attendees.length}</span>
               <span className="of-text-d">of</span>
-              <span>{event.capacity}</span>
+              <span>{eventDetail.capacity}</span>
             </div>
             <Button
               variant="contained"
-              className={`${buttonClass} ${event.id}`}
-              onClick={(e) => {
-                handleButtonEvent(
+              className={`${changeClassNameButton()} ${eventDetail.id}`}
+              onClick={async (e) => {
+                await handleButtonEvent({
                   e,
                   textButton,
                   userId,
-                  event,
+                  eventDetail,
                   setGoToEditEvent,
                   setEventToEdit,
-                  setTextButton
-                );
+                  setRefreshEvents,
+                });
               }}
             >
               {textButton}

@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
-  const [refreshEvents,setRefreshEvents] = useState(false)
+  const [refreshEvents, setRefreshEvents] = useState(false);
 
   const pageCount =
     eventsList && eventsList.length
@@ -40,7 +40,7 @@ const Dashboard = () => {
     try {
       const currentEvents = await getEventsFromServer();
       setEventList(currentEvents.events);
-      setRefreshEvents(false)
+      setRefreshEvents(false);
     } catch (error) {
       console.log("error", error);
     }
@@ -51,12 +51,11 @@ const Dashboard = () => {
   }, []);
 
   // when we need to refresh
-  useEffect(()=>{
-    if(refreshEvents){
-      console.log("refreshing events...")
-      getEvents()
+  useEffect(() => {
+    if (refreshEvents) {
+      getEvents();
     }
-  },[refreshEvents])
+  }, [refreshEvents]);
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -118,7 +117,7 @@ const Dashboard = () => {
             }
           >
             {eventToDraw ? (
-              eventToDraw.map((event,index) => {
+              eventToDraw.map((event, index) => {
                 return (
                   <EventCard
                     key={String(index)}
