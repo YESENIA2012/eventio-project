@@ -1,6 +1,10 @@
 import { Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { handleButtonEvent, getTextButton } from "../../utils";
+import {
+  handleButtonEvent,
+  getTextButton,
+  changeClassNameButton,
+} from "../../utils";
 import "./eventCardStyle.scss";
 
 const EventCard = (props) => {
@@ -14,21 +18,8 @@ const EventCard = (props) => {
     eventDetail,
     setRefreshEvents,
   } = props;
+
   const textButton = getTextButton(userId, eventDetail);
-
-  const changeClassNameButton = () => {
-    let buttonClass = "";
-
-    if (textButton === "join") {
-      buttonClass = "button-event";
-    } else if (textButton === "leave") {
-      buttonClass = "pink-class-button";
-    } else {
-      buttonClass = "gray-class-button";
-    }
-
-    return buttonClass;
-  };
 
   return (
     <div
@@ -44,8 +35,8 @@ const EventCard = (props) => {
         if (
           !(
             elementClassName.includes("button-event") ||
-            elementClassName.includes("pink-class-button") ||
-            elementClassName.includes("gray-class-button")
+            elementClassName.includes("pink-class-btn") ||
+            elementClassName.includes("gray-class-btn")
           )
         ) {
           setGoToDetailEvent(true);
@@ -70,7 +61,7 @@ const EventCard = (props) => {
         </span>
         <Button
           variant="contained"
-          className={`${changeClassNameButton()} ${eventDetail.id}`}
+          className={`${changeClassNameButton(textButton)} ${eventDetail.id}`}
           onClick={async (e) => {
             await handleButtonEvent({
               e,

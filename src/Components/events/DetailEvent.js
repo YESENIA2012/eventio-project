@@ -1,6 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams, useLocation } from "react-router-dom";
-import { handleButtonEvent, getTextButton } from "../../utils";
+import {
+  handleButtonEvent,
+  getTextButton,
+  getEventFromServer,
+  changeClassNameButton,
+} from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -10,7 +15,6 @@ import AvatarUser from "../avatarUser/AvatarUser";
 
 import "./detailEventStyle.scss";
 import { UserContext } from "../globalState";
-import { getEventFromServer } from "../../utils";
 
 const DetailEvent = () => {
   const { user } = useContext(UserContext);
@@ -22,15 +26,13 @@ const DetailEvent = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventDetail, setEventDetail] = useState(null);
-  const [textButton, setTextButton] = useState("");
+  const textButton = eventDetail ? getTextButton(userId, eventDetail) : "";
   const [refreshEvents, setRefreshEvents] = useState(false);
 
   async function getEvent() {
     try {
       const eventFound = await getEventFromServer(eventId);
-      const textButtonEvent = getTextButton(userId, eventFound);
       setEventDetail(eventFound);
-      setTextButton(textButtonEvent);
       setRefreshEvents(false);
     } catch (error) {
       console.log("error", error);
@@ -52,20 +54,6 @@ const DetailEvent = () => {
       return;
     }
 
-    const changeClassNameButton = () => {
-      let buttonClass = "";
-
-      if (textButton === "join") {
-        buttonClass = "button-event-detail";
-      } else if (textButton === "leave") {
-        buttonClass = "pink-class-btn";
-      } else {
-        buttonClass = "gray-class-btn";
-      }
-
-      return buttonClass;
-    };
-
     return (
       <div className="container-event">
         <div className="information-event">
@@ -86,7 +74,9 @@ const DetailEvent = () => {
             </div>
             <Button
               variant="contained"
-              className={`${changeClassNameButton()} ${eventDetail.id}`}
+              className={`${changeClassNameButton(textButton)} ${
+                eventDetail.id
+              }`}
               onClick={async (e) => {
                 await handleButtonEvent({
                   e,

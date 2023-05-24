@@ -322,6 +322,20 @@ const createFakeEvents = () => {
 
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
+const changeClassNameButton = (textButton) => {
+  let buttonClass = "";
+
+  if (textButton === "join") {
+    buttonClass = "button-event";
+  } else if (textButton === "leave") {
+    buttonClass = "pink-class-btn";
+  } else {
+    buttonClass = "gray-class-btn";
+  }
+
+  return buttonClass;
+};
+
 export {
   isLoggedOut,
   styles,
@@ -337,4 +351,5 @@ export {
   saveEvent,
   getUserDataFromServer,
   getEventFromServer,
+  changeClassNameButton,
 };
