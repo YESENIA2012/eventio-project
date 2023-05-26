@@ -74,7 +74,6 @@ const handleButtonEvent = async (parameters) => {
   if (textButton === "edit") {
     setGoToEditEvent(true);
     setEventToEdit(eventDetail.id);
-    /* goToEditEventFunction(e, eventDetail, setGoToEditEvent, setEventToEdit); */
   } else if (textButton === "leave") {
     // first update the record on local storage
     await updateEventAttendees(eventDetail, userId);
