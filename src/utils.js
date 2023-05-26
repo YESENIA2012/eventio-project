@@ -25,7 +25,6 @@ const getEventData = (eventId) => {
       const event = events.find((event) => event.id === eventId);
 
       if (!event) {
-        console.log("No event found");
         reject(null);
       } else {
         resolve({ event });
@@ -34,44 +33,18 @@ const getEventData = (eventId) => {
   });
 };
 
-const goToEditEventFunction = (
-  e,
-  eventDetail,
-  setGoToEditEvent,
-  setEventToEdit
-) => {
-  const nameClassAtTheElement = e.target.className;
-  const arrayClass = nameClassAtTheElement.split(" ");
-  const eventToEdit = arrayClass[12];
-  let eventId = null;
-
-  if (eventDetail.id.toString() === eventToEdit) {
-    eventId = eventDetail.id;
-  }
-
-  if (!eventId) {
-    return;
-  } else {
-    setGoToEditEvent(true);
-    setEventToEdit(eventId);
-  }
-  return eventId;
-};
-
-const joinOrLeaveToEvent = async (textEventButton, userId, eventDetail) => {
-  if (textEventButton === "leave") {
-    const indexUserToDelete = eventDetail.attendees.findIndex(
-      (user) => user === userId
+const joinEvent = async (eventDetail, userId) => {
+  let { events: eventsCopy } = await getEventsFromServer();
+  return new Promise((resolve, reject) => {
+    const currentIndex = eventsCopy.findIndex(
+      (event) => event.id === eventDetail.id
     );
-
-    eventDetail.attendees
-      .splice(indexUserToDelete, 1)
-      .filter((user) => user !== undefined);
-  } else {
-    eventDetail.attendees.push(userId);
-  }
-
-  await updateEvent(eventDetail);
+    eventsCopy[currentIndex].attendees.push(userId);
+    // now we add the new attendees
+    // update the events in local
+    localStorage.setItem("Events", JSON.stringify(eventsCopy));
+    resolve();
+  });
 };
 
 const getTextButton = (userId, eventDetail) => {
@@ -88,25 +61,27 @@ const getTextButton = (userId, eventDetail) => {
   return textButton;
 };
 
-const handleButtonEvent = (
-  e,
-  textButton,
-  userId,
-  eventDetail,
-  setGoToEditEvent,
-  setEventToEdit,
-  setTextButton
-) => {
-  const textEventButton = textButton;
+const handleButtonEvent = async (parameters) => {
+  const {
+    textButton,
+    userId,
+    eventDetail,
+    setGoToEditEvent,
+    setEventToEdit,
+    setRefreshEvents,
+  } = parameters;
 
-  if (textEventButton === "edit") {
-    goToEditEventFunction(e, eventDetail, setGoToEditEvent, setEventToEdit);
-  } else if (textEventButton === "leave") {
-    joinOrLeaveToEvent(textEventButton, userId, eventDetail);
-    setTextButton("join");
+  if (textButton === "edit") {
+    setGoToEditEvent(true);
+    setEventToEdit(eventDetail.id);
+  } else if (textButton === "leave") {
+    // first update the record on local storage
+    await updateEventAttendees(eventDetail, userId);
+    // send request to server to refresh events
+    setRefreshEvents(true);
   } else {
-    joinOrLeaveToEvent(textEventButton, userId, eventDetail, setTextButton);
-    setTextButton("leave");
+    await joinEvent(eventDetail, userId);
+    setRefreshEvents(true);
   }
 };
 
@@ -199,13 +174,13 @@ const getEventsFromServer = (pageNumber = null, userId = null) => {
     }
 
     if (pageNumber === null && userId == null) {
-      resolve({ events: events });
+      resolve({ events: events.map((event) => event) });
     }
 
     const eventUser = getEventsUser(events, pageNumber, userId);
 
     resolve({
-      events: events,
+      events: events.map((event) => event), // generate a new array
       currentEvents: eventUser.eventsUser,
       pageCountProfile: eventUser.pageCountProfile,
     });
@@ -222,18 +197,36 @@ const getEventFromServer = async (eventId) => {
   });
 };
 
-const updateEvent = async (updateEvent) => {
+const updateEventAttendees = async (updatedEvent, userId) => {
   let currentEvents = await getEventsFromServer();
 
   return new Promise((resolve) => {
     let events = currentEvents.events;
-
-    const arrayIndex = events.findIndex(
-      (element) => element.id === updateEvent.id
+    let eventsCopy = events.map((event) => event);
+    const arrayIndex = eventsCopy.findIndex(
+      (element) => element.id === updatedEvent.id
     );
-    events[arrayIndex] = updateEvent;
+    const currentAttendees = eventsCopy[arrayIndex].attendees;
+    const newAttendees = currentAttendees.filter(
+      (attendeeId) => attendeeId !== userId
+    );
+    eventsCopy[arrayIndex].attendees = newAttendees;
+    localStorage.setItem("Events", JSON.stringify(eventsCopy));
+    resolve();
+  });
+};
+
+const updateEvent = async (updatedEvent) => {
+  let currentEvents = await getEventsFromServer();
+
+  return new Promise((resolve) => {
+    let events = currentEvents.events;
+    const arrayIndex = events.findIndex(
+      (element) => element.id === updatedEvent.id
+    );
+    events[arrayIndex] = updatedEvent;
     localStorage.setItem("Events", JSON.stringify(events));
-    resolve(updateEvent);
+    resolve(updatedEvent);
   });
 };
 
@@ -304,6 +297,20 @@ const createFakeEvents = () => {
 
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
+const getButtonClassName = (textButton) => {
+  let buttonClass = "";
+
+  if (textButton === "join") {
+    buttonClass = "button-event";
+  } else if (textButton === "leave") {
+    buttonClass = "pink-class-btn";
+  } else {
+    buttonClass = "gray-class-btn";
+  }
+
+  return buttonClass;
+};
+
 export {
   isLoggedOut,
   styles,
@@ -319,4 +326,5 @@ export {
   saveEvent,
   getUserDataFromServer,
   getEventFromServer,
+  getButtonClassName,
 };

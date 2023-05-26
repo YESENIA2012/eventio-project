@@ -1,6 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Navigate, useParams, useLocation } from "react-router-dom";
-import { handleButtonEvent, getTextButton } from "../../utils";
+import {
+  handleButtonEvent,
+  getTextButton,
+  getEventFromServer,
+  getButtonClassName,
+} from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -10,7 +15,6 @@ import AvatarUser from "../avatarUser/AvatarUser";
 
 import "./detailEventStyle.scss";
 import { UserContext } from "../globalState";
-import { getEventFromServer } from "../../utils";
 
 const DetailEvent = () => {
   const { user } = useContext(UserContext);
@@ -21,65 +25,65 @@ const DetailEvent = () => {
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
-  const [event, setEvent] = useState(null);
-  const [textButton, setTextButton] = useState("");
+  const [eventDetail, setEventDetail] = useState(null);
+  const textButton = eventDetail ? getTextButton(userId, eventDetail) : "";
+  const [refreshEvents, setRefreshEvents] = useState(false);
+
+  async function getEvent() {
+    try {
+      const eventFound = await getEventFromServer(eventId);
+      setEventDetail(eventFound);
+      setRefreshEvents(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
   useEffect(() => {
-    //aca
-    async function getEvent() {
-      try {
-        const eventFound = await getEventFromServer(eventId);
-        const textButtonEvent = getTextButton(userId, eventFound);
-        setEvent(eventFound);
-        setTextButton(textButtonEvent);
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
-
     getEvent();
   }, []);
 
+  useEffect(() => {
+    if (refreshEvents) {
+      getEvent();
+    }
+  }, [refreshEvents]);
+
   const drawEvent = () => {
-    if (!eventId || !event) {
+    if (!eventId || !eventDetail) {
       return;
     }
-    const buttonClass =
-      textButton === "join" || textButton === "edit"
-        ? "button-event-detail"
-        : "pink-class";
 
     return (
       <div className="container-event">
         <div className="information-event">
           <div className="time-date-container">
-            <span className="date-d">{event.date}</span>
+            <span className="date-d">{eventDetail.date}</span>
             <span className="dash-d">-</span>
-            <span className="time-d">{event.time}</span>
+            <span className="time-d">{eventDetail.time}</span>
           </div>
-          <h1 className="title">{event.nameEvent}</h1>
-          <p className="host-e">{event.host}</p>
-          <p className="description-event-e">{event.descriptionEvent}</p>
+          <h1 className="title">{eventDetail.nameEvent}</h1>
+          <p className="host-e">{eventDetail.host}</p>
+          <p className="description-event-e">{eventDetail.descriptionEvent}</p>
           <div className="attendees-capacity-button-container">
             <div className="attendees-capacity-container">
               <PersonIcon className="person-icon" />
-              <span className="attendees">{event.attendees.length}</span>
+              <span className="attendees">{eventDetail.attendees.length}</span>
               <span className="of-text-d">of</span>
-              <span>{event.capacity}</span>
+              <span>{eventDetail.capacity}</span>
             </div>
             <Button
               variant="contained"
-              className={`${buttonClass} ${event.id}`}
-              onClick={(e) => {
-                handleButtonEvent(
-                  e,
+              className={`${getButtonClassName(textButton)} ${eventDetail.id}`}
+              onClick={async (e) => {
+                await handleButtonEvent({
                   textButton,
                   userId,
-                  event,
+                  eventDetail,
                   setGoToEditEvent,
                   setEventToEdit,
-                  setTextButton
-                );
+                  setRefreshEvents,
+                });
               }}
             >
               {textButton}

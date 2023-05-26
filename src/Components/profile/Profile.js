@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const Profile = () => {
   const [eventId, setEventId] = useState("");
   const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
+  const prePageNumber = useRef();
   const nameUser = user.name;
   const lastNameUser = user.lastName;
   const textAvatar = `${user.name[0] ?? " "} ${user.lastName[0] ?? " "}`;
@@ -31,20 +32,31 @@ const Profile = () => {
   const userId = user && user.idUser ? user.idUser : null;
   const [pageCount, setPageCount] = useState(0);
   const [eventsListUser, setEventListUser] = useState([]);
+  const [refreshEvents, setRefreshEvents] = useState(false);
 
-  useEffect(() => {
-    async function getEventsUser() {
-      try {
-        const currentEvents = await getEventsFromServer(pageNumber, userId);
-        setEventListUser(currentEvents.currentEvents);
-        setPageCount(currentEvents.pageCountProfile);
-      } catch (error) {
-        console.log("error", error);
-      }
+  async function getEventsUser() {
+    try {
+      const currentEvents = await getEventsFromServer(pageNumber, userId);
+      setEventListUser(currentEvents.currentEvents);
+      setPageCount(currentEvents.pageCountProfile);
+      setRefreshEvents(false);
+    } catch (error) {
+      console.log("error", error);
     }
+  }
 
+  // on component mounts
+  useEffect(() => {
+    prePageNumber.current = pageNumber;
     getEventsUser();
-  }, [pageNumber]);
+  }, []);
+
+  // when we need to refresh
+  useEffect(() => {
+    if (refreshEvents || pageNumber !== prePageNumber) {
+      getEventsUser();
+    }
+  }, [refreshEvents, pageNumber]);
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -104,9 +116,10 @@ const Profile = () => {
           }
         >
           {eventsListUser && eventsListUser.length ? (
-            eventsListUser.map((event) => {
+            eventsListUser.map((event, index) => {
               return (
                 <EventCard
+                  key={index}
                   setGoToDetailEvent={setGoToDetailEvent}
                   setEventId={setEventId}
                   userId={userId}
@@ -114,6 +127,7 @@ const Profile = () => {
                   setGoToEditEvent={setGoToEditEvent}
                   setEventToEdit={setEventToEdit}
                   eventDetail={event}
+                  setRefreshEvents={setRefreshEvents}
                 />
               );
             })
@@ -146,7 +160,6 @@ const Profile = () => {
           }
         >
           <nav className="modal-container-p">
-            <span className="profile-button">View Profile</span>
             <span
               className="dashboard-button"
               onClick={() => {

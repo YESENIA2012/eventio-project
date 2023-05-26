@@ -1,10 +1,13 @@
 import { Button } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { handleButtonEvent, getTextButton } from "../../utils";
+import {
+  handleButtonEvent,
+  getTextButton,
+  getButtonClassName,
+} from "../../utils";
 import "./eventCardStyle.scss";
-import { useState } from "react";
 
-const EventCard  = (props) => {
+const EventCard = (props) => {
   const {
     userId,
     setGoToDetailEvent,
@@ -13,11 +16,10 @@ const EventCard  = (props) => {
     setGoToEditEvent,
     setEventToEdit,
     eventDetail,
+    setRefreshEvents,
   } = props;
 
-  const defaultText = getTextButton(userId, eventDetail);
-  const [textButton, setTextButton] = useState(defaultText);
-  const buttonClass = textButton === "join" || textButton === "edit" ? "button-event" : 'pink-class-button'
+  const textButton = getTextButton(userId, eventDetail);
 
   return (
     <div
@@ -30,7 +32,13 @@ const EventCard  = (props) => {
       onClick={(e) => {
         const elementClassName = e.target.className;
         // if button is clicked, dont go to event detail page
-        if( !(elementClassName.includes('button-event') || elementClassName.includes('pink-class-button') ) ){
+        if (
+          !(
+            elementClassName.includes("button-event") ||
+            elementClassName.includes("pink-class-btn") ||
+            elementClassName.includes("gray-class-btn")
+          )
+        ) {
           setGoToDetailEvent(true);
           setEventId(eventDetail.id);
         }
@@ -53,17 +61,16 @@ const EventCard  = (props) => {
         </span>
         <Button
           variant="contained"
-          className={`${buttonClass} ${eventDetail.id}`}
-          onClick={(e) => {
-            handleButtonEvent(
-              e,
+          className={`${getButtonClassName(textButton)} ${eventDetail.id}`}
+          onClick={async (e) => {
+            await handleButtonEvent({
               textButton,
               userId,
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
-              setTextButton
-            );
+              setRefreshEvents,
+            });
           }}
         >
           {textButton}

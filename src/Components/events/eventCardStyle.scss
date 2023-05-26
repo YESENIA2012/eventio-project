@@ -54,8 +54,12 @@
     background-color: styleFile.$background-color-button;
   }
 
-  .pink-class-button:hover {
+  .pink-class-btn:hover {
     background-color: rgb(235, 81, 129);
+  }
+
+  .gray-class-btn:hover {
+    background-color: rgb(150, 157, 166);
   }
 }
 
@@ -115,14 +119,26 @@
       background-color: styleFile.$background-color-button;
     }
 
-    .pink-class-button:hover {
+    .pink-class-btn:hover {
       background-color: rgb(235, 81, 129);
+    }
+
+    .gray-class-btn:hover {
+      background-color: rgb(150, 157, 166);
     }
   }
 }
 
 .element-column :hover {
   cursor: pointer;
+}
+
+.element .gray-class-btn,
+.element-column .gray-class-btn {
+  width: 100px;
+  height: 30px;
+  background-color: rgb(150, 157, 166);
+  font-weight: bold;
 }
 
 .element .button-event,
@@ -133,8 +149,8 @@
   font-weight: bold;
 }
 
-.element .pink-class-button,
-.element-column .pink-class-button {
+.element .pink-class-btn,
+.element-column .pink-class-btn {
   width: 100px;
   height: 30px;
   background-color: rgb(235, 81, 129);
