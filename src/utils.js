@@ -81,7 +81,6 @@ const handleButtonEvent = async (parameters) => {
     setRefreshEvents(true);
   } else {
     await joinEvent(eventDetail, userId);
-
     setRefreshEvents(true);
   }
 };

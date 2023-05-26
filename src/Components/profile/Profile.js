@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
 
@@ -17,6 +17,7 @@ const Profile = () => {
   const [eventId, setEventId] = useState("");
   const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
+  const prePageNumber = useRef();
   const nameUser = user.name;
   const lastNameUser = user.lastName;
   const textAvatar = `${user.name[0] ?? " "} ${user.lastName[0] ?? " "}`;
@@ -46,15 +47,16 @@ const Profile = () => {
 
   // on component mounts
   useEffect(() => {
+    prePageNumber.current = pageNumber;
     getEventsUser();
   }, []);
 
   // when we need to refresh
   useEffect(() => {
-    if (refreshEvents) {
+    if (refreshEvents || pageNumber !== prePageNumber) {
       getEventsUser();
     }
-  }, [refreshEvents]);
+  }, [refreshEvents, pageNumber]);
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
