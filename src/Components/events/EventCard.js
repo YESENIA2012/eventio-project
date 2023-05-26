@@ -3,7 +3,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import {
   handleButtonEvent,
   getTextButton,
-  changeClassNameButton,
+  getButtonClassName,
 } from "../../utils";
 import "./eventCardStyle.scss";
 
@@ -61,10 +61,9 @@ const EventCard = (props) => {
         </span>
         <Button
           variant="contained"
-          className={`${changeClassNameButton(textButton)} ${eventDetail.id}`}
+          className={`${getButtonClassName(textButton)} ${eventDetail.id}`}
           onClick={async (e) => {
             await handleButtonEvent({
-              e,
               textButton,
               userId,
               eventDetail,

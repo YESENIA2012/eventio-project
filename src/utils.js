@@ -33,30 +33,6 @@ const getEventData = (eventId) => {
   });
 };
 
-const goToEditEventFunction = (
-  e,
-  eventDetail,
-  setGoToEditEvent,
-  setEventToEdit
-) => {
-  const nameClassAtTheElement = e.target.className;
-  const arrayClass = nameClassAtTheElement.split(" ");
-  const eventToEdit = arrayClass[12];
-  let eventId = null;
-
-  if (eventDetail.id.toString() === eventToEdit) {
-    eventId = eventDetail.id;
-  }
-
-  if (!eventId) {
-    return;
-  } else {
-    setGoToEditEvent(true);
-    setEventToEdit(eventId);
-  }
-  return eventId;
-};
-
 const joinEvent = async (eventDetail, userId) => {
   let { events: eventsCopy } = await getEventsFromServer();
   return new Promise((resolve, reject) => {
@@ -87,7 +63,6 @@ const getTextButton = (userId, eventDetail) => {
 
 const handleButtonEvent = async (parameters) => {
   const {
-    e,
     textButton,
     userId,
     eventDetail,
@@ -97,7 +72,9 @@ const handleButtonEvent = async (parameters) => {
   } = parameters;
 
   if (textButton === "edit") {
-    goToEditEventFunction(e, eventDetail, setGoToEditEvent, setEventToEdit);
+    setGoToEditEvent(true);
+    setEventToEdit(eventDetail.id);
+    /* goToEditEventFunction(e, eventDetail, setGoToEditEvent, setEventToEdit); */
   } else if (textButton === "leave") {
     // first update the record on local storage
     await updateEventAttendees(eventDetail, userId);
@@ -322,7 +299,7 @@ const createFakeEvents = () => {
 
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
-const changeClassNameButton = (textButton) => {
+const getButtonClassName = (textButton) => {
   let buttonClass = "";
 
   if (textButton === "join") {
@@ -351,5 +328,5 @@ export {
   saveEvent,
   getUserDataFromServer,
   getEventFromServer,
-  changeClassNameButton,
+  getButtonClassName,
 };

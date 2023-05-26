@@ -4,7 +4,7 @@ import {
   handleButtonEvent,
   getTextButton,
   getEventFromServer,
-  changeClassNameButton,
+  getButtonClassName,
 } from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -74,12 +74,9 @@ const DetailEvent = () => {
             </div>
             <Button
               variant="contained"
-              className={`${changeClassNameButton(textButton)} ${
-                eventDetail.id
-              }`}
+              className={`${getButtonClassName(textButton)} ${eventDetail.id}`}
               onClick={async (e) => {
                 await handleButtonEvent({
-                  e,
                   textButton,
                   userId,
                   eventDetail,
