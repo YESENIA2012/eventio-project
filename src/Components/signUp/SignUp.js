@@ -78,9 +78,10 @@ const SignUp = () => {
       }
 
       setLoginData({
-        name: nameUser,
-        lastName: lastNameUser,
-        email: emailUser,
+        name: userCreated.firstName,
+        lastName: userCreated.lastName,
+        email: userCreated.email,
+        idUser: userCreated.id,
         isLoggedIn: true,
       });
       
