@@ -8,9 +8,10 @@ import {
   messageSignInStyle,
   failedLoginMessageStyle,
   userDoesNotExistsMessageStyle,
+  messageInputStyles
 } from "./materialStyles";
 
-import { styles, getUserDataFromServer } from "../../utils";
+import { styles } from "../../utils";
 import "./styleLogin.scss";
 import { UserContext } from "../globalState";
 
@@ -33,38 +34,41 @@ const Login = () => {
   }, [emailText, passwordText]);
 
   const processLogin = async () => {
-    const currentUsers = await getUserDataFromServer();
-    const informationUser = currentUsers.find(
-      (user) => user.email === emailText
-    );
-    if (!informationUser) {
-      setMessageSignIn(userDoesNotExistsMessageStyle);
-      setErrorInfoMessage(true);
-      return;
-    }
+    try {
+      const response = await fetch("http://localhost:4000/auth/login", {
+        method:"POST",
+        headers: { 'Content-Type': 'application/json' },
+        body :JSON.stringify({ email: emailText, password: passwordText })
+      });
+      const userData = await response.json();
 
-    if (emailText === "" && passwordText === "") {
-      setMessageSignIn(messageSignInStyle);
-    } else if (
-      informationUser.email === emailText &&
-      informationUser.password !== passwordText
-    ) {
-      setMessageSignIn(failedLoginMessageStyle);
-      setErrorInfoMessage(true);
-    } else if (
-      emailText === informationUser.email &&
-      passwordText === informationUser.password
-    ) {
+      if (userData.error && userData.error === 'User does not exist') {
+        setMessageSignIn(userDoesNotExistsMessageStyle);
+        setErrorInfoMessage(true);
+        return;
+      } else if (userData.error && userData.error.includes("empty")){
+        setMessageSignIn(messageInputStyles);
+        setErrorInfoMessage(true);
+        return 
+      } else if (userData.error && userData.error === 'Invalid email or password'){
+        setMessageSignIn(failedLoginMessageStyle);
+        setErrorInfoMessage(true);
+        return 
+      }
+
       setLoginData({
-        name: informationUser.name,
-        lastName: informationUser.lastName,
-        email: informationUser.email,
-        idUser: informationUser.idUser,
+        name: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        idUser: userData.id,
         isLoggedIn: true,
       });
-    } else if (informationUser.email !== emailText) {
-      setMessageSignIn(userDoesNotExistsMessageStyle);
-      setErrorInfoMessage(true);
+
+      console.log("successfully logged in", userData)
+      return userData
+    } catch (error) {
+      console.log("Error", error) 
+      return { error: true };
     }
   };
 
