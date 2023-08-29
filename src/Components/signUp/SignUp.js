@@ -1,17 +1,17 @@
 import { Fragment, useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { Button, TextField, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 import { UserContext } from "../globalState";
 import Image from "../image/ImageContainer";
-import { styles, getUserDataFromServer } from "../../utils";
+import { styles } from "../../utils";
 import {
   textFieldBorderStyle,
   userExistsMessageStyle,
   messagePassWordNotMatchStyles,
   messageSignupStyles,
+  messageInputStyles
 } from "./materialStylesSignUp";
 import "./styleSignUp.scss";
 
@@ -44,57 +44,52 @@ const SignUp = () => {
   };
 
   const validateInformation = async () => {
-    let userAlreadyExists = false;
-    // password does not match
     if (passwordUser !== repeatPasswordUser) {
       setMessageSignUp(messagePassWordNotMatchStyles);
       setErrorInformationEntered(true);
       return false;
     }
 
-    const currentUsers = await getUserDataFromServer();
-    // check if the user already exists in db
-    if (currentUsers) {
-      currentUsers.forEach((user) => {
-        if (user.email === emailUser) {
-          userAlreadyExists = true;
-        }
-      });
-    }
-
-    if (userAlreadyExists) {
-      setMessageSignUp(userExistsMessageStyle);
-      setErrorInformationEntered(true);
-      return false;
-    }
-
-    return true;
+    return true
   };
 
   const registerUser = async () => {
-    const userInformation = await getUserDataFromServer();
-    let newUser = {
-      name: nameUser,
-      lastName: lastNameUser,
-      email: emailUser,
-      password: passwordUser,
-      idUser: uuidv4(),
-    };
+     try {
+      const response = await fetch("http://localhost:4000/auth/signup", {
+        method:"POST",
+        headers: { 'Content-Type': 'application/json' },
+        body :JSON.stringify( {
+          firstName: nameUser,
+          lastName: lastNameUser,
+          email: emailUser,
+          password: passwordUser,
+        })
+      });
+      const userCreated = await response.json();
 
-    if (!userInformation) {
-      localStorage.setItem("userInformation", JSON.stringify([newUser]));
-    } else {
-      const currentUsers = [...userInformation, newUser];
-      localStorage.setItem("userInformation", JSON.stringify(currentUsers));
-    }
+      if (userCreated.error && userCreated.error === "This user already exists") {
+        setMessageSignUp(userExistsMessageStyle);
+        setErrorInformationEntered(true); 
+        return
+      } else if (userCreated.error && userCreated.error.includes("empty")){
+        setMessageSignUp(messageInputStyles);
+        setErrorInformationEntered(true);
+        return 
+      }
 
-    setLoginData({
-      name: nameUser,
-      lastName: lastNameUser,
-      email: emailUser,
-      idUser: newUser.idUser,
-      isLoggedIn: true,
-    });
+      setLoginData({
+        name: nameUser,
+        lastName: lastNameUser,
+        email: emailUser,
+        isLoggedIn: true,
+      });
+      
+      console.log("user was created successfully", userCreated)
+      return userCreated
+    } catch (error) {   
+      console.log("Error", error)   
+      return { error: true };
+    } 
   };
 
   if (user.isLoggedIn) {

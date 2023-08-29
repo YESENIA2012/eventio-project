@@ -20,9 +20,15 @@ const messageSignupStyles = {
   messageColor: { color: "rgb(150, 157, 166)" },
 };
 
+const messageInputStyles = {
+  text:"Please enter all fields",
+  messageColor,
+}
+
 export {
   textFieldBorderStyle,
   userExistsMessageStyle,
   messagePassWordNotMatchStyles,
   messageSignupStyles,
+  messageInputStyles
 };
