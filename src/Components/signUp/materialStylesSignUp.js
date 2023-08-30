@@ -16,7 +16,7 @@ const messagePassWordNotMatchStyles = {
 };
 
 const messageSignupStyles = {
-  text: "Enter your detalls below.",
+  text: "Enter your details below.",
   messageColor: { color: "rgb(150, 157, 166)" },
 };
 

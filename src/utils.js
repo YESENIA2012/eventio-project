@@ -85,19 +85,26 @@ const handleButtonEvent = async (parameters) => {
   }
 };
 
-const getUserDataFromServer = () => {
-  return new Promise((resolve) => {
-    const dataUser = JSON.parse(localStorage.getItem("userInformation"));
-    resolve(dataUser);
-  });
-};
-
-const getFromLocalStorage = () => {
-  const dataUser = JSON.parse(localStorage.getItem("userInformation"));
-  return dataUser;
-};
+const request = async (body, endpoint, method) => {
+  const requestOptions ={
+    method: method,
+    headers: { 'Content-Type': 'application/json' },
+  }
+  if(body){
+    requestOptions.body = JSON.stringify(body)
+  }
+  
+  const result = await fetch(`http://localhost:4000/${endpoint}`, requestOptions )
+    const response = await result.json()
+    if (!response.error) {
+      return response
+    }
+    const error = new Error(response.error);
+    throw error
+}
 
 const getEventsUser = (events, pageNumber, userId) => {
+  console.log("esta entranfo a la funcion para traer los eventos del usuario")
   const eventsPerPage = 6;
   const pagesVisited = pageNumber * eventsPerPage;
 
@@ -143,6 +150,7 @@ const getEventsUser = (events, pageNumber, userId) => {
   return { eventsUser: eventsUserToDraw, pageCountProfile: pageCount };
 };
 
+//this function is call in edit event component
 const getEventsFromLocalStorage = (pageNumber = null, userId = null) => {
   const events = JSON.parse(localStorage.getItem("Events"));
 
@@ -165,7 +173,8 @@ const getEventsFromLocalStorage = (pageNumber = null, userId = null) => {
   };
 };
 
-const getEventsFromServer = (pageNumber = null, userId = null) => {
+//this function is call in index.js dashboard and profile components
+const getEventsFromServer = async (pageNumber = null, userId = null) => {
   return new Promise((resolve) => {
     const events = JSON.parse(localStorage.getItem("Events"));
 
@@ -178,6 +187,7 @@ const getEventsFromServer = (pageNumber = null, userId = null) => {
     }
 
     const eventUser = getEventsUser(events, pageNumber, userId);
+    console.log("Estos son los eventos del usuario", eventUser)
 
     resolve({
       events: events.map((event) => event), // generate a new array
@@ -187,6 +197,7 @@ const getEventsFromServer = (pageNumber = null, userId = null) => {
   });
 };
 
+//this function get an event and is call in detail event
 const getEventFromServer = async (eventId) => {
   const eventsFronServer = await getEventsFromServer();
   const events = eventsFronServer.events;
@@ -196,6 +207,7 @@ const getEventFromServer = async (eventId) => {
     resolve(event);
   });
 };
+
 
 const updateEventAttendees = async (updatedEvent, userId) => {
   let currentEvents = await getEventsFromServer();
@@ -216,6 +228,7 @@ const updateEventAttendees = async (updatedEvent, userId) => {
   });
 };
 
+//this function is call in edit event component
 const updateEvent = async (updatedEvent) => {
   let currentEvents = await getEventsFromServer();
 
@@ -230,6 +243,7 @@ const updateEvent = async (updatedEvent) => {
   });
 };
 
+//this function is call in new event component
 const saveEvent = async (newEvent) => {
   let currentEvents = await getEventsFromServer();
   return new Promise((resolve) => {
@@ -243,7 +257,7 @@ const saveEvent = async (newEvent) => {
   });
 };
 
-const mockedEvents = [
+/* const mockedEvents = [
   {
     id: "yes2",
     eventOwner: "carol3",
@@ -293,7 +307,7 @@ const mockedEvents = [
 
 const createFakeEvents = () => {
   localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
-};
+}; */
 
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
@@ -318,13 +332,12 @@ export {
   getEventData,
   getTextButton,
   handleButtonEvent,
-  getFromLocalStorage,
-  createFakeEvents,
+  /* createFakeEvents, */
   getEventsFromServer,
   getEventsFromLocalStorage,
   updateEvent,
   saveEvent,
-  getUserDataFromServer,
   getEventFromServer,
   getButtonClassName,
+  request
 };
