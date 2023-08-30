@@ -62,7 +62,7 @@ const SignUp = () => {
       }
       const endpoint = "auth/signup"
       const method = "POST"
-      const userCreated = await request(body, endpoint, method)
+      const userCreated = await request(endpoint, method, body)
       console.log("userCreated", userCreated)
 
       setLoginData({
@@ -76,7 +76,7 @@ const SignUp = () => {
       console.log("user was created successfully", userCreated)
       return userCreated
     } catch (error) {   
-      console.log( error.message)   
+      console.log( error.message )   
       if (error.message === "This user already exists") {
         setMessageSignUp(userExistsMessageStyle);
       } else if (error.message.includes("empty")){

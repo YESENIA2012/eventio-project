@@ -11,7 +11,7 @@ import {
   messageInputStyles
 } from "./materialStyles";
 
-import { styles } from "../../utils";
+import { styles, request } from "../../utils";
 import "./styleLogin.scss";
 import { UserContext } from "../globalState";
 
@@ -35,26 +35,13 @@ const Login = () => {
 
   const processLogin = async () => {
     try {
-      const response = await fetch("http://localhost:4000/auth/login", {
-        method:"POST",
-        headers: { 'Content-Type': 'application/json' },
-        body :JSON.stringify({ email: emailText, password: passwordText })
-      });
-      const userData = await response.json();
-
-      if (userData.error && userData.error === 'User does not exist') {
-        setMessageSignIn(userDoesNotExistsMessageStyle);
-        setErrorInfoMessage(true);
-        return;
-      } else if (userData.error && userData.error.includes("empty")){
-        setMessageSignIn(messageInputStyles);
-        setErrorInfoMessage(true);
-        return 
-      } else if (userData.error && userData.error === 'Invalid email or password'){
-        setMessageSignIn(failedLoginMessageStyle);
-        setErrorInfoMessage(true);
-        return 
+      const body = {
+        email: emailText,
+        password: passwordText,
       }
+      const endpoint = "auth/login"
+      const method = "POST"
+      const userData = await request(endpoint, method, body);
 
       setLoginData({
         name: userData.firstName,
@@ -68,7 +55,14 @@ const Login = () => {
       return userData
     } catch (error) {
       console.log("Error", error) 
-      return { error: true };
+      if (error.message === 'User does not exist') {
+        setMessageSignIn(userDoesNotExistsMessageStyle);
+      } else if (error.message.includes("empty")){
+        setMessageSignIn(messageInputStyles);
+      } else if (error.message === 'Invalid email or password'){
+        setMessageSignIn(failedLoginMessageStyle);
+      }
+      setErrorInfoMessage(true);
     }
   };
 

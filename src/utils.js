@@ -85,7 +85,7 @@ const handleButtonEvent = async (parameters) => {
   }
 };
 
-const request = async (body, endpoint, method) => {
+const request = async (endpoint, method, body) => {
   const requestOptions ={
     method: method,
     headers: { 'Content-Type': 'application/json' },
