@@ -63,7 +63,6 @@ const SignUp = () => {
       const endpoint = "auth/signup"
       const method = "POST"
       const userCreated = await request(endpoint, method, body)
-      console.log("userCreated", userCreated)
 
       setLoginData({
         name: userCreated.firstName,

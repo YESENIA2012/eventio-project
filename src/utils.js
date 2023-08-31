@@ -103,17 +103,16 @@ const request = async (endpoint, method, body) => {
     throw error
 }
 
-const getEventsUser = (events, pageNumber, userId) => {
-  console.log("esta entranfo a la funcion para traer los eventos del usuario")
+const getEventsUser = (events = [], pageNumber, userId) => {
   const eventsPerPage = 6;
   const pagesVisited = pageNumber * eventsPerPage;
-
-  let currentEvents = null;
-  let pageCount = null;
+  let currentEvents = [];
+  let pageCount = 0;
 
   if (!userId) {
-    currentEvents = [];
-    pageCount = 0;
+    return { eventsUser: currentEvents, pageCountProfile: pageCount };
+  }
+  if(events === null){
     return { eventsUser: currentEvents, pageCountProfile: pageCount };
   }
 
@@ -175,19 +174,19 @@ const getEventsFromLocalStorage = (pageNumber = null, userId = null) => {
 
 //this function is call in index.js dashboard and profile components
 const getEventsFromServer = async (pageNumber = null, userId = null) => {
-  return new Promise((resolve) => {
-    const events = JSON.parse(localStorage.getItem("Events"));
 
-    if (!events) {
-      resolve({ events: [] });
+  return new Promise((resolve) => {
+    let events = JSON.parse(localStorage.getItem("Events"));
+
+    if (!events || events === null) {
+      events = [];
     }
 
     if (pageNumber === null && userId == null) {
-      resolve({ events: events.map((event) => event) });
+      events = events.map((event) => event);
     }
 
     const eventUser = getEventsUser(events, pageNumber, userId);
-    console.log("Estos son los eventos del usuario", eventUser)
 
     resolve({
       events: events.map((event) => event), // generate a new array
@@ -257,58 +256,6 @@ const saveEvent = async (newEvent) => {
   });
 };
 
-/* const mockedEvents = [
-  {
-    id: "yes2",
-    eventOwner: "carol3",
-    date: "April 4, 2017",
-    time: "2:17 PM",
-    nameEvent: "Mexican party vol.2",
-    host: "Matilda Daniels",
-    descriptionEvent: "Party in Scrollbar",
-    attendees: ["3e97eaf8-92bd-4911-b169-c4934fb31023"],
-    capacity: 50,
-  },
-  {
-    id: "yes3",
-    eventOwner: "carol2",
-    date: "April 4, 2017",
-    time: "2:17 PM",
-    nameEvent: "How to become Dark Soldier",
-    host: "Bill Soto",
-    descriptionEvent:
-      "I will tell you insights about how I became Dark Soldier",
-    attendees: [],
-    capacity: 50,
-  },
-  {
-    id: "yes1jdj",
-    eventOwner: "carol1",
-    date: "April 4, 2017",
-    time: "2:17 PM",
-    nameEvent: "Parkour lesson",
-    host: "Johnny Erickson",
-    descriptionEvent: "Meet me at 5th Eve!",
-    attendees: [],
-    capacity: 1000,
-  },
-  {
-    id: "yes1dj",
-    eventOwner: "carol",
-    date: "April 4, 2017",
-    time: "2:17 PM",
-    nameEvent: "Party in Asgard",
-    host: "Ivan Wong",
-    descriptionEvent: "You can bring your +1!",
-    attendees: [],
-    capacity: 1000,
-  },
-];
-
-const createFakeEvents = () => {
-  localStorage.setItem("Events", JSON.stringify([...mockedEvents]));
-}; */
-
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
 
 const getButtonClassName = (textButton) => {
@@ -332,7 +279,6 @@ export {
   getEventData,
   getTextButton,
   handleButtonEvent,
-  /* createFakeEvents, */
   getEventsFromServer,
   getEventsFromLocalStorage,
   updateEvent,

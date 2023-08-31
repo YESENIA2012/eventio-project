@@ -51,10 +51,8 @@ const Login = () => {
         isLoggedIn: true,
       });
 
-      console.log("successfully logged in", userData)
       return userData
     } catch (error) {
-      console.log("Error", error) 
       if (error.message === 'User does not exist') {
         setMessageSignIn(userDoesNotExistsMessageStyle);
       } else if (error.message.includes("empty")){
