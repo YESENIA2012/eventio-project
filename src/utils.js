@@ -95,12 +95,12 @@ const request = async (endpoint, method, body) => {
   }
   
   const result = await fetch(`http://localhost:4000/${endpoint}`, requestOptions )
-    const response = await result.json()
-    if (!response.error) {
-      return response
-    }
-    const error = new Error(response.error);
-    throw error
+  const response = await result.json()
+  if (!response.error) {
+    return response
+  }
+  const error = new Error(response.error);
+  throw error
 }
 
 const getEventsUser = (events = [], pageNumber, userId) => {
