@@ -7,7 +7,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
 import EventCard from "../events/EventCard";
-import { getEventsFromServer, isLoggedOut } from "../../utils";
+import { request, isLoggedOut } from "../../utils";
 import "./styleDashboard.scss";
 
 const Dashboard = () => {
@@ -23,24 +23,28 @@ const Dashboard = () => {
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
   const [refreshEvents, setRefreshEvents] = useState(false);
+  const [lengthEventsList, setLengthEventsList] = useState(0)
 
-  const pageCount =
-    eventsList && eventsList.length
-      ? Math.ceil(eventsList.length / EVENTS_PER_PAGE)
-      : 0;
+ const pageCount = lengthEventsList ? Math.ceil(lengthEventsList / EVENTS_PER_PAGE) : 0; 
 
-  const pagesVisited = pageNumber * EVENTS_PER_PAGE;
-
-  const eventToDraw =
-    eventsList && eventsList.length
-      ? eventsList.slice(pagesVisited, pagesVisited + EVENTS_PER_PAGE)
-      : 0;
+  const eventToDraw = eventsList
 
   async function getEvents() {
     try {
-      const currentEvents = await getEventsFromServer();
-      setEventList(currentEvents.events);
-      setRefreshEvents(false);
+      const itemsPerPage =  EVENTS_PER_PAGE 
+      const endpoint = `events/${pageNumber}/${itemsPerPage}`
+      const method = "GET"
+      const result = await request(endpoint, method);
+      let events = result.eventsList
+      const lengthEvents = result.lengthEvents
+
+      if (!events) {
+        events = [];
+      }
+
+      setEventList(events);
+      setLengthEventsList(lengthEvents)
+      setRefreshEvents(false);  
     } catch (error) {
       console.log("error", error);
     }
@@ -49,6 +53,10 @@ const Dashboard = () => {
   useEffect(() => {
     getEvents();
   }, []);
+
+  useEffect(() => {
+    getEvents();
+  }, [pageNumber]); 
 
   // when we need to refresh
   useEffect(() => {
