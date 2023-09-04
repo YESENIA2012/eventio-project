@@ -53,7 +53,7 @@ const Login = () => {
 
       return userData
     } catch (error) {
-      if (error.message === 'User does not exist') {
+      if (error.message === 'This account is not registered') {
         setMessageSignIn(userDoesNotExistsMessageStyle);
       } else if (error.message.includes("empty")){
         setMessageSignIn(messageInputStyles);
