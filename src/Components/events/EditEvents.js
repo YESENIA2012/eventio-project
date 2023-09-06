@@ -6,9 +6,7 @@ import EditEventCard from "./EditEventCard";
 import AvatarUser from "../avatarUser/AvatarUser";
 import { UserContext } from "../globalState";
 import {
-  getEventsFromLocalStorage,
-  updateEvent,
-  getEventData,
+  request
 } from "../../utils";
 import "./styleEditEvents.scss";
 
@@ -22,11 +20,13 @@ const EditEvent = () => {
   useEffect(() => {
     async function getEvent(eventId) {
       try {
-        const eventData = await getEventData(eventId);
-        const eventEdit = eventData.event;
+        const endpoint = `events/event/${eventId}`
+        const method = "GET"
+        const eventEdit = await request(endpoint, method);
+
         setEvent(eventEdit);
       } catch (error) {
-        console.log(error);
+        console.log("Error", error);
       }
     }
 
@@ -41,16 +41,38 @@ const EditEvent = () => {
   }, [event]);
 
   const saveInformationEventEdit = async () => {
-    await updateEvent(event);
-    setBackToDashboard(true);
+    try {
+      const endpoint = `events/${eventId}`
+      const method = "PUT"
+      const body = { 
+        userId: user.idUser,
+        title: event.nameEvent,
+        description: event.descriptionEvent,
+        event_date: event.date,
+        event_time: event.time, 
+        capacity: event.capacity, 
+      }
+
+      await request(endpoint, method, body);
+      setBackToDashboard(true); 
+    } catch (error) {
+      console.log("Error", error)
+    } 
   };
 
-  const removeEventFromLocalStorage = () => {
-    const eventsInLocalStorage = getEventsFromLocalStorage();
-    let events = eventsInLocalStorage.events;
-    events = events.filter((event) => event.id !== eventId);
-    localStorage.setItem("Events", JSON.stringify(events));
-    setBackToDashboard(true);
+  const removeEventFromLocalStorage = async () => {
+    try {
+      const endpoint = `events/${eventId}`
+      const method = "DELETE"
+      const body = { 
+        userId: user.idUser,
+      }
+
+      await request(endpoint, method, body)
+      setBackToDashboard(true);
+    } catch (error) {
+      console.log("Error", error)
+    }
   };
 
   if (backToDashboard) {
@@ -70,7 +92,9 @@ const EditEvent = () => {
         </div>
         <div className="box-event">
           {itemToDraw}
-          <div className="attendees-container">Attendees</div>
+          <div className="attendees-container">
+            Attendees
+          </div>
         </div>
         ;
         <div className="check-icon-container">
