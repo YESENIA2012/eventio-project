@@ -23,6 +23,7 @@ const EditEvent = () => {
         const endpoint = `events/event/${eventId}`
         const method = "GET"
         const eventEdit = await request(endpoint, method);
+        console.log("eventEdit", eventEdit)
 
         setEvent(eventEdit);
       } catch (error) {
@@ -93,7 +94,8 @@ const EditEvent = () => {
         <div className="box-event">
           {itemToDraw}
           <div className="attendees-container">
-            Attendees
+            <p>Attendees</p>
+            <div>{ event.attendeesNames }</div>
           </div>
         </div>
         ;
