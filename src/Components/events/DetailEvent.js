@@ -5,6 +5,7 @@ import {
   getTextButton,
   getEventFromServer,
   getButtonClassName,
+  request
 } from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -31,7 +32,9 @@ const DetailEvent = () => {
 
   async function getEvent() {
     try {
-      const eventFound = await getEventFromServer(eventId);
+      const endpoint = `events/event/${eventId}`
+      const method = "GET"
+      const eventFound = await request(endpoint, method);
       setEventDetail(eventFound);
       setRefreshEvents(false);
     } catch (error) {
@@ -90,7 +93,10 @@ const DetailEvent = () => {
             </Button>
           </div>
         </div>
-        <div className="name-attendees">Attendees</div>
+        <div className="name-attendees">
+          <p>Attendees</p>
+          <div>{ eventDetail.attendeesNames }</div>
+        </div>
       </div>
     );
   };
