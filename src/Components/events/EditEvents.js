@@ -5,15 +5,13 @@ import DoneIcon from "@mui/icons-material/Done";
 import EditEventCard from "./EditEventCard";
 import AvatarUser from "../avatarUser/AvatarUser";
 import { UserContext } from "../globalState";
-import {
-  request
-} from "../../utils";
+import { request } from "../../utils";
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
   const { user } = useContext(UserContext);
   const eventId = useParams().id;
-  const [event, setEvent] = useState(null);
+  const [event, setEvent] = useState({});
   const [itemToDraw, setItemToDraw] = useState(null);
   const [backToDashboard, setBackToDashboard] = useState(false);
 
@@ -95,7 +93,7 @@ const EditEvent = () => {
           {itemToDraw}
           <div className="attendees-container">
             <p>Attendees</p>
-            <div>{ event.attendeesNames }</div>
+            <div>{ event?.attendeesNames || " " }</div>
           </div>
         </div>
         ;
@@ -108,3 +106,4 @@ const EditEvent = () => {
 };
 
 export default EditEvent;
+//{ event ? event.attendeesNames : " " }
