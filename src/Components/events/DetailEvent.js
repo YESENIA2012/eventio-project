@@ -3,7 +3,6 @@ import { Navigate, useParams, useLocation } from "react-router-dom";
 import {
   handleButtonEvent,
   getTextButton,
-  getEventFromServer,
   getButtonClassName,
   request
 } from "../../utils";
@@ -38,7 +37,7 @@ const DetailEvent = () => {
       setEventDetail(eventFound);
       setRefreshEvents(false);
     } catch (error) {
-      console.log("error", error);
+      console.log("Error", error);
     }
   }
 

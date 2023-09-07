@@ -196,18 +196,6 @@ const getEventsFromServer = async (pageNumber = null, userId = null) => {
   });
 };
 
-//this function get an event and is call in detail event
-const getEventFromServer = async (eventId) => {
-  const eventsFronServer = await getEventsFromServer();
-  const events = eventsFronServer.events;
-
-  return new Promise((resolve) => {
-    const event = events.find((event) => event.id.toString() === eventId);
-    resolve(event);
-  });
-};
-
-
 const updateEventAttendees = async (updatedEvent, userId) => {
   try {
     const endpoint = "events/leave"
@@ -263,7 +251,6 @@ export {
   getEventsFromServer,
   getEventsFromLocalStorage,
   updateEvent,
-  getEventFromServer,
   getButtonClassName,
   request
 };
