@@ -34,17 +34,17 @@ const getEventData = (eventId) => {
 };
 
 const joinEvent = async (eventDetail, userId) => {
-  let { events: eventsCopy } = await getEventsFromServer();
-  return new Promise((resolve, reject) => {
-    const currentIndex = eventsCopy.findIndex(
-      (event) => event.id === eventDetail.id
-    );
-    eventsCopy[currentIndex].attendees.push(userId);
-    // now we add the new attendees
-    // update the events in local
-    localStorage.setItem("Events", JSON.stringify(eventsCopy));
-    resolve();
-  });
+  try {
+    const endpoint = "events/join"
+    const method = "POST"
+    const body = {
+      eventId : eventDetail.id,
+      userId : userId,
+    }
+    await request(endpoint, method, body);
+  } catch (error) {
+    console.log("Error", error)
+  }
 };
 
 const getTextButton = (userId, eventDetail) => {
@@ -209,22 +209,17 @@ const getEventFromServer = async (eventId) => {
 
 
 const updateEventAttendees = async (updatedEvent, userId) => {
-  let currentEvents = await getEventsFromServer();
-
-  return new Promise((resolve) => {
-    let events = currentEvents.events;
-    let eventsCopy = events.map((event) => event);
-    const arrayIndex = eventsCopy.findIndex(
-      (element) => element.id === updatedEvent.id
-    );
-    const currentAttendees = eventsCopy[arrayIndex].attendees;
-    const newAttendees = currentAttendees.filter(
-      (attendeeId) => attendeeId !== userId
-    );
-    eventsCopy[arrayIndex].attendees = newAttendees;
-    localStorage.setItem("Events", JSON.stringify(eventsCopy));
-    resolve();
-  });
+  try {
+    const endpoint = "events/leave"
+    const method = "DELETE"
+    const body = {
+      eventId : updatedEvent.id,
+      userId : userId,
+    }
+    await request(endpoint, method, body);
+  } catch (error) {
+    console.log("Error", error);
+  }
 };
 
 //this function is call in edit event component
@@ -239,20 +234,6 @@ const updateEvent = async (updatedEvent) => {
     events[arrayIndex] = updatedEvent;
     localStorage.setItem("Events", JSON.stringify(events));
     resolve(updatedEvent);
-  });
-};
-
-//this function is call in new event component
-const saveEvent = async (newEvent) => {
-  let currentEvents = await getEventsFromServer();
-  return new Promise((resolve) => {
-    if (!currentEvents.events.length) {
-      localStorage.setItem("Events", JSON.stringify([newEvent]));
-    } else {
-      const newEvents = [...currentEvents.events, newEvent];
-      localStorage.setItem("Events", JSON.stringify(newEvents));
-    }
-    resolve({ status: 200, data: [newEvent] });
   });
 };
 
@@ -282,7 +263,6 @@ export {
   getEventsFromServer,
   getEventsFromLocalStorage,
   updateEvent,
-  saveEvent,
   getEventFromServer,
   getButtonClassName,
   request
