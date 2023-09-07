@@ -106,4 +106,3 @@ const EditEvent = () => {
 };
 
 export default EditEvent;
-//{ event ? event.attendeesNames : " " }
