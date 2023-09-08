@@ -18,21 +18,6 @@ const styleTextFieldEditEvent = makeStyles()(() => {
   };
 });
 
-const getEventData = (eventId) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const events = JSON.parse(localStorage.getItem("Events"));
-      const event = events.find((event) => event.id === eventId);
-
-      if (!event) {
-        reject(null);
-      } else {
-        resolve({ event });
-      }
-    }, 500);
-  });
-};
-
 const joinEvent = async (eventDetail, userId) => {
   try {
     const endpoint = "events/join"
@@ -75,9 +60,7 @@ const handleButtonEvent = async (parameters) => {
     setGoToEditEvent(true);
     setEventToEdit(eventDetail.id);
   } else if (textButton === "leave") {
-    // first update the record on local storage
     await updateEventAttendees(eventDetail, userId);
-    // send request to server to refresh events
     setRefreshEvents(true);
   } else {
     await joinEvent(eventDetail, userId);
@@ -103,99 +86,6 @@ const request = async (endpoint, method, body) => {
   throw error
 }
 
-const getEventsUser = (events = [], pageNumber, userId) => {
-  const eventsPerPage = 6;
-  const pagesVisited = pageNumber * eventsPerPage;
-  let currentEvents = [];
-  let pageCount = 0;
-
-  if (!userId) {
-    return { eventsUser: currentEvents, pageCountProfile: pageCount };
-  }
-  if(events === null){
-    return { eventsUser: currentEvents, pageCountProfile: pageCount };
-  }
-
-  currentEvents = events
-    .map((event) => {
-      if (event.eventOwner === userId && !event.attendees.includes(userId)) {
-        return event;
-      } else if (
-        event.attendees.includes(userId) &&
-        event.eventOwner !== userId
-      ) {
-        return event;
-      } else if (
-        event.attendees.includes(userId) &&
-        event.eventOwner === userId
-      ) {
-        return event;
-      } else {
-        return null;
-      }
-    })
-    .filter((event) => event !== null);
-
-  pageCount =
-    currentEvents && currentEvents.length
-      ? Math.ceil(currentEvents.length / eventsPerPage)
-      : 0;
-
-  let eventsUserToDraw =
-    currentEvents && currentEvents.length
-      ? currentEvents.slice(pagesVisited, pagesVisited + eventsPerPage)
-      : 0;
-
-  return { eventsUser: eventsUserToDraw, pageCountProfile: pageCount };
-};
-
-//this function is call in edit event component
-const getEventsFromLocalStorage = (pageNumber = null, userId = null) => {
-  const events = JSON.parse(localStorage.getItem("Events"));
-
-  if (!events) {
-    return { events: [] };
-  }
-
-  if (pageNumber === null && userId == null) {
-    return { events: events };
-  }
-
-  const eventsPerPage = 6;
-  const pagesVisited = pageNumber * eventsPerPage;
-  const eventsUser = getEventsUser(events, eventsPerPage, pagesVisited, userId);
-
-  return {
-    events: events,
-    currentEvents: eventsUser.eventsUser,
-    pageCountProfile: eventsUser.pageCountProfile,
-  };
-};
-
-//this function is call in index.js dashboard and profile components
-const getEventsFromServer = async (pageNumber = null, userId = null) => {
-
-  return new Promise((resolve) => {
-    let events = JSON.parse(localStorage.getItem("Events"));
-
-    if (!events || events === null) {
-      events = [];
-    }
-
-    if (pageNumber === null && userId == null) {
-      events = events.map((event) => event);
-    }
-
-    const eventUser = getEventsUser(events, pageNumber, userId);
-
-    resolve({
-      events: events.map((event) => event), // generate a new array
-      currentEvents: eventUser.eventsUser,
-      pageCountProfile: eventUser.pageCountProfile,
-    });
-  });
-};
-
 const updateEventAttendees = async (updatedEvent, userId) => {
   try {
     const endpoint = "events/leave"
@@ -208,21 +98,6 @@ const updateEventAttendees = async (updatedEvent, userId) => {
   } catch (error) {
     console.log("Error", error);
   }
-};
-
-//this function is call in edit event component
-const updateEvent = async (updatedEvent) => {
-  let currentEvents = await getEventsFromServer();
-
-  return new Promise((resolve) => {
-    let events = currentEvents.events;
-    const arrayIndex = events.findIndex(
-      (element) => element.id === updatedEvent.id
-    );
-    events[arrayIndex] = updatedEvent;
-    localStorage.setItem("Events", JSON.stringify(events));
-    resolve(updatedEvent);
-  });
 };
 
 const isLoggedOut = (user) => (user && !user.isLoggedIn) || !user;
@@ -245,12 +120,8 @@ export {
   isLoggedOut,
   styles,
   styleTextFieldEditEvent,
-  getEventData,
   getTextButton,
   handleButtonEvent,
-  getEventsFromServer,
-  getEventsFromLocalStorage,
-  updateEvent,
   getButtonClassName,
   request
 };

@@ -6,7 +6,7 @@ import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
-import EventCard from "../events/EventCard";
+import EventCard from "../events/EventCard"   /* "../events/EventCard" */
 import { request, isLoggedOut } from "../../utils";
 import "./styleDashboard.scss";
 
@@ -26,8 +26,6 @@ const Dashboard = () => {
   const [lengthEventsList, setLengthEventsList] = useState(0)
 
  const pageCount = lengthEventsList ? Math.ceil(lengthEventsList / EVENTS_PER_PAGE) : 0; 
-
-  const eventToDraw = eventsList
 
   async function getEvents() {
     try {
@@ -124,8 +122,8 @@ const Dashboard = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {eventToDraw ? (
-              eventToDraw.map((event, index) => {
+            {eventsList ? (
+              eventsList.map((event, index) => {
                 return (
                   <EventCard
                     key={String(index)}
@@ -155,10 +153,10 @@ const Dashboard = () => {
             containerClassName={"pagination-bttns"}
             previousLinkClassName={"previous-bttn"}
             nextLinkClassName={
-              eventToDraw.length ? "next-bttn" : "hide-pagination-btn-dashboard"
+              lengthEventsList ? "next-bttn" : "hide-pagination-btn-dashboard"
             }
             disabledClassName={
-              eventToDraw.length
+              lengthEventsList
                 ? "pagination-disable"
                 : "hide-pagination-btn-dashboard"
             }
