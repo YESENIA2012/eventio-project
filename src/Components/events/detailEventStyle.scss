@@ -26,6 +26,18 @@
     }
   }
 
+  .show-Error-message{
+    margin: 80px 120px 0 0;
+    color: rgb(237, 85, 151);
+    position: inherit;
+  }
+
+  .hide-Error-message{
+    margin-top: -200px;
+    position: absolute;
+    opacity: 0;
+  }
+
   .p-title {
     font-size: 11px;
     width: 80%;
@@ -149,6 +161,13 @@
   .container-event-section {
     height: 500px;
     width: 95%;
+
+    .show-Error-message{
+      margin: 70px 20px 0 30px;
+      color: rgb(237, 85, 151);
+      position: absolute;
+      font-size: 16px;
+    }
 
     .header-component {
       @include styleFile.align-element-with-flex(flex-end);
