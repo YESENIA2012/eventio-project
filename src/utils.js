@@ -26,7 +26,8 @@ const joinEvent = async (eventDetail, userId) => {
       eventId : eventDetail.id,
       userId : userId,
     }
-    await request(endpoint, method, body);
+    const joinEventResult = await request(endpoint, method, body);
+    return joinEventResult
   } catch (error) {
     console.log("Error", error)
   }
@@ -54,6 +55,7 @@ const handleButtonEvent = async (parameters) => {
     setGoToEditEvent,
     setEventToEdit,
     setRefreshEvents,
+    setErrorJoinEvents
   } = parameters;
 
   if (textButton === "edit") {
@@ -63,7 +65,10 @@ const handleButtonEvent = async (parameters) => {
     await updateEventAttendees(eventDetail, userId);
     setRefreshEvents(true);
   } else {
-    await joinEvent(eventDetail, userId);
+    const result = await joinEvent(eventDetail, userId);
+    if(!result){
+      setErrorJoinEvents(true)
+    }
     setRefreshEvents(true);
   }
 };
@@ -123,5 +128,6 @@ export {
   getTextButton,
   handleButtonEvent,
   getButtonClassName,
-  request
+  request,
+  joinEvent
 };

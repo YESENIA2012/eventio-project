@@ -28,6 +28,7 @@ const DetailEvent = () => {
   const [eventDetail, setEventDetail] = useState(null);
   const textButton = eventDetail ? getTextButton(userId, eventDetail) : "";
   const [refreshEvents, setRefreshEvents] = useState(false);
+  const [errorJoinEvents, setErrorJoinEvents] = useState(false)
 
   async function getEvent() {
     try {
@@ -50,6 +51,15 @@ const DetailEvent = () => {
       getEvent();
     }
   }, [refreshEvents]);
+
+  useEffect(() => {
+    if (errorJoinEvents) {
+      const timeoutId = setTimeout(() => {
+        setErrorJoinEvents(false);
+      }, 4000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [errorJoinEvents]) 
 
   const drawEvent = () => {
     if (!eventId || !eventDetail) {
@@ -85,6 +95,7 @@ const DetailEvent = () => {
                   setGoToEditEvent,
                   setEventToEdit,
                   setRefreshEvents,
+                  setErrorJoinEvents
                 });
               }}
             >
@@ -121,6 +132,9 @@ const DetailEvent = () => {
           </div>
           <AvatarUser user={user} className="avatar-name" />
         </header>
+        <h3 className={errorJoinEvents ? "show-Error-message" : "hide-Error-message"}>
+            You cannot join the event, the capacity is full.
+          </h3>
         <p className="p-title">DETAIL EVENT</p>
         <section className="section-event-information">{drawEvent()}</section>
         <div className="add-new-event-container">

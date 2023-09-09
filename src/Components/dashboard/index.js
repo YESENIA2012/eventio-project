@@ -6,7 +6,7 @@ import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
-import EventCard from "../events/EventCard"   /* "../events/EventCard" */
+import EventCard from "../events/EventCard"
 import { request, isLoggedOut } from "../../utils";
 import "./styleDashboard.scss";
 
@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [eventsList, setEventList] = useState([]);
   const [refreshEvents, setRefreshEvents] = useState(false);
   const [lengthEventsList, setLengthEventsList] = useState(0)
+  const [errorJoinEvents, setErrorJoinEvents] = useState(false)
 
  const pageCount = lengthEventsList ? Math.ceil(lengthEventsList / EVENTS_PER_PAGE) : 0; 
 
@@ -63,6 +64,15 @@ const Dashboard = () => {
     }
   }, [refreshEvents]);
 
+  useEffect(() => {
+    if (errorJoinEvents) {
+      const timeoutId = setTimeout(() => {
+        setErrorJoinEvents(false);
+      }, 4000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [errorJoinEvents]) 
+
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
   } else if (goToCreateNewEvent) {
@@ -77,6 +87,9 @@ const Dashboard = () => {
     return (
       <div className="event-container">
         <div className="user-name-container-d">
+          <h3 className={errorJoinEvents ? "show-message-Error" : "hide-message-Error"}>
+            You cannot join the event, the capacity is full.
+          </h3>
           <AvatarUser user={user} className="avatar-and-name" />
         </div>
         <div className="container-dashboard">
@@ -135,6 +148,7 @@ const Dashboard = () => {
                     setEventToEdit={setEventToEdit}
                     eventDetail={event}
                     setRefreshEvents={setRefreshEvents}
+                    setErrorJoinEvents={setErrorJoinEvents}
                   />
                 );
               })
