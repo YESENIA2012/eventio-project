@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, TextField } from "@mui/material";

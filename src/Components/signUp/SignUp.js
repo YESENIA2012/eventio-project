@@ -71,9 +71,6 @@ const SignUp = () => {
         idUser: userCreated.id,
         isLoggedIn: true,
       });
-      
-      console.log("user was created successfully", userCreated)
-      return userCreated
     } catch (error) {   
       console.log( error.message )   
       if (error.message === "This user already exists") {
