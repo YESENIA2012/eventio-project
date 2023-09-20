@@ -31,7 +31,7 @@ const Dashboard = () => {
   async function getEvents() {
     try {
       const itemsPerPage =  EVENTS_PER_PAGE 
-      const endpoint = `events/${pageNumber}/${itemsPerPage}`
+      const endpoint = `events/pagination?pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
       const method = "GET"
       const result = await request(endpoint, method);
       let events = result.eventsList

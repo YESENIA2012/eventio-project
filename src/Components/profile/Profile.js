@@ -39,7 +39,7 @@ const Profile = () => {
   async function getEventsUser() {
     try {
       const itemsPerPage =  EVENTS_PER_PAGE 
-      const endpoint = `events/user/${userId}/${pageNumber}/${itemsPerPage}`
+      const endpoint = `events/pagination?userId=${userId}&pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
       const method = "GET"
       const result = await request(endpoint, method);
       let eventsUser = result.eventsList
