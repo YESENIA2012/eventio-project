@@ -37,10 +37,6 @@ const Dashboard = () => {
       let events = result.eventsList
       const lengthEvents = result.lengthEvents
 
-      if (!events) {
-        events = [];
-      }
-
       setEventList(events);
       setLengthEventsList(lengthEvents)
       setRefreshEvents(false);  

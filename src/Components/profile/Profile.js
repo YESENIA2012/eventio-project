@@ -36,7 +36,7 @@ const Profile = () => {
 
   const pageCount = lengthEventsList ? Math.ceil(lengthEventsList / EVENTS_PER_PAGE) : 0
 
-  async function getEventsUser() {
+  async function getUserEvents() {
     try {
       const itemsPerPage =  EVENTS_PER_PAGE 
       const endpoint = `events/pagination?userId=${userId}&pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
@@ -44,10 +44,6 @@ const Profile = () => {
       const result = await request(endpoint, method);
       let eventsUser = result.eventsList
       const quantityEventsUser = result.lengthEventsUser
-
-      if (!eventsUser) {
-        eventsUser = [];
-      } 
 
       setEventListUser(eventsUser);
       setLengthEventsList(quantityEventsUser)
@@ -58,16 +54,16 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    getEventsUser();
+    getUserEvents();
   }, [])
 
   useEffect(() => {
-    getEventsUser();
+    getUserEvents();
   }, [pageNumber])
 
   useEffect(() => {
     if (refreshEvents) {
-      getEventsUser();
+      getUserEvents();
     }
   }, [refreshEvents]);
 
