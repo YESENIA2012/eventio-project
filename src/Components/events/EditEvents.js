@@ -21,7 +21,6 @@ const EditEvent = () => {
         const endpoint = `events/event/${eventId}`
         const method = "GET"
         const eventEdit = await request(endpoint, method);
-        console.log("eventEdit", eventEdit)
 
         setEvent(eventEdit);
       } catch (error) {
