@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import dayjs from "dayjs";
 import { styleTextFieldEditEvent } from "../../utils";
+import { UserContext } from "../globalState";
 
 const EditEventCard = (props) => {
+  const { user } = useContext(UserContext);
   const { event, setEvent } = props;
   const [dateEvent, setDateEvent] = useState("");
   const [timeEvent, setTimeEvent] = useState("");
@@ -35,9 +37,7 @@ const EditEventCard = (props) => {
 
   const changeDataEvent = () => {
     const eventEdit = event;
-    const informationUser = JSON.parse(localStorage.getItem("userInformation"));
-
-    let host = `${informationUser.name} ${informationUser.lastName}`;
+    let host = `${user.name} ${user.lastName}`;
     let dateToSave = dateEvent;
     dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
 

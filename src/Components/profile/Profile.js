@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import ReactPaginate from "react-paginate";
 import { Navigate } from "react-router-dom";
 
@@ -8,16 +8,16 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import ViewStreamIcon from "@mui/icons-material/ViewStream";
 
-import { getEventsFromServer, isLoggedOut } from "../../utils";
+import { isLoggedOut, request } from "../../utils";
 import "./profileStyle.scss";
 import EventCard from "../events/EventCard";
 import { UserContext } from "../globalState";
 
 const Profile = () => {
+  const EVENTS_PER_PAGE = 6;
   const [eventId, setEventId] = useState("");
   const { user, logout } = useContext(UserContext);
   const [pageNumber, setPageNumber] = useState(0);
-  const prePageNumber = useRef();
   const nameUser = user.name;
   const lastNameUser = user.lastName;
   const textAvatar = `${user.name[0] ?? " "} ${user.lastName[0] ?? " "}`;
@@ -30,33 +30,42 @@ const Profile = () => {
   const [goToEditEvent, setGoToEditEvent] = useState(false);
   const [eventToEdit, setEventToEdit] = useState("");
   const userId = user && user.idUser ? user.idUser : null;
-  const [pageCount, setPageCount] = useState(0);
   const [eventsListUser, setEventListUser] = useState([]);
   const [refreshEvents, setRefreshEvents] = useState(false);
+  const [lengthEventsList, setLengthEventsList] = useState(0)
 
-  async function getEventsUser() {
+  const pageCount = lengthEventsList ? Math.ceil(lengthEventsList / EVENTS_PER_PAGE) : 0
+
+  async function getUserEvents() {
     try {
-      const currentEvents = await getEventsFromServer(pageNumber, userId);
-      setEventListUser(currentEvents.currentEvents);
-      setPageCount(currentEvents.pageCountProfile);
+      const itemsPerPage =  EVENTS_PER_PAGE 
+      const endpoint = `events/pagination?userId=${userId}&pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
+      const method = "GET"
+      const result = await request(endpoint, method);
+      let eventsUser = result.eventsList
+      const quantityEventsUser = result.lengthEventsUser
+
+      setEventListUser(eventsUser);
+      setLengthEventsList(quantityEventsUser)
       setRefreshEvents(false);
     } catch (error) {
-      console.log("error", error);
+      console.log("Error", error);
     }
   }
 
-  // on component mounts
   useEffect(() => {
-    prePageNumber.current = pageNumber;
-    getEventsUser();
-  }, []);
+    getUserEvents();
+  }, [])
 
-  // when we need to refresh
   useEffect(() => {
-    if (refreshEvents || pageNumber !== prePageNumber) {
-      getEventsUser();
+    getUserEvents();
+  }, [pageNumber])
+
+  useEffect(() => {
+    if (refreshEvents) {
+      getUserEvents();
     }
-  }, [refreshEvents, pageNumber]);
+  }, [refreshEvents]);
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -144,13 +153,13 @@ const Profile = () => {
           }}
           containerClassName={"pagination-bttns"}
           previousLinkClassName={"previous-bttn"}
-          nextLinkClassName={
-            eventsListUser.length ? "next-bttn" : "hide-pagination-btn"
+           nextLinkClassName={
+            lengthEventsList ? "next-bttn" : "hide-pagination-btn"
           }
           disabledClassName={
-            eventsListUser.length ? "pagination-disable" : "hide-pagination-btn"
+            lengthEventsList ? "pagination-disable" : "hide-pagination-btn"
           }
-          activeClassName={"pagination-active"}
+          activeClassName={"pagination-active"} 
         />
         <div
           className={

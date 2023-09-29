@@ -5,7 +5,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 import { UserContext } from "../globalState";
 import Image from "../image/ImageContainer";
-import { styles } from "../../utils";
+import { styles, request } from "../../utils";
 import {
   textFieldBorderStyle,
   userExistsMessageStyle,
@@ -37,58 +37,47 @@ const SignUp = () => {
   }, [emailUser, passwordUser, repeatPasswordUser]);
 
   const signUpUser = async () => {
-    const isinfoValid = await validateInformation();
+    const isinfoValid = validateInformation();
     if (isinfoValid) {
       await registerUser();
     }
   };
 
-  const validateInformation = async () => {
+  const validateInformation = () => {
     if (passwordUser !== repeatPasswordUser) {
       setMessageSignUp(messagePassWordNotMatchStyles);
       setErrorInformationEntered(true);
       return false;
     }
-
     return true
   };
 
   const registerUser = async () => {
      try {
-      const response = await fetch("http://localhost:4000/auth/signup", {
-        method:"POST",
-        headers: { 'Content-Type': 'application/json' },
-        body :JSON.stringify( {
-          firstName: nameUser,
-          lastName: lastNameUser,
-          email: emailUser,
-          password: passwordUser,
-        })
-      });
-      const userCreated = await response.json();
-
-      if (userCreated.error && userCreated.error === "This user already exists") {
-        setMessageSignUp(userExistsMessageStyle);
-        setErrorInformationEntered(true); 
-        return
-      } else if (userCreated.error && userCreated.error.includes("empty")){
-        setMessageSignUp(messageInputStyles);
-        setErrorInformationEntered(true);
-        return 
-      }
-
-      setLoginData({
-        name: nameUser,
+      const body = {
+        firstName: nameUser,
         lastName: lastNameUser,
         email: emailUser,
+        password: passwordUser,
+      }
+      const endpoint = "auth/signup"
+      const method = "POST"
+      const userCreated = await request(endpoint, method, body)
+
+      setLoginData({
+        name: userCreated.firstName,
+        lastName: userCreated.lastName,
+        email: userCreated.email,
+        idUser: userCreated.id,
         isLoggedIn: true,
       });
-      
-      console.log("user was created successfully", userCreated)
-      return userCreated
     } catch (error) {   
-      console.log("Error", error)   
-      return { error: true };
+      if (error.message === "This user already exists") {
+        setMessageSignUp(userExistsMessageStyle);
+      } else if (error.message.includes("empty")){
+        setMessageSignUp(messageInputStyles);
+      }
+      setErrorInformationEntered(true);
     } 
   };
 

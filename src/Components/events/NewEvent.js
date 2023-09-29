@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { Button, TextField } from "@mui/material";
@@ -10,8 +9,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import {
   styles,
-  saveEvent,
   isLoggedOut,
+  request
 } from "../../utils";
 
 import "./newEventStyle.scss";
@@ -50,46 +49,36 @@ const NewEvent = () => {
   }, [titleEvent, descriptionEvent, dateEvent, timeEvent, capacityPeopleEvent]);
 
   const saveNewEventInLocalStorage = async () => {
-    let dateToSave = dateEvent;
-    dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
+    try {
+      let dateToSave = dateEvent;
+      dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
 
-    if (
-      titleEvent === "" ||
-      descriptionEvent === "" ||
-      dateEvent === "" ||
-      timeEvent === "" ||
-      capacityPeopleEvent === ""
-    ) {
-      setErrorInfoMessage(true);
-      setMessage({
-        text: "Please fill in the blanks.",
-        messageColor: { color: "rgb(237, 85, 151)" },
-      });
-      return;
-    } else {
-      const idUser = user.idUser;
-      let host = `${user.name} ${user.lastName}`;
-      try {
-        await saveEvent({
-          id: uuidv4(),
-          eventOwner: idUser,
-          date: dateToSave,
-          time: timeEvent,
-          nameEvent: titleEvent,
-          host: host,
-          descriptionEvent: descriptionEvent,
-          attendees: [idUser],
-          capacity: capacityPeopleEvent,
-        });
-      } catch (error) {
-        console.log("error", error);
+      const body = {
+        userId:  user.idUser,
+        title: titleEvent,
+        description: descriptionEvent,
+        event_date: dateToSave,
+        event_time: timeEvent,
+        capacity: capacityPeopleEvent,
       }
+      const endpoint = "events/"
+      const method = "POST"
+      await request(endpoint, method, body)
 
       setTitleEvent("");
       setDescriptionEvent("");
       setDateEvent(dayjs());
       setTimeEvent(dayjs().format("h:mm A"));
       setCapacityPeopleEvent("");
+
+    } catch (error) {
+      if (error.message.includes("empty")){
+        setMessage({
+          text: "Please fill in the blanks.",
+          messageColor: { color: "rgb(237, 85, 151)" },
+        });
+        setErrorInfoMessage(true)
+      }
     }
   };
 

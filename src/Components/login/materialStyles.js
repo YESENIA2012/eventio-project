@@ -14,13 +14,20 @@ const failedLoginMessageStyle = {
 };
 
 const userDoesNotExistsMessageStyle = {
-  text: "Oops! Username does not exist",
+  text: "Oops! User does not exist",
   messageColor,
   failBorderBotton,
 };
+
+const messageInputStyles = {
+  text:"Please enter all fields",
+  messageColor,
+  failBorderBotton,
+}
 
 export {
   messageSignInStyle,
   failedLoginMessageStyle,
   userDoesNotExistsMessageStyle,
+  messageInputStyles
 };

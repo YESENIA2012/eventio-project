@@ -3,8 +3,8 @@ import { Navigate, useParams, useLocation } from "react-router-dom";
 import {
   handleButtonEvent,
   getTextButton,
-  getEventFromServer,
   getButtonClassName,
+  request
 } from "../../utils";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -28,14 +28,17 @@ const DetailEvent = () => {
   const [eventDetail, setEventDetail] = useState(null);
   const textButton = eventDetail ? getTextButton(userId, eventDetail) : "";
   const [refreshEvents, setRefreshEvents] = useState(false);
+  const [errorJoinEvents, setErrorJoinEvents] = useState(false)
 
   async function getEvent() {
     try {
-      const eventFound = await getEventFromServer(eventId);
+      const endpoint = `events/event/${eventId}`
+      const method = "GET"
+      const eventFound = await request(endpoint, method);
       setEventDetail(eventFound);
       setRefreshEvents(false);
     } catch (error) {
-      console.log("error", error);
+      console.log("Error", error);
     }
   }
 
@@ -48,6 +51,15 @@ const DetailEvent = () => {
       getEvent();
     }
   }, [refreshEvents]);
+
+  useEffect(() => {
+    if (errorJoinEvents) {
+      const timeoutId = setTimeout(() => {
+        setErrorJoinEvents(false);
+      }, 4000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [errorJoinEvents]) 
 
   const drawEvent = () => {
     if (!eventId || !eventDetail) {
@@ -83,6 +95,7 @@ const DetailEvent = () => {
                   setGoToEditEvent,
                   setEventToEdit,
                   setRefreshEvents,
+                  setErrorJoinEvents
                 });
               }}
             >
@@ -90,7 +103,10 @@ const DetailEvent = () => {
             </Button>
           </div>
         </div>
-        <div className="name-attendees">Attendees</div>
+        <div className="name-attendees">
+          <p>Attendees</p>
+          <div>{ eventDetail.attendeesNames }</div>
+        </div>
       </div>
     );
   };
@@ -116,6 +132,9 @@ const DetailEvent = () => {
           </div>
           <AvatarUser user={user} className="avatar-name" />
         </header>
+        <h3 className={errorJoinEvents ? "show-Error-message" : "hide-Error-message"}>
+            You cannot join the event, the capacity is full.
+          </h3>
         <p className="p-title">DETAIL EVENT</p>
         <section className="section-event-information">{drawEvent()}</section>
         <div className="add-new-event-container">
