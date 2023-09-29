@@ -17,6 +17,7 @@ const EventCard = (props) => {
     setEventToEdit,
     eventDetail,
     setRefreshEvents,
+    setErrorJoinEvents
   } = props;
 
   const textButton = getTextButton(userId, eventDetail);
@@ -70,6 +71,7 @@ const EventCard = (props) => {
               setGoToEditEvent,
               setEventToEdit,
               setRefreshEvents,
+              setErrorJoinEvents
             });
           }}
         >

@@ -6,8 +6,8 @@ import ViewStreamIcon from "@mui/icons-material/ViewStream";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { UserContext } from "../globalState";
 import AvatarUser from "../avatarUser/AvatarUser";
-import EventCard from "../events/EventCard";
-import { getEventsFromServer, isLoggedOut } from "../../utils";
+import EventCard from "../events/EventCard"
+import { request, isLoggedOut } from "../../utils";
 import "./styleDashboard.scss";
 
 const Dashboard = () => {
@@ -23,24 +23,23 @@ const Dashboard = () => {
   const [eventToEdit, setEventToEdit] = useState("");
   const [eventsList, setEventList] = useState([]);
   const [refreshEvents, setRefreshEvents] = useState(false);
+  const [lengthEventsList, setLengthEventsList] = useState(0)
+  const [errorJoinEvents, setErrorJoinEvents] = useState(false)
 
-  const pageCount =
-    eventsList && eventsList.length
-      ? Math.ceil(eventsList.length / EVENTS_PER_PAGE)
-      : 0;
-
-  const pagesVisited = pageNumber * EVENTS_PER_PAGE;
-
-  const eventToDraw =
-    eventsList && eventsList.length
-      ? eventsList.slice(pagesVisited, pagesVisited + EVENTS_PER_PAGE)
-      : 0;
+ const pageCount = lengthEventsList ? Math.ceil(lengthEventsList / EVENTS_PER_PAGE) : 0; 
 
   async function getEvents() {
     try {
-      const currentEvents = await getEventsFromServer();
-      setEventList(currentEvents.events);
-      setRefreshEvents(false);
+      const itemsPerPage =  EVENTS_PER_PAGE 
+      const endpoint = `events/pagination?pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
+      const method = "GET"
+      const result = await request(endpoint, method);
+      let events = result.eventsList
+      const lengthEvents = result.lengthEvents
+
+      setEventList(events);
+      setLengthEventsList(lengthEvents)
+      setRefreshEvents(false);  
     } catch (error) {
       console.log("error", error);
     }
@@ -50,12 +49,25 @@ const Dashboard = () => {
     getEvents();
   }, []);
 
+  useEffect(() => {
+    getEvents();
+  }, [pageNumber]); 
+
   // when we need to refresh
   useEffect(() => {
     if (refreshEvents) {
       getEvents();
     }
   }, [refreshEvents]);
+
+  useEffect(() => {
+    if (errorJoinEvents) {
+      const timeoutId = setTimeout(() => {
+        setErrorJoinEvents(false);
+      }, 4000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [errorJoinEvents]) 
 
   if (isLoggedOut(user)) {
     return <Navigate to="/" />;
@@ -71,6 +83,9 @@ const Dashboard = () => {
     return (
       <div className="event-container">
         <div className="user-name-container-d">
+          <h3 className={errorJoinEvents ? "show-message-Error" : "hide-message-Error"}>
+            You cannot join the event, the capacity is full.
+          </h3>
           <AvatarUser user={user} className="avatar-and-name" />
         </div>
         <div className="container-dashboard">
@@ -116,8 +131,8 @@ const Dashboard = () => {
               viewEvents ? "box-event-view-row" : "box-event-view-column"
             }
           >
-            {eventToDraw ? (
-              eventToDraw.map((event, index) => {
+            {eventsList ? (
+              eventsList.map((event, index) => {
                 return (
                   <EventCard
                     key={String(index)}
@@ -129,6 +144,7 @@ const Dashboard = () => {
                     setEventToEdit={setEventToEdit}
                     eventDetail={event}
                     setRefreshEvents={setRefreshEvents}
+                    setErrorJoinEvents={setErrorJoinEvents}
                   />
                 );
               })
@@ -147,10 +163,10 @@ const Dashboard = () => {
             containerClassName={"pagination-bttns"}
             previousLinkClassName={"previous-bttn"}
             nextLinkClassName={
-              eventToDraw.length ? "next-bttn" : "hide-pagination-btn-dashboard"
+              lengthEventsList ? "next-bttn" : "hide-pagination-btn-dashboard"
             }
             disabledClassName={
-              eventToDraw.length
+              lengthEventsList
                 ? "pagination-disable"
                 : "hide-pagination-btn-dashboard"
             }
