@@ -1,17 +1,17 @@
 import { Fragment, useState, useEffect, useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 import { Button, TextField, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { VisibilityOff } from "@mui/icons-material";
 import { UserContext } from "../globalState";
 import Image from "../image/ImageContainer";
-import { styles, getUserDataFromServer } from "../../utils";
+import { styles, request } from "../../utils";
 import {
   textFieldBorderStyle,
   userExistsMessageStyle,
   messagePassWordNotMatchStyles,
   messageSignupStyles,
+  messageInputStyles
 } from "./materialStylesSignUp";
 import "./styleSignUp.scss";
 
@@ -37,64 +37,49 @@ const SignUp = () => {
   }, [emailUser, passwordUser, repeatPasswordUser]);
 
   const signUpUser = async () => {
-    const isinfoValid = await validateInformation();
+    const isinfoValid = validateInformation();
     if (isinfoValid) {
       await registerUser();
     }
   };
 
-  const validateInformation = async () => {
-    let userAlreadyExists = false;
-    // password does not match
+  const validateInformation = () => {
     if (passwordUser !== repeatPasswordUser) {
       setMessageSignUp(messagePassWordNotMatchStyles);
       setErrorInformationEntered(true);
       return false;
     }
-
-    const currentUsers = await getUserDataFromServer();
-    // check if the user already exists in db
-    if (currentUsers) {
-      currentUsers.forEach((user) => {
-        if (user.email === emailUser) {
-          userAlreadyExists = true;
-        }
-      });
-    }
-
-    if (userAlreadyExists) {
-      setMessageSignUp(userExistsMessageStyle);
-      setErrorInformationEntered(true);
-      return false;
-    }
-
-    return true;
+    return true
   };
 
   const registerUser = async () => {
-    const userInformation = await getUserDataFromServer();
-    let newUser = {
-      name: nameUser,
-      lastName: lastNameUser,
-      email: emailUser,
-      password: passwordUser,
-      idUser: uuidv4(),
-    };
+     try {
+      const body = {
+        firstName: nameUser,
+        lastName: lastNameUser,
+        email: emailUser,
+        password: passwordUser,
+      }
+      const endpoint = "auth/signup"
+      const method = "POST"
+      const userCreated = await request(endpoint, method, body)
 
-    if (!userInformation) {
-      localStorage.setItem("userInformation", JSON.stringify([newUser]));
-    } else {
-      const currentUsers = [...userInformation, newUser];
-      localStorage.setItem("userInformation", JSON.stringify(currentUsers));
-    }
-
-    setLoginData({
-      name: nameUser,
-      lastName: lastNameUser,
-      email: emailUser,
-      idUser: newUser.idUser,
-      isLoggedIn: true,
-    });
+      setLoginData({
+        name: userCreated.firstName,
+        lastName: userCreated.lastName,
+        email: userCreated.email,
+        idUser: userCreated.id,
+        isLoggedIn: true,
+      });
+    } catch (error) {   
+      console.log( error.message )   
+      if (error.message === "This user already exists") {
+        setMessageSignUp(userExistsMessageStyle);
+      } else if (error.message.includes("empty")){
+        setMessageSignUp(messageInputStyles);
+      }
+      setErrorInformationEntered(true);
+    } 
   };
 
   if (user.isLoggedIn) {
