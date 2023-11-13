@@ -18,15 +18,16 @@ const styleTextFieldEditEvent = makeStyles()(() => {
   };
 });
 
-const joinEvent = async (eventDetail, userId) => {
+const joinEvent = async (eventDetail) => {
   try {
     const endpoint = "events/join"
     const method = "POST"
     const body = {
       eventId : eventDetail.id,
-      userId : userId,
     }
-    const joinEventResult = await request(endpoint, method, body);
+
+    const token = JSON.parse(localStorage.getItem("token"));
+    const joinEventResult = await request(endpoint, method, body, token);
     return joinEventResult
   } catch (error) {
     console.log("Error", error)
@@ -50,7 +51,6 @@ const getTextButton = (userId, eventDetail) => {
 const handleButtonEvent = async (parameters) => {
   const {
     textButton,
-    userId,
     eventDetail,
     setGoToEditEvent,
     setEventToEdit,
@@ -62,10 +62,10 @@ const handleButtonEvent = async (parameters) => {
     setGoToEditEvent(true);
     setEventToEdit(eventDetail.id);
   } else if (textButton === "leave") {
-    await updateEventAttendees(eventDetail, userId);
+    await updateEventAttendees(eventDetail);
     setRefreshEvents(true);
   } else {
-    const result = await joinEvent(eventDetail, userId);
+    const result = await joinEvent(eventDetail);
     if(!result){
       setErrorJoinEvents(true)
     }
@@ -73,13 +73,21 @@ const handleButtonEvent = async (parameters) => {
   }
 };
 
-const request = async (endpoint, method, body) => {
-  const requestOptions ={
+const request = async ( endpoint, method, body, token ) => {
+
+  const requestOptions = {
     method: method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json', 
+    },
   }
+
   if(body){
     requestOptions.body = JSON.stringify(body)
+  }
+
+  if(token){
+    requestOptions.headers['authorization'] = token
   }
   
   const result = await fetch(`http://localhost:4000/${endpoint}`, requestOptions )
@@ -91,15 +99,16 @@ const request = async (endpoint, method, body) => {
   throw error
 }
 
-const updateEventAttendees = async (updatedEvent, userId) => {
+const updateEventAttendees = async (updatedEvent) => {
   try {
     const endpoint = "events/leave"
     const method = "DELETE"
     const body = {
       eventId : updatedEvent.id,
-      userId : userId,
     }
-    await request(endpoint, method, body);
+    const token = JSON.parse(localStorage.getItem("token"));
+
+    await request(endpoint, method, body, token);
   } catch (error) {
     console.log("Error", error);
   }
