@@ -48,13 +48,12 @@ const NewEvent = () => {
     }
   }, [titleEvent, descriptionEvent, dateEvent, timeEvent, capacityPeopleEvent]);
 
-  const saveNewEventInLocalStorage = async () => {
+  const saveNewEventOnBD = async () => {
     try {
       let dateToSave = dateEvent;
       dateToSave = dayjs(dateToSave).format(dateFormats.customDate);
 
       const body = {
-        userId:  user.idUser,
         title: titleEvent,
         description: descriptionEvent,
         event_date: dateToSave,
@@ -63,7 +62,9 @@ const NewEvent = () => {
       }
       const endpoint = "events/"
       const method = "POST"
-      await request(endpoint, method, body)
+      const token = JSON.parse(localStorage.getItem("token"));
+      
+      await request(endpoint, method, body, token)
 
       setTitleEvent("");
       setDescriptionEvent("");
@@ -188,7 +189,7 @@ const NewEvent = () => {
           <Button
             variant="contained"
             className="new-event-button"
-            onClick={saveNewEventInLocalStorage}
+            onClick={saveNewEventOnBD}
           >
             CREATE NEW EVENT
           </Button>
