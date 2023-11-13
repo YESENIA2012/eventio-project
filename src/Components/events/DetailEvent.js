@@ -90,7 +90,6 @@ const DetailEvent = () => {
               onClick={async (e) => {
                 await handleButtonEvent({
                   textButton,
-                  userId,
                   eventDetail,
                   setGoToEditEvent,
                   setEventToEdit,

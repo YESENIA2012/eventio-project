@@ -66,7 +66,6 @@ const EventCard = (props) => {
           onClick={async (e) => {
             await handleButtonEvent({
               textButton,
-              userId,
               eventDetail,
               setGoToEditEvent,
               setEventToEdit,
