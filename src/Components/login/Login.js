@@ -41,7 +41,9 @@ const Login = () => {
       }
       const endpoint = "auth/login"
       const method = "POST"
-      const userData = await request(endpoint, method, body);
+      const dataLogin = await request(endpoint, method, body);
+      const userData = dataLogin.userFound
+      const token = dataLogin.accessToken
 
       setLoginData({
         name: userData.firstName,
@@ -50,6 +52,8 @@ const Login = () => {
         idUser: userData.id,
         isLoggedIn: true,
       });
+
+      localStorage.setItem("token", JSON.stringify(token));
 
       return userData
     } catch (error) {
