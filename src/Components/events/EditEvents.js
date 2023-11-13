@@ -43,30 +43,29 @@ const EditEvent = () => {
       const endpoint = `events/${eventId}`
       const method = "PUT"
       const body = { 
-        userId: user.idUser,
         title: event.nameEvent,
         description: event.descriptionEvent,
         event_date: event.date,
         event_time: event.time, 
         capacity: event.capacity, 
       }
+      const token = JSON.parse(localStorage.getItem("token"));
 
-      await request(endpoint, method, body);
+      await request(endpoint, method, body, token);
+      
       setBackToDashboard(true); 
     } catch (error) {
       console.log("Error", error)
     } 
   };
 
-  const removeEventFromLocalStorage = async () => {
+  const deleteEvent = async () => {
     try {
       const endpoint = `events/${eventId}`
       const method = "DELETE"
-      const body = { 
-        userId: user.idUser,
-      }
+      const token = JSON.parse(localStorage.getItem("token"));
 
-      await request(endpoint, method, body)
+      await request(endpoint, method, null, token)
       setBackToDashboard(true);
     } catch (error) {
       console.log("Error", error)
@@ -83,7 +82,7 @@ const EditEvent = () => {
         </div>
         <div className="title-container">
           <div className="title">DETAIL EVENT</div>
-          <div className="delete-event" onClick={removeEventFromLocalStorage}>
+          <div className="delete-event" onClick={deleteEvent}>
             <DeleteIcon />
             <span>DELETE EVENT</span>
           </div>
