@@ -5,11 +5,11 @@ import DoneIcon from "@mui/icons-material/Done";
 import EditEventCard from "./EditEventCard";
 import AvatarUser from "../avatarUser/AvatarUser";
 import { UserContext } from "../globalState";
-import { request } from "../../utils";
+import { request, isLoggedOut } from "../../utils";
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const eventId = useParams().id;
   const [event, setEvent] = useState({});
   const [itemToDraw, setItemToDraw] = useState(null);
@@ -43,37 +43,41 @@ const EditEvent = () => {
       const endpoint = `events/${eventId}`
       const method = "PUT"
       const body = { 
-        userId: user.idUser,
         title: event.nameEvent,
         description: event.descriptionEvent,
         event_date: event.date,
         event_time: event.time, 
         capacity: event.capacity, 
       }
+      const token = JSON.parse(localStorage.getItem("token"));
 
-      await request(endpoint, method, body);
+      await request(endpoint, method, body, token);
+      
       setBackToDashboard(true); 
     } catch (error) {
       console.log("Error", error)
+      if(error.message === "TokenExpiredError: jwt expired"){
+        logout() 
+      }
     } 
   };
 
-  const removeEventFromLocalStorage = async () => {
+  const deleteEvent = async () => {
     try {
       const endpoint = `events/${eventId}`
       const method = "DELETE"
-      const body = { 
-        userId: user.idUser,
-      }
+      const token = JSON.parse(localStorage.getItem("token"));
 
-      await request(endpoint, method, body)
+      await request(endpoint, method, null, token)
       setBackToDashboard(true);
     } catch (error) {
       console.log("Error", error)
     }
   };
 
-  if (backToDashboard) {
+  if (isLoggedOut(user)) {
+    return <Navigate to="/" />;
+  } else if (backToDashboard) {
     return <Navigate to="/dashboard" />;
   } else {
     return (
@@ -83,7 +87,7 @@ const EditEvent = () => {
         </div>
         <div className="title-container">
           <div className="title">DETAIL EVENT</div>
-          <div className="delete-event" onClick={removeEventFromLocalStorage}>
+          <div className="delete-event" onClick={deleteEvent}>
             <DeleteIcon />
             <span>DELETE EVENT</span>
           </div>

@@ -39,17 +39,21 @@ const Profile = () => {
   async function getUserEvents() {
     try {
       const itemsPerPage =  EVENTS_PER_PAGE 
-      const endpoint = `events/pagination?userId=${userId}&pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
+      const endpoint = `events/pagination?pageNumber=${pageNumber}&itemsPerPage=${itemsPerPage}`
       const method = "GET"
-      const result = await request(endpoint, method);
-      let eventsUser = result.eventsList
+      const token = JSON.parse(localStorage.getItem("token"));
+      const result = await request(endpoint, method, null, token);
+      const eventsUser = result.eventsList
       const quantityEventsUser = result.lengthEventsUser
-
+      
       setEventListUser(eventsUser);
       setLengthEventsList(quantityEventsUser)
       setRefreshEvents(false);
     } catch (error) {
-      console.log("Error", error);
+
+      if(error.message === "TokenExpiredError: jwt expired"){
+        logout()
+      }
     }
   }
 

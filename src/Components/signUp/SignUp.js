@@ -62,7 +62,9 @@ const SignUp = () => {
       }
       const endpoint = "auth/signup"
       const method = "POST"
-      const userCreated = await request(endpoint, method, body)
+      const userData = await request(endpoint, method, body)
+      const userCreated = userData.newUser
+      const token = userData.accessToken
 
       setLoginData({
         name: userCreated.firstName,
@@ -71,8 +73,10 @@ const SignUp = () => {
         idUser: userCreated.id,
         isLoggedIn: true,
       });
+
+      localStorage.setItem("token", JSON.stringify(token));
     } catch (error) {   
-      console.log( error.message )   
+       
       if (error.message === "This user already exists") {
         setMessageSignUp(userExistsMessageStyle);
       } else if (error.message.includes("empty")){
