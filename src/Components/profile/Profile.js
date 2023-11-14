@@ -50,7 +50,10 @@ const Profile = () => {
       setLengthEventsList(quantityEventsUser)
       setRefreshEvents(false);
     } catch (error) {
-      console.log("Error", error);
+
+      if(error.message === "TokenExpiredError: jwt expired"){
+        logout()
+      }
     }
   }
 

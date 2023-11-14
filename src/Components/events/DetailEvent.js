@@ -17,7 +17,7 @@ import "./detailEventStyle.scss";
 import { UserContext } from "../globalState";
 
 const DetailEvent = () => {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const eventId = useParams().id;
   const location = useLocation();
   const userId = location.state.userId;
@@ -94,7 +94,8 @@ const DetailEvent = () => {
                   setGoToEditEvent,
                   setEventToEdit,
                   setRefreshEvents,
-                  setErrorJoinEvents
+                  setErrorJoinEvents,
+                  logout
                 });
               }}
             >

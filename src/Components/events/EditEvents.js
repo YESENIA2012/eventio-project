@@ -5,11 +5,11 @@ import DoneIcon from "@mui/icons-material/Done";
 import EditEventCard from "./EditEventCard";
 import AvatarUser from "../avatarUser/AvatarUser";
 import { UserContext } from "../globalState";
-import { request } from "../../utils";
+import { request, isLoggedOut } from "../../utils";
 import "./styleEditEvents.scss";
 
 const EditEvent = () => {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const eventId = useParams().id;
   const [event, setEvent] = useState({});
   const [itemToDraw, setItemToDraw] = useState(null);
@@ -56,6 +56,9 @@ const EditEvent = () => {
       setBackToDashboard(true); 
     } catch (error) {
       console.log("Error", error)
+      if(error.message === "TokenExpiredError: jwt expired"){
+        logout() 
+      }
     } 
   };
 
@@ -72,7 +75,9 @@ const EditEvent = () => {
     }
   };
 
-  if (backToDashboard) {
+  if (isLoggedOut(user)) {
+    return <Navigate to="/" />;
+  } else if (backToDashboard) {
     return <Navigate to="/dashboard" />;
   } else {
     return (

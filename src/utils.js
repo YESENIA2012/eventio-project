@@ -18,7 +18,7 @@ const styleTextFieldEditEvent = makeStyles()(() => {
   };
 });
 
-const joinEvent = async (eventDetail) => {
+const joinEvent = async (eventDetail, logout) => {
   try {
     const endpoint = "events/join"
     const method = "POST"
@@ -31,6 +31,9 @@ const joinEvent = async (eventDetail) => {
     return joinEventResult
   } catch (error) {
     console.log("Error", error)
+    if(error.message === "TokenExpiredError: jwt expired"){
+      logout() 
+    }
   }
 };
 
@@ -55,17 +58,18 @@ const handleButtonEvent = async (parameters) => {
     setGoToEditEvent,
     setEventToEdit,
     setRefreshEvents,
-    setErrorJoinEvents
+    setErrorJoinEvents,
+    logout
   } = parameters;
 
   if (textButton === "edit") {
     setGoToEditEvent(true);
     setEventToEdit(eventDetail.id);
   } else if (textButton === "leave") {
-    await updateEventAttendees(eventDetail);
+    await updateEventAttendees(eventDetail, logout);
     setRefreshEvents(true);
   } else {
-    const result = await joinEvent(eventDetail);
+    const result = await joinEvent(eventDetail, logout);
     if(!result){
       setErrorJoinEvents(true)
     }
@@ -74,7 +78,6 @@ const handleButtonEvent = async (parameters) => {
 };
 
 const request = async ( endpoint, method, body, token ) => {
-
   const requestOptions = {
     method: method,
     headers: { 
@@ -92,14 +95,16 @@ const request = async ( endpoint, method, body, token ) => {
   
   const result = await fetch(`http://localhost:4000/${endpoint}`, requestOptions )
   const response = await result.json()
+
   if (!response.error) {
     return response
   }
+
   const error = new Error(response.error);
   throw error
 }
 
-const updateEventAttendees = async (updatedEvent) => {
+const updateEventAttendees = async (updatedEvent, logout) => {
   try {
     const endpoint = "events/leave"
     const method = "DELETE"
@@ -111,6 +116,9 @@ const updateEventAttendees = async (updatedEvent) => {
     await request(endpoint, method, body, token);
   } catch (error) {
     console.log("Error", error);
+    if(error.message === "TokenExpiredError: jwt expired"){
+      logout() 
+    }
   }
 };
 

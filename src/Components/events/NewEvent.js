@@ -17,7 +17,7 @@ import "./newEventStyle.scss";
 import { UserContext } from "../globalState";
 
 const NewEvent = () => {
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const [goToDashboard, setGoToDashboard] = useState(false);
   const [titleEvent, setTitleEvent] = useState("");
   const [descriptionEvent, setDescriptionEvent] = useState("");
@@ -79,6 +79,8 @@ const NewEvent = () => {
           messageColor: { color: "rgb(237, 85, 151)" },
         });
         setErrorInfoMessage(true)
+      } else if(error.message === "TokenExpiredError: jwt expired"){
+        logout() 
       }
     }
   };

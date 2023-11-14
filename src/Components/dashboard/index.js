@@ -12,7 +12,7 @@ import "./styleDashboard.scss";
 
 const Dashboard = () => {
   const EVENTS_PER_PAGE = 6;
-  const { user } = useContext(UserContext);
+  const { user, logout } = useContext(UserContext);
   const userId = user ? user.idUser : null;
   const [pageNumber, setPageNumber] = useState(0);
   const [viewEvents, setViewEvents] = useState(true);
@@ -145,6 +145,7 @@ const Dashboard = () => {
                     eventDetail={event}
                     setRefreshEvents={setRefreshEvents}
                     setErrorJoinEvents={setErrorJoinEvents}
+                    logout={logout}
                   />
                 );
               })
