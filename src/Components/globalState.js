@@ -15,6 +15,7 @@ function UserProvider(props) {
     setUser(userData);
   };
   const logout = () => {
+    localStorage.removeItem("token")
     setUser(initialUserState);
   };
 
